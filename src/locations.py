@@ -1,0 +1,22 @@
+FORTNITE_LOCATIONS = [
+    "Junk Junction",
+    "Anarchy Acres",
+    "Risky Reels",
+    "Haunted Hills",
+    "Pleasant Park",
+    "Tomato Town",
+    "Wailing Woods",
+    "Loot Lake",
+    "Lonely Lodge",
+    "Snobby Shores",
+    "Tilted Towers",
+    "Dusty ~~Depot~~ Divot",
+    "Retail Row",
+    "Greasy Grove",
+    "Shifty Shafts",
+    "Salty Springs",
+    "Fatal Fields",
+    "Moisty Mire",
+    "Flush Factory",
+    "Lucky Landing"
+]
