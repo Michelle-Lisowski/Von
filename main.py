@@ -206,6 +206,9 @@ class Procbot(commands.Bot):
 
             # If the message author is the bot, return
             if message.author.id == self.user.id:
+                # Check xp.json
+                await self.update_data(xp, message.author)
+                
                 # Add an insanely high amount of XP to the bot
                 xp[str(self.user.id)]['LEVEL'] += 1
                 xp[str(self.user.id)]['EXPERIENCE'] += int(2 ** 64)
