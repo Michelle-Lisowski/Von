@@ -535,6 +535,7 @@ def get_prefix(bot, message):
         # Guild prefix is set to '.'
         if not str(message.guild.id) in guilds:
             guilds[str(message.guild.id)] = {}
+            guilds[str(message.guild.id)]['DEFAULT_PREFIX'] = '.'
             guilds[str(message.guild.id)]['GUILD_PREFIX'] = '.'
 
         # Open guilds.json in write mode
@@ -542,8 +543,10 @@ def get_prefix(bot, message):
             # Write any file changes to guilds.json
             json.dump(guilds, fp, indent=4)
 
+        prefixes = [guilds[str(message.guild.id)]['DEFAULT_PREFIX'], guilds[str(message.guild.id)]['GUILD_PREFIX']]
+
         # Return guild prefix
-        return commands.when_mentioned_or(guilds[str(message.guild.id)]['GUILD_PREFIX'])(bot, message)
+        return commands.when_mentioned_or(*prefixes)(bot, message)
 
 print('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel} | Procbot 1.0.0'.format(discord.version_info))
 bot = Procbot(get_prefix)
