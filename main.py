@@ -114,8 +114,8 @@ class Procbot(commands.Bot):
     # Updates experience data for the specified user;
     # Called in on_message
     async def update_data(self, user_xp, user):
-        # If the user is a bot, return
-        if user.bot:
+        # If the user is a different bot, return
+        if user.bot and user.id != self.user.id:
             return
 
         # Otherwise, create an empty dict for the user;
