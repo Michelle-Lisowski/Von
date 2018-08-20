@@ -546,6 +546,7 @@ def get_prefix(bot, message):
             # Write any file changes to guilds.json
             json.dump(guilds, fp, indent=4)
 
+        # Make '.' a prefix as well as the custom prefix for each guild
         prefixes = [guilds[str(message.guild.id)]['DEFAULT_PREFIX'], guilds[str(message.guild.id)]['GUILD_PREFIX']]
 
         # Return guild prefix
