@@ -39,6 +39,7 @@ class Administration:
             embed.add_field(name='Member Name', value=member.name, inline=False)
             embed.add_field(name='Member ID', value=member.id, inline=False)
             embed.add_field(name='Kicked By', value=ctx.author.name, inline=False)
+            embed.add_field(name='Reason', value=reason, inline=False)
             embed.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=embed)
 
@@ -77,6 +78,7 @@ class Administration:
             embed.add_field(name='Member Name', value=member.name, inline=False)
             embed.add_field(name='Member ID', value=member.id, inline=False)
             embed.add_field(name='Banned By', value=ctx.author.name, inline=False)
+            embed.add_field(name='Reason', value=reason, inline=False)
             embed.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=embed)
 
