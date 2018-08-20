@@ -13,7 +13,7 @@ Add Procbot to your own Discord server by clicking this [link](https://discordap
 
 ## License  
 
-The license can be found [here](../master/LICENSE).
+The full license can be found [here](../master/LICENSE).
 
 ---
 
