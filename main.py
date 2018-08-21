@@ -243,13 +243,15 @@ class Procbot(commands.Bot):
         p = guilds[str(before.guild.id)]['GUILD_PREFIX']
 
         if f'{p}help' or f'{p}kick' or f'{p}ban' or f'{p}mute' or f'{p}unmute' or f'{p}purge' or f'{p}setting' or f'{p}info' or f'{p}profile' or f'{p}serverinfo' or f'{p}load' or f'{p}unload' or f'{p}reload' or f'{p}logout' or f'{p}roll' or f'{p}gay' or f'{p}ping' or f'{p}cat' or f'{p}xp' or f'{p}play' or f'{p}pause' or f'{p}resume' or f'{p}skip' or f'{p}np' or f'{p}playlist' or f'{p}stop' or f'{p}volume' in before.content:
-            # self.process_commands(before) re-runs the recently run command, so return must be use instead
+            # self.process_commands(before) re-runs the recently run command, so return must be used instead
             return
         # If the original message wasn't a command, process the commands in the edited message
         else:
             await self.process_commands(after)
 
+        # Open guilds.json in write mode
         with open('guilds.json', 'w') as fp:
+            # Write any file changes to guilds.json
             json.dump(guilds, fp, indent=4)
 
     # Logs that a command has been invoked
@@ -281,28 +283,36 @@ class Procbot(commands.Bot):
         # Deny the 'Send Messages' permission to the 'Muted' role in all guild channels
         await channels.set_permissions(target=role, send_messages=False)
 
-        # Add the guild's ID and default prefix to guilds.json
+        # Open guilds.json in read mode
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
 
+        # If the guild's ID isn't in guilds.json, create an empty dict;
+        # Guild prefix is set to '.'
         if not str(guild.id) in guilds:
             guilds[str(guild.id)] = {}
             guilds[str(guild.id)]['GUILD_PREFIX'] = '.'
 
+        # Open guilds.json in write mode
         with open('guilds.json', 'w') as fp:
+            # Write any file changes to guilds.json
             json.dump(guilds, fp, indent=4)
 
-        # Add the guild's ID to mod_logs.json and set case counts to 0
+        # Open mod_logs.json in read mode
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
+        # If the guild's ID isn't in guilds.json, create an empty dict;
+        # Case counts are set to 0
         if not str(guild.id) in mod_logs:
-            guilds[str(guild.id)] = {}
-            guilds[str(guild.id)]['KICK_CASES'] = 0
-            guilds[str(guild.id)]['BAN_CASES'] = 0
-            guilds[str(guild.id)]['MUTE_CASES'] = 0
+            mod_logs[str(guild.id)] = {}
+            mod_logs[str(guild.id)]['KICK_CASES'] = 0
+            mod_logs[str(guild.id)]['BAN_CASES'] = 0
+            mod_logs[str(guild.id)]['MUTE_CASES'] = 0
 
-        with open('guilds.json', 'w') as fp:
+        # Open mod_logs.json in write mode
+        with open('mod_logs.json', 'w') as fp:
+            # Write any file changes to mod_logs.json
             json.dump(mod_logs, fp, indent=4)
 
     # Called whenever the bot has been removed from a guild;
@@ -328,23 +338,24 @@ class Procbot(commands.Bot):
 
             # If the channel is non-existent, create it
             if channel is None:
+                # Set channel overwrites for @everyone and the bot
                 overwrites = {
                     member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
                     member.guild.me: discord.PermissionOverwrite(send_messages=True)
                 }
 
+                # Create the 'Information' category and the 'welcome' channel
                 category = await member.guild.create_category_channel('Information', overwrites, 'Category for information-based channels.')
                 channel = await member.guild.create_text_channel('welcome', category, 'Channel for welcome and leave messages.')
 
-            if member.id == 439566037139062795:
-                await channel.send(f'Welcome to the server, **{member.name}**... We\'re so sad to see you here... :cry:')
-            else:
-                await channel.send(f'Welcome to the server, **{member.name}**! We\'re so happy to see you here! :tada:')
+            # Send the join message
+            await channel.send(f'Welcome to the server, **{member.name}**! We\'re so happy to see you here! :tada:')
 
             # Open xp.json in read mode
             with open('xp.json', 'r') as fp:
                 xp = json.load(fp)
 
+            # Check xp.json
             await self.update_data(xp, member)
 
             # Open xp.json in write mode
@@ -366,18 +377,18 @@ class Procbot(commands.Bot):
 
             # If the channel is non-existent, create it
             if channel is None:
+                # Set channel overwrites for @everyone and the bot
                 overwrites = {
                     member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
                     member.guild.me: discord.PermissionOverwrite(send_messages=True)
                 }
 
+                # Create the 'Information' category and the 'welcome' channel
                 category = await member.guild.create_category_channel('Information', overwrites, 'Category for information-based channels.')
                 channel = await member.guild.create_text_channel('welcome', category, 'Channel for welcome and leave messages.')
             
-            if member.id == 439566037139062795:
-                await channel.send(f'We\'e happy to see you leave, **{member.name}**! :tada:')
-            else:
-                await channel.send(f'We\'re sad to see you leave, **{member.name}**... :cry:')
+            # Send the leave message
+            await channel.send(f'We\'re sad to see you leave, **{member.name}**... :cry:')
 
     # Custom events;
     # on_kick, on_ban, on_mute;
@@ -392,15 +403,20 @@ class Procbot(commands.Bot):
 
         # If it doesn't exist, create it
         if channel is None:
+            # Set channel overwrites for @everyone and the bot
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
                 member.guild.me: discord.PermissionOverwrite(send_messages=True)
             }
 
+            # Create the 'Logs' category and the 'mod-logs' channel
             category = member.guild.create_category_channel('Logs', overwrites, 'Category for log-based channels.')
             channel = member.guild.create_text_channel('mod-logs', category, 'Channel for moderation logs.')
 
+        # Fetch the number of kick cases
         case = mod_logs[str(member.guild.id)]['KICK_CASES']
+
+        # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':boot: Kick | Case {case}'
         embed.colour = 0x0000ff
@@ -422,15 +438,20 @@ class Procbot(commands.Bot):
 
         # If it doesn't exist, create it
         if channel is None:
+            # Set channel overwrites for @everyone and the bot
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
                 member.guild.me: discord.PermissionOverwrite(send_messages=True)
             }
 
+            # Create the 'Logs' category and the 'mod-logs' channel
             category = member.guild.create_category_channel('Logs', overwrites, 'Category for log-based channels.')
             channel = member.guild.create_text_channel('mod-logs', overwrites, category, 'Channel for moderation logs.')
 
+        # Fetch the number of ban cases
         case = mod_logs[str(member.guild.id)]['BAN_CASES']
+
+        # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':no_entry_sign: Ban | Case {case}'
         embed.colour = 0x0000ff
@@ -452,15 +473,20 @@ class Procbot(commands.Bot):
 
         # If it doesn't exist, create it
         if channel is None:
+            # Set channel overwrites for @everyone and the bot
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
                 member.guild.me: discord.PermissionOverwrite(send_messages=True)
             }
 
+            # Create the 'Logs' category and the 'mod-logs' channel
             category = member.guild.create_category_channel('Logs', overwrites, 'Category for log-based channels.')
             channel = member.guild.create_text_channel('mod-logs', overwrites, category, 'Channel for moderation logs.')
 
+        # Fetch the number of mute cases
         case = mod_logs[str(member.guild.id)]['MUTE_CASES']
+        
+        # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':zipper_mouth: Mute | Case {case}'
         embed.colour = 0x0000ff
@@ -475,7 +501,10 @@ class Procbot(commands.Bot):
     # Called whenever an error is raised in a command;
     # If the cog or command has its own handler, the error handling is passed to it
     async def on_command_error(self, ctx, error):
+        # Specify errors to be ignored
         ignored = (commands.CommandNotFound, commands.MissingRequiredArgument)
+
+        # Fetch the original error
         error = getattr(error, 'original', error)
 
         # If the command has its own handler, return
@@ -497,9 +526,9 @@ class Procbot(commands.Bot):
             embed.description = f'```{error}```'
             embed.colour = 0xff0000
             embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild {str(ctx.guild)}, command {ctx.command}:')
-            print(error)
-            return await ctx.send(embed=embed)
+            print(f'Exception in guild {str(ctx.guild)}, command {ctx.command}:\n{error}')
+            await ctx.send(embed=embed)
+            return
 
     # Global event error handler;
     # Called whenever an error is raised in an event
@@ -556,14 +585,17 @@ ext_dir = 'ext'
 
 # Bot initialisation
 if __name__ == '__main__':
-    # Load all cogs
+    # Fetch cog files
     for ext in [f.replace('.py', '') for f in listdir(ext_dir) if isfile(join(ext_dir, f))]:
         try:
+            # Load cog files
             bot.load_extension(ext_dir + '.' + ext)
         except (discord.ClientException, ModuleNotFoundError):
+            # Print an error if needed
             print(f'ERROR: Failed to load {ext}')
             print(traceback.format_exc())
         else:
+            # Log that the cog was successfully loaded
             print(f'Successfully loaded {ext}')
     # Run the bot         
     bot.initialise()
