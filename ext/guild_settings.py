@@ -27,7 +27,6 @@ class GuildSettings:
                 return
             else:
                 guilds[str(ctx.guild.id)] = {}
-                guilds[str(ctx.guild.id)]['DEFAULT_PREFIX'] = '.'
                 guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = new_prefix
                 await ctx.send(f":information_source: New server prefix: **{guilds[str(ctx.guild.id)]['GUILD_PREFIX']}**")
         else:
@@ -36,7 +35,6 @@ class GuildSettings:
                 return
             else:
                 guilds[str(ctx.guild.id)] = {}
-                guilds[str(ctx.guild.id)]['DEFAULT_PREFIX'] = '.'
                 guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = new_prefix
                 await ctx.send(f":information_source: New server prefix: **{guilds[str(ctx.guild.id)]['GUILD_PREFIX']}**")
 
