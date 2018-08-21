@@ -114,8 +114,8 @@ class Procbot(commands.Bot):
     # Updates experience data for the specified user;
     # Called in on_message
     async def update_data(self, user_xp, user):
-        # If the user is a different bot, return
-        if user.bot and user.id != self.user.id:
+        # If the user is a bot, return
+        if user.bot:
             return
 
         # Otherwise, create an empty dict for the user;
@@ -193,36 +193,33 @@ class Procbot(commands.Bot):
     # After everything has been called, process_commands is called;
     # If process_commands is not called, the bot won't respond to commands
     async def on_message(self, message):
-        # If the message is from private messages, process the commands and return
+        # If the message is from private messages, process commands and return
         if not message.guild:
             await self.process_commands(message)
             return
 
-        # Otherwise, run experience and strike-related functions
+        # Otherwise, run experience-related functions
         else:
             # Open xp.json in read mode
             with open('xp.json', 'r') as fp:
                 xp = json.load(fp)
 
-            # If the message author is the bot, return
-            if message.author.id == self.user.id:
-                # Check xp.json
-                await self.update_data(xp, message.author)
-                
-                # Add an insanely high amount of XP to the bot
-                xp[str(self.user.id)]['LEVEL'] += 1
-                xp[str(self.user.id)]['EXPERIENCE'] += int(2 ** 64)
-                
-                # Open xp.json in write mode
-                with open('xp.json', 'w') as fp:
-                    # Write any file changes to xp.json
-                    json.dump(xp, fp, indent=4)                              
-                return
-
             # Run experience-related functions
             await self.update_data(xp, message.author)
             await self.add_experience(xp, message.author, 5)
             await self.level_up(xp, message.author, message.channel)
+
+            # If the bot's user ID isn't in xp.json, create an empty dict;
+            # Experience is set to an extremely high number and level is set to 1
+            if not str(self.user.id) in xp:
+                xp[str(self.user.id)] = {}
+                xp[str(self.user.id)]['LEVEL'] = 1
+                xp[str(self.user.id)]['EXPERIENCE'] = int(2 ** 64)
+
+            # Otherwise, add an insanely high amount of experience to the bot
+            else:
+                xp[str(self.user.id)]['LEVEL'] += 1
+                xp[str(self.user.id)]['EXPERIENCE'] += int(2 ** 64)
 
             # Open xp.json in write mode
             with open('xp.json', 'w') as fp:
