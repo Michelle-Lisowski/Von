@@ -1,4 +1,3 @@
-# Procbot.music by sirtezza_451
 import asyncio
 import datetime
 import itertools

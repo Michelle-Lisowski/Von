@@ -1,4 +1,3 @@
-# Procbot.rand by sirtezza_451
 import asyncio
 import json
 import random

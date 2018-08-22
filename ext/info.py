@@ -1,4 +1,3 @@
-# Procbot.info by sirtezza_451
 import sys
 import time
 

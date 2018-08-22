@@ -1,4 +1,3 @@
-# Procbot.owner by sirtezza_451
 import datetime
 
 import discord

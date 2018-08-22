@@ -1,4 +1,4 @@
-# Procbot by sirtezza_451
+# Procbot by sirtezza451
 import datetime
 import json
 import os

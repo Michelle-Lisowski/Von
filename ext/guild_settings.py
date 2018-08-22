@@ -1,4 +1,3 @@
-# Procbot.guild_settings by sirtezza_451
 import json
 
 import discord

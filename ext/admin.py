@@ -1,4 +1,3 @@
-# Procbot.admin by sirtezza_451
 import datetime
 import json
 
