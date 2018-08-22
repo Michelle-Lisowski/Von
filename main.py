@@ -135,13 +135,6 @@ class Procbot(commands.Bot):
 
         # Otherwise, add the specified amount of experience to the specified user
         else:
-            # If the user is the bot, XP added per message is insanely high
-            if user.id == self.user.id:
-                xp = int(2 ** 64)
-
-            # Otherwise, XP added per message is normal
-            else:
-                xp = xp
             user_xp[str(user.id)]['EXPERIENCE'] += xp
 
     # Increase the specified user's level at a specific amount of experience;
