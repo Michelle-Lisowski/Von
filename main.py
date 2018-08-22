@@ -191,7 +191,7 @@ class Procbot(commands.Bot):
             await self.process_commands(message)
             return
 
-        # Otherwise, run experience-related functions
+        # Otherwise, run experience and log-related functions
         else:
             # Open xp.json in read mode
             with open('xp.json', 'r') as fp:
@@ -218,6 +218,17 @@ class Procbot(commands.Bot):
             with open('xp.json', 'w') as fp:
                 # Write any file changes to xp.json
                 json.dump(xp, fp, indent=4)
+
+            # Open mod_logs.json in read mode
+            with open('mod_logs.json', 'r') as fp:
+                mod_logs = json.load(fp)
+
+            if not str(message.guild.id) in mod_logs:
+                mod_logs[str(message.guild.id)] = {}
+                mod_logs[str(message.guild.id)]['KICK_CASES'] = 0
+                mod_logs[str(message.guild.id)]['BAN_CASES'] = 0
+                mod_logs[str(message.guild.id)]['MUTE_CASES'] = 0
+
             await self.process_commands(message)
 
     # Processes commands in edited messages
