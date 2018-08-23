@@ -25,7 +25,7 @@ ytdlopts = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    'source_address': '0.0.0.0'  # ipv6 addresses cause issues sometimes
+    'source_address': '0.0.0.0'
 }
 
 ffmpegopts = {
@@ -36,10 +36,10 @@ ffmpegopts = {
 ytdl = YoutubeDL(ytdlopts)
 
 class VoiceConnectionError(commands.CommandError):
-    '''Custom Exception class for connection errors.'''
+    pass
 
 class InvalidVoiceChannel(VoiceConnectionError):
-    '''Exception for cases of invalid voice channels.'''
+    pass
 
 class YTDLSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *, data, requester):

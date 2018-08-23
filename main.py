@@ -396,7 +396,7 @@ class Procbot(commands.Bot):
             # Send the leave message
             await channel.send(f'We\'re sad to see you leave, **{member.name}**... :cry:')
 
-    # Custom events;
+    # Custom 'events';
     # on_kick, on_ban, on_mute;
     # Called in a cog via self.bot.on_kick(author, member, reason)
     async def on_kick(self, author, member, reason):
