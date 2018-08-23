@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <header>
+    <img align="right" src="https://imgur.com/NTgAGc0" height="256" width="256">
     <h1>Procbot</h1>
     <p><b>Procbot is a Discord bot which plays music, executes fun and admin commands, and more!</b></p>
 </header>
