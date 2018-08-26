@@ -554,13 +554,13 @@ class Procbot(commands.Bot):
             embed.description = f'```{error}```'
             embed.colour = 0xff0000
             embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild {str(ctx.guild)}, command {ctx.command}:\n{error}')
+            print(f'Exception in guild {str(ctx.guild)}, command \'{ctx.command}\':\n{error}')
             await ctx.send(embed=embed)
 
     # Global event error handler;
     # Called whenever an error is raised in an event
     async def on_error(self, event, *args, **kwargs):
-        print(f'Ignoring exception in event {event}:')
+        print(f'Exception in event {event}:')
         print(traceback.format_exc())
 
     # Login
