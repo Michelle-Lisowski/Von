@@ -25,7 +25,7 @@ class Owner:
         else:
             success = discord.Embed()
             success.title = ':white_check_mark: Success!'
-            success.description = f'Successfully loaded **{ext}**.'
+            success.description = f'Successfully loaded extension **{ext}**.'
             success.colour = 0x00ff00
             success.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=success)
@@ -45,7 +45,7 @@ class Owner:
         else:
             success = discord.Embed()
             success.title = ':white_check_mark: Success!'
-            success.description = f'Successfully unloaded **{ext}**.'
+            success.description = f'Successfully unloaded extension **{ext}**.'
             success.colour = 0x00ff00
             success.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=success)
@@ -66,7 +66,7 @@ class Owner:
         else:
             success = discord.Embed()
             success.title = ':white_check_mark: Success!'
-            success.description = f'Successfully reloaded **{ext}**.'
+            success.description = f'Successfully reloaded extension **{ext}**.'
             success.colour = 0x00ff00
             success.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=success)

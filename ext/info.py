@@ -24,6 +24,7 @@ class Information:
         embed.title = 'Procbot'
         embed.description = '**Procbot by sirtezza_451#9856. Created using discord.py rewrite.**'
         embed.colour = 0x0000ff
+        embed.add_field(name='GitHub', value='https://github.com/sirtezza451/Procbot', inline=False)
         embed.add_field(name='Uptime', value=f'Procbot has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
         embed.add_field(name='Name', value=f'{self.bot.user.name}#{self.bot.user.discriminator}', inline=True)
         embed.add_field(name='ID', value=self.bot.user.id, inline=True)
@@ -51,7 +52,7 @@ class Information:
         embed.add_field(name='User ID', value=str(member.id), inline=True)
         embed.add_field(name='Role', value=str(member.top_role), inline=True)
         embed.add_field(name='Status', value=str(self.bot.get_status(member)), inline=True)
-        embed.add_field(name='Activity', value=f'{str(self.bot.get_at(member))} {str(activity)}', inline=True)
+        embed.add_field(name='Activity', value=f'{str(self.bot.get_at(member))} **{str(activity)}**', inline=True)
         embed.add_field(name='Nickname', value=str(member.nick), inline=True)
         embed.add_field(name='Created', value=str(member.created_at), inline=False)
         embed.add_field(name='Joined', value=str(member.joined_at), inline=False)

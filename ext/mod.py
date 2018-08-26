@@ -20,63 +20,54 @@ class Moderation:
             mod_logs = json.load(fp)
 
         if member is None:
-            await ctx.send(':no_entry_sign: You didn\'t mention a member to be muted!')
-            return
+            await ctx.send(':grey_exclamation: Please mention a member to mute.')
         elif member.id == ctx.author.id:
-            await ctx.send(':no_entry_sign: Why would you want to mute yourself?')
-            return
+            await ctx.send(':grey_exclamation: Why would you want to mute yourself?')
         elif member.id == self.bot.user.id:
-            await ctx.send(':no_entry_sign: I can\'t mute myself! Why would you want to mute me anyway?')
-            return
+            await ctx.send(':grey_exclamation: Why would you want to mute me? I can\'t mute myself anyway.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t mute someone with a role equal to or higher than yours!')
-            return
+            await ctx.send(':grey_exclamation: You can\'t mute someone with a role higher than or equal to your role.')
         else:
             role = utils.get(ctx.guild.roles, name='Muted')
             if role in member.roles:
-                await ctx.send(f':no_entry_sign: **{member.name}** has already been muted!')
+                await ctx.send(f':x: **{member.name}** has already been muted.')
                 return
-            else:
-                if reason is None:
-                    reason = 'No reason given.'
 
-                await member.add_roles(role)
-                embed = discord.Embed()
-                embed.title = ':zipper_mouth: Member Muted'
-                embed.colour = 0x0000ff
-                embed.add_field(name='Member Name', value=member.name, inline=False)
-                embed.add_field(name='Member ID', value=member.id, inline=False)
-                embed.add_field(name='Muted By', value=ctx.author.name, inline=False)
-                embed.add_field(name='Reason', value=reason, inline=False)
-                embed.set_footer(text=datetime.datetime.now())
-                await ctx.send(embed=embed)
+            if reason is None:
+                reason = 'No reason given.'
 
-                mod_logs[str(ctx.guild.id)]['MUTE_CASES'] += 1
-                with open('mod_logs.json', 'w') as fp:
-                    json.dump(mod_logs, fp, indent=4)
-                await self.bot.on_mute(author=ctx.author, member=member, reason=str(reason))
+            await member.add_roles(role)
+            embed = discord.Embed()
+            embed.title = ':zipper_mouth: Member Muted'
+            embed.colour = 0x0000ff
+            embed.add_field(name='Member Name', value=member.name, inline=False)
+            embed.add_field(name='Member ID', value=member.id, inline=False)
+            embed.add_field(name='Muted By', value=ctx.author.name, inline=False)
+            embed.add_field(name='Reason', value=reason, inline=False)
+            embed.set_footer(text=datetime.datetime.now())
+            await ctx.send(embed=embed)
+
+            mod_logs[str(ctx.guild.id)]['MUTE_COUNT'] += 1
+            with open('mod_logs.json', 'w') as fp:
+                json.dump(mod_logs, fp, indent=4)
+            await self.bot.on_mute(author=ctx.author, member=member, reason=str(reason))
 
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def unmute(self, ctx, member: discord.Member = None):
         if member is None:
-            await ctx.send(':no_entry_sign: You didn\'t mention a member to be unmuted!')
-            return
+            await ctx.send(':grey_exclamation: Please mention a member to unmute.')
         elif member.id == ctx.author.id:
-            await ctx.send(':no_entry_sign: How would you be able to unmute yourself if you\'re not muted?')
-            return
+            await ctx.send(':grey_exclamation: You\'re able to run this command, so you were never muted in the first place.')
         elif member.id == self.bot.user.id:
-            await ctx.send(':no_entry_sign: I can\'t be muted, so how can I be unmuted?')
-            return
+            await ctx.send(':grey_exclamation: I can\'t mute myself, so I guess I can\'t unmute myself.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t unmute someone with a role equal to or higher than yours!')
-            return
+            await ctx.send(':grey_exclamation: You can\'t unmute someone with a role higher than or equal to your role.')
         else:
             role = utils.get(ctx.guild.roles, name='Muted')
             if not role in member.roles:
-                await ctx.send(f':no_entry_sign: **{member.name}** was never muted!')
-                return
+                await ctx.send(f':x: **{member.name}** was never muted.')
             else:
                 await member.remove_roles(role)
                 embed = discord.Embed()
@@ -93,14 +84,9 @@ class Moderation:
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, number: int = None):
         if number is None:
-            await ctx.send(':no_entry_sign: You didn\'t specify a number of messages to be deleted!')
-            return
-        elif number > 100:
-            await ctx.send(f':no_entry_sign: `{number}` isn\'t a valid number! Please specify a number between 2 and 100.')
-            return
-        elif number < 2:
-            await ctx.send(f':no_entry_sign: `{number}` isn\'t a valid number! Please specify a number between 2 and 100.')
-            return
+            await ctx.send(':grey_exclamation: Please specify a number of messages to delete.')
+        elif not 1 < number < 101:
+            await ctx.send(':grey_exclamation: Please specify a number between `2` and `100`.')
         else:
             purged = await ctx.channel.purge(limit=number, check=None)
             embed = discord.Embed()

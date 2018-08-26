@@ -19,17 +19,13 @@ class Administration:
             mod_logs = json.load(fp)
 
         if member is None:
-            await ctx.send(':no_entry_sign: You didn\'t mention a member to be kicked!')
-            return
+            await ctx.send(':grey_exclamation: Please mention a member to kick.')
         elif member.id == ctx.author.id:
-            await ctx.send(':no_entry_sign: Surely you don\'t want to kick yourself!')
-            return
+            await ctx.send(':no_entry_sign: Why would you want to kick yourself?')
         elif member.id == self.bot.user.id:
-            await ctx.send(':no_entry_sign: I can\'t kick myself! Why would you want to kick me anyway?')
-            return
+            await ctx.send(':no_entry_sign: Why would you want to kick me? I can\'t kick myself anyway.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t kick someone with a role equal to or higher than your role!')
-            return
+            await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')
         else:
             if reason is None:
                 reason = 'No reason given.'
@@ -45,7 +41,7 @@ class Administration:
             embed.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=embed)
 
-            mod_logs[str(ctx.guild.id)]['KICK_CASES'] += 1
+            mod_logs[str(ctx.guild.id)]['KICK_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
             await self.bot.on_kick(author=ctx.author, member=member, reason=str(reason))
@@ -58,17 +54,13 @@ class Administration:
             mod_logs = json.load(fp)
 
         if member is None:
-            await ctx.send(':no_entry_sign: You didn\'t mention a member to be banned!')
-            return
+            await ctx.send(':grey_exclamation: Please mention a member to ban.')
         elif member.id == ctx.author.id:
-            await ctx.send(':no_entry_sign: Surely you don\'t want to ban yourself!')
-            return
+            await ctx.send(':no_entry_sign: Why would you want to ban yourself?')
         elif member.id == self.bot.user.id:
-            await ctx.send(':no_entry_sign: I can\'t ban myself! Why would you want to ban me anyway?')
-            return
+            await ctx.send(':no_entry_sign: Why would you want to ban me? I can\'t ban myself anyway.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t ban someone with a role equal to or higher than your role!')
-            return
+            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role!')
         else:
             if reason is None:
                 reason = 'No reason given.'
@@ -84,7 +76,7 @@ class Administration:
             embed.set_footer(text=datetime.datetime.now())
             await ctx.send(embed=embed)
 
-            mod_logs[str(ctx.guild.id)]['BAN_CASES'] += 1
+            mod_logs[str(ctx.guild.id)]['BAN_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
             await self.bot.on_ban(author=ctx.author, member=member, reason=None)

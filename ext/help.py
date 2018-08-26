@@ -26,7 +26,7 @@ class Help:
             embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
             embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
-            embed.set_footer(text=datetime.datetime.now())
+            embed.add_field(name='Other', value=f'`{p}setting`', inline=False)
             await ctx.send(embed=embed)
 
     @help_.command()
@@ -40,7 +40,6 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}play <search query>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}play gods plan`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -53,7 +52,6 @@ class Help:
         embed.description = '**Pauses the currently playing music**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}pause`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -66,7 +64,6 @@ class Help:
         embed.description = '**Resumes the currently paused music**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}resume`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -79,7 +76,6 @@ class Help:
         embed.description = '**Skips the currently playing song**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}skip`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -92,7 +88,6 @@ class Help:
         embed.description = '**Displays the currently playing song**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}np`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -105,7 +100,6 @@ class Help:
         embed.description = '**Displays the next 5 songs in the playlist**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}playlist`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -118,7 +112,6 @@ class Help:
         embed.description = '**Stops the currently playing music**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}stop`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -133,7 +126,6 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}volume <volume>`', inline=False)
         embed.add_field(name='Arguments', value='`volume` - **number** (optional)', inline=False)
         embed.add_field(name='Example', value=f'`{p}volume 75`', inline=False)
-        embed.set_footer(text=f'Default volume is 50% | {datetime.datetime.now()}')
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -148,7 +140,7 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}roll <number of sides>`', inline=False)
         embed.add_field(name='Arguments', value='`number of sides` - **number** (optional)', inline=False)
         embed.add_field(name='Example', value=f'`{p}roll 1234567890`', inline=False)
-        embed.set_footer(text=f'If no number of sides is specified, a 6-sided die will be rolled | {datetime.datetime.now()}')
+        embed.set_footer(text='If no number of sides is specified, a 6-sided die will be rolled')
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -162,7 +154,7 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}gay <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}gay @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=f'If no member is mentioned, the message returned will display how gay you are | {datetime.datetime.now()}')
+        embed.set_footer(text='If no member is mentioned, the message returned will display how gay you are')
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -175,7 +167,6 @@ class Help:
         embed.description = '**Returns Procbot\'s latency in milliseconds**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}ping`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -188,7 +179,6 @@ class Help:
         embed.description = '**Returns a random picture of a cat**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}cat`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -201,7 +191,6 @@ class Help:
         embed.description = '**Returns the Fortnite location you should land at**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}drop`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -215,7 +204,6 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}xp <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}xp @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -229,7 +217,6 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}kick <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}kick @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -243,7 +230,6 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}ban <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}ban @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -257,7 +243,6 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}mute <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}mute @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -271,7 +256,6 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}unmute <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}unmute @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -286,7 +270,6 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}purge <number of messages>`', inline=False)
         embed.add_field(name='Arguments', value='`number of messages` - **number**', inline=False)
         embed.add_field(name='Example', value=f'`{p}purge 50`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -299,7 +282,6 @@ class Help:
         embed.description = '**Returns information about Procbot**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}info`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -313,7 +295,7 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}profile <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}profile @sirtezza_451#9856`', inline=False)
-        embed.set_footer(text=f'If no member is mentioned, the message returned will display information about you | {datetime.datetime.now()}')
+        embed.set_footer(text='If no member is mentioned, the message returned will display information about you')
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -326,7 +308,20 @@ class Help:
         embed.description = '**Returns information about the current server**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}serverinfo`', inline=False)
-        embed.set_footer(text=datetime.datetime.now())
+        await ctx.send(embed=embed)
+
+    @help_.command()
+    async def setting(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        embed = discord.Embed()
+        embed.title = f'Procbot | {p}setting'
+        embed.description = '**Allows you to change various things related to the bot**'
+        embed.colour = 0x0000ff
+        embed.add_field(name='Usage', value=f'`{p}setting <option> <argument>`', inline=False)
+        embed.add_field(name='Example', value=f'`{p}setting prefix -`', inline=False)
+        embed.set_footer(text='Using the command with no arguments returns the options that can be changed.')
         await ctx.send(embed=embed)
 
 def setup(bot):

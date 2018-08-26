@@ -25,9 +25,9 @@ class Procbot(commands.Bot):
     # Gets the activity type of the specified member;
     # Called in a cog via self.bot.get_at(member)
     def get_at(self, member):
-        # If the member has no activity, return
+        # If the member has no activity, pass
         if member.activity is None:
-            return
+            pass
         else:
             # If the activity type is unknown, return an empty string
             if member.activity.type == ActivityType.unknown:
@@ -116,9 +116,9 @@ class Procbot(commands.Bot):
     # Updates experience data for the specified user;
     # Called in on_message
     async def update_data(self, user_xp, user):
-        # If the user is a bot, return
+        # If the user is a bot, pass
         if user.bot:
-            return
+            pass
 
         # Otherwise, create an empty dict for the user;
         # Experience is set to 0 and level is set to 1;
@@ -193,7 +193,7 @@ class Procbot(commands.Bot):
             await self.process_commands(message)
             return
 
-        # Otherwise, run experience and log-related functions
+        # Otherwise, run experience, prefix and log-related functions
         else:
             # Open xp.json in read mode
             with open('xp.json', 'r') as fp:
@@ -221,16 +221,41 @@ class Procbot(commands.Bot):
                 # Write any file changes to xp.json
                 json.dump(xp, fp, indent=4)
 
+            # Open guilds.json in read mode
+            with open('guilds.json', 'r') as fp:
+                guilds = json.load(fp)
+
+            # If the guild's ID isn't in guilds.json, create an empty dict;
+            # Guild prefix is set to '.';
+            # Default volume is set to 0.5
+            if not str(message.guild.id) in guilds:
+                guilds[str(message.guild.id)] = {}
+                guilds[str(message.guild.id)]['GUILD_PREFIX'] = '.'
+                guilds[str(message.guild.id)]['DEFAULT_VOLUME'] = 0.5
+
+            # Open guilds.json in write mode
+            with open('guilds.json', 'w') as fp:
+                # Write any file changes to guilds.json
+                json.dump(guilds, fp, indent=4)                
+
             # Open mod_logs.json in read mode
             with open('mod_logs.json', 'r') as fp:
                 mod_logs = json.load(fp)
 
+            # If the guild's ID isn't in mod_logs.json, create an empty dict;
+            # Case counts are set to 0
             if not str(message.guild.id) in mod_logs:
                 mod_logs[str(message.guild.id)] = {}
-                mod_logs[str(message.guild.id)]['KICK_CASES'] = 0
-                mod_logs[str(message.guild.id)]['BAN_CASES'] = 0
-                mod_logs[str(message.guild.id)]['MUTE_CASES'] = 0
+                mod_logs[str(message.guild.id)]['KICK_COUNT'] = 0
+                mod_logs[str(message.guild.id)]['BAN_COUNT'] = 0
+                mod_logs[str(message.guild.id)]['MUTE_COUNT'] = 0
 
+            # Open mod_logs.json in write mode
+            with open('mod_logs.json', 'w') as fp:
+                # Write any file changes to mod_logs.json
+                json.dump(mod_logs, fp, indent=4)
+
+            # Process commands
             await self.process_commands(message)
 
     # Processes commands in edited messages
@@ -239,17 +264,12 @@ class Procbot(commands.Bot):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
 
-        # If the current guild isn't in guilds.json, create an empty dict;
-        # Guild prefix is set to '.'
-        if not str(before.guild.id) in guilds:
-            guilds[str(before.guild.id)] = {}
-            guilds[str(before.guild.id)]['GUILD_PREFIX'] = '.'
-
         # If the current guild is in guilds.json, fetch its prefix
         p = guilds[str(before.guild.id)]['GUILD_PREFIX']
 
+        # If the original message was a command, return
         if f'{p}help' or f'{p}kick' or f'{p}ban' or f'{p}mute' or f'{p}unmute' or f'{p}purge' or f'{p}setting' or f'{p}info' or f'{p}profile' or f'{p}serverinfo' or f'{p}load' or f'{p}unload' or f'{p}reload' or f'{p}logout' or f'{p}roll' or f'{p}gay' or f'{p}ping' or f'{p}cat' or f'{p}xp' or f'{p}play' or f'{p}pause' or f'{p}resume' or f'{p}skip' or f'{p}np' or f'{p}playlist' or f'{p}stop' or f'{p}volume' in before.content:
-            # self.process_commands(before) re-runs the recently run command, so return must be used instead
+            # self.process_commands(before) re-invokes the recently invoked command, so return must be used instead
             return
         # If the original message wasn't a command, process the commands in the edited message
         else:
@@ -294,10 +314,12 @@ class Procbot(commands.Bot):
             guilds = json.load(fp)
 
         # If the guild's ID isn't in guilds.json, create an empty dict;
-        # Guild prefix is set to '.'
+        # Guild prefix is set to '.';
+        # Default volume is set to 0.5
         if not str(guild.id) in guilds:
             guilds[str(guild.id)] = {}
             guilds[str(guild.id)]['GUILD_PREFIX'] = '.'
+            guilds[str(guild.id)]['DEFAULT_VOLUME'] = 0.5
 
         # Open guilds.json in write mode
         with open('guilds.json', 'w') as fp:
@@ -312,9 +334,9 @@ class Procbot(commands.Bot):
         # Case counts are set to 0
         if not str(guild.id) in mod_logs:
             mod_logs[str(guild.id)] = {}
-            mod_logs[str(guild.id)]['KICK_CASES'] = 0
-            mod_logs[str(guild.id)]['BAN_CASES'] = 0
-            mod_logs[str(guild.id)]['MUTE_CASES'] = 0
+            mod_logs[str(guild.id)]['KICK_COUNT'] = 0
+            mod_logs[str(guild.id)]['BAN_COUNT'] = 0
+            mod_logs[str(guild.id)]['MUTE_COUNT'] = 0
 
         # Open mod_logs.json in write mode
         with open('mod_logs.json', 'w') as fp:
@@ -322,9 +344,9 @@ class Procbot(commands.Bot):
             json.dump(mod_logs, fp, indent=4)
 
     # Called whenever the bot has been removed from a guild;
-    # Updates the server count
+    # Updates the bot's visible guild count
     async def on_guild_remove(self, guild):
-        # Update server count
+        # Update guild count
         if len(self.guilds) == 1:
             await self.change_presence(activity=discord.Game(name='with 1 server!'))
         else:
@@ -333,9 +355,9 @@ class Procbot(commands.Bot):
     # Called whenever a member has joined a guild;
     # Finds a logs channel in the guild and logs that the member has joined
     async def on_member_join(self, member):
-        # If the member's ID is the bot's user ID, return
+        # If the member's ID is the bot's user ID, pass
         if member.id == self.user.id:
-            return
+            pass
 
         # Otherwise, log that the member has joined
         else:
@@ -372,9 +394,9 @@ class Procbot(commands.Bot):
     # Called whenever a member has left a guild;
     # Finds a logs channel and logs that the member has left
     async def on_member_remove(self, member):
-        # If the member's ID is the bot's user ID, return
+        # If the member's ID is the bot's user ID, pass
         if member.id == self.user.id:
-            return
+            pass
 
         # Otherwise, log that the member has left
         else:
@@ -390,8 +412,8 @@ class Procbot(commands.Bot):
                 }
 
                 # Create the 'Information' category and the 'welcome' channel
-                category = await member.guild.create_category_channel('Information', overwrites, 'Category for information-based channels.')
-                channel = await member.guild.create_text_channel('welcome', category, 'Channel for welcome and leave messages.')
+                category = await member.guild.create_category(name='Information', overwrites=overwrites, reason='Category for information-based channels.')
+                channel = await member.guild.create_text_channel(name='welcome', overwrites=overwrites, category=category, reason='Channel for welcome and leave messages.')
             
             # Send the leave message
             await channel.send(f'We\'re sad to see you leave, **{member.name}**... :cry:')
@@ -416,11 +438,11 @@ class Procbot(commands.Bot):
             }
 
             # Create the 'Logs' category and the 'mod-logs' channel
-            category = member.guild.create_category_channel('Logs', overwrites, 'Category for log-based channels.')
-            channel = member.guild.create_text_channel('mod-logs', category, 'Channel for moderation logs.')
+            category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
+            channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
 
         # Fetch the number of kick cases
-        case = mod_logs[str(member.guild.id)]['KICK_CASES']
+        case = mod_logs[str(member.guild.id)]['KICK_COUNT']
 
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
@@ -451,11 +473,11 @@ class Procbot(commands.Bot):
             }
 
             # Create the 'Logs' category and the 'mod-logs' channel
-            category = member.guild.create_category_channel('Logs', overwrites, 'Category for log-based channels.')
-            channel = member.guild.create_text_channel('mod-logs', overwrites, category, 'Channel for moderation logs.')
+            category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
+            channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
 
         # Fetch the number of ban cases
-        case = mod_logs[str(member.guild.id)]['BAN_CASES']
+        case = mod_logs[str(member.guild.id)]['BAN_COUNT']
 
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
@@ -486,11 +508,11 @@ class Procbot(commands.Bot):
             }
 
             # Create the 'Logs' category and the 'mod-logs' channel
-            category = member.guild.create_category_channel('Logs', overwrites, 'Category for log-based channels.')
-            channel = member.guild.create_text_channel('mod-logs', overwrites, category, 'Channel for moderation logs.')
+            category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
+            channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
 
         # Fetch the number of mute cases
-        case = mod_logs[str(member.guild.id)]['MUTE_CASES']
+        case = mod_logs[str(member.guild.id)]['MUTE_COUNT']
         
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
@@ -501,7 +523,7 @@ class Procbot(commands.Bot):
         embed.add_field(name='Reason', value=str(reason), inline=False)
         embed.add_field(name='Muted By', value=str(author), inline=False)
         embed.set_footer(text=datetime.datetime.now())
-        await channel.send(embed=embed)               
+        await channel.send(embed=embed)           
 
     # Global command error handler;
     # Called whenever an error is raised in a command;
@@ -534,7 +556,6 @@ class Procbot(commands.Bot):
             embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
             print(f'Exception in guild {str(ctx.guild)}, command {ctx.command}:\n{error}')
             await ctx.send(embed=embed)
-            return
 
     # Global event error handler;
     # Called whenever an error is raised in an event
@@ -542,7 +563,7 @@ class Procbot(commands.Bot):
         print(f'Ignoring exception in event {event}:')
         print(traceback.format_exc())
 
-    # Runs the bot
+    # Login
     def initialise(self):
         # Open settings.json in read mode
         with open('settings.json', 'r') as fp:
@@ -570,7 +591,6 @@ def get_prefix(bot, message):
         # Guild prefix is set to '.'
         if not str(message.guild.id) in guilds:
             guilds[str(message.guild.id)] = {}
-            # guilds[str(message.guild.id)]['DEFAULT_PREFIX'] = '.'
             guilds[str(message.guild.id)]['GUILD_PREFIX'] = '.'
 
         # Open guilds.json in write mode
