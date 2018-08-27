@@ -105,7 +105,8 @@ class MusicPlayer:
                 async with timeout(300):
                     source = await self.queue.get()
             except asyncio.TimeoutError:
-                return self.destroy(self._guild)
+                self.end(self._guild)
+                return
 
             if not isinstance(source, YTDLSource):
                 try:
@@ -134,8 +135,8 @@ class MusicPlayer:
             except discord.HTTPException:
                 pass
 
-    def destroy(self, guild):
-        return self.bot.loop.create_task(self._cog.cleanup(guild))
+    def end(self, guild):
+        return self.bot.loop.create_task(self._cog.stop(guild))
 
 class Music:
     __slots__ = ('bot', 'players')
@@ -143,7 +144,7 @@ class Music:
         self.bot = bot
         self.players = {}
 
-    async def cleanup(self, guild):
+    async def stop(self, guild):
         try:
             await guild.voice_client.disconnect()
             return
@@ -155,11 +156,6 @@ class Music:
         except KeyError:
             pass
 
-    async def __local_check(self, ctx):
-        if not ctx.guild:
-            raise commands.NoPrivateMessage
-        return True
-
     async def __error(self, ctx, error):
         if isinstance(error, commands.NoPrivateMessage):
             try:
@@ -168,7 +164,10 @@ class Music:
                 pass
 
         elif isinstance(error, InvalidVoiceChannel):
-            await ctx.send(':grey_exclamation: Please join a valid voice channel.')
+            await ctx.send(error)
+
+        elif isinstance(error, VoiceConnectionError):
+            await ctx.send(error)
 
         elif isinstance(error, commands.UserInputError):
             embed = discord.Embed()
@@ -176,7 +175,7 @@ class Music:
             embed.description = f'```{error}```'
             embed.colour = 0xff0000
             embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild {str(ctx.guild)}, command {str(ctx.command)}:\n{error}')
+            print(f'Exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':\n{error}')
             await ctx.send(embed=embed)
 
         elif isinstance(error, commands.CommandInvokeError):
@@ -185,11 +184,11 @@ class Music:
             embed.description = f'```{error}```'
             embed.colour = 0xff0000
             embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild {str(ctx.guild)}, command {str(ctx.command)}:\n{error}')
+            print(f'Exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':\n{error}')
             await ctx.send(embed=embed)
 
         else:
-            print(f'Ignoring exception in guild {str(ctx.guild)}, command {str(ctx.command)}:', file=sys.stderr)
+            print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     def get_player(self, ctx):
@@ -353,7 +352,7 @@ class Music:
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         else:
-            await self.cleanup(ctx.guild)
+            await self.stop(ctx.guild)
             await ctx.send(f':information_source: Music stopped by **{ctx.author.name}**.')
 
     @commands.command(name='volume')

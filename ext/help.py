@@ -21,13 +21,25 @@ class Help:
             embed.title = 'Procbot'
             embed.description = f'Get more information by using `{p}help <command>`'
             embed.colour = 0x0000ff
-            embed.add_field(name='Music', value=f'`{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
+            embed.add_field(name='Music', value=f' `{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
             embed.add_field(name='Random', value=f'`{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp`', inline=False)
-            embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
-            embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
-            embed.add_field(name='Other', value=f'`{p}setting`', inline=False)
+            embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban` `{p}setting`', inline=False)
+            embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
             await ctx.send(embed=embed)
+
+    @help_.command()
+    async def connect(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        embed = discord.Embed()
+        embed.title = f'Procbot | {p}connect'
+        embed.description = '**Connects to the specified voice channel**'
+        embed.colour = 0x0000ff
+        embed.add_field(name='Usage', value=f'`{p}connect <voice channel>`', inline=False)
+        embed.add_field(name='Example', value=f'`{p}connect Music`', inline=False)
+        await ctx.send(embed=embed)
 
     @help_.command()
     async def play(self, ctx):
@@ -319,9 +331,9 @@ class Help:
         embed.title = f'Procbot | {p}setting'
         embed.description = '**Allows you to change various things related to the bot**'
         embed.colour = 0x0000ff
-        embed.add_field(name='Usage', value=f'`{p}setting <option> <argument>`', inline=False)
+        embed.add_field(name='Usage', value=f'`{p}setting <subcommand> <argument>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}setting prefix -`', inline=False)
-        embed.set_footer(text='Using the command with no arguments returns the options that can be changed.')
+        embed.set_footer(text='Using the command with no arguments returns the subcommands that can be used.')
         await ctx.send(embed=embed)
 
 def setup(bot):
