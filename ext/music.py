@@ -146,6 +146,7 @@ class Music:
     async def cleanup(self, guild):
         try:
             await guild.voice_client.disconnect()
+            return
         except AttributeError:
             pass
 
