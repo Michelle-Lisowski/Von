@@ -93,7 +93,7 @@ class MusicPlayer:
         self.next = asyncio.Event()
 
         self.np = None
-        self.volume = guilds[str(ctx.guild.id)]['DEFAULT_VOLUME']
+        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
         self.current = None
         ctx.bot.loop.create_task(self.player_loop())
 
@@ -122,7 +122,7 @@ class MusicPlayer:
             source.volume = self.volume
             self.current = source
 
-            self._guild.voice_client.play(source, after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
+            self._guild.voice_client.play(source, after=lambda n: self.bot.loop.call_soon_threadsafe(self.next.set))
             self.np = await self._channel.send(f':musical_note: Now playing: **{source.title}**.')
             await self.next.wait()
 
@@ -254,7 +254,7 @@ class Music:
             vc.pause()
             await ctx.send(f':pause: Song paused by **{ctx.author.name}**.')
 
-    @commands.command(name='resume')
+    @commands.command(name='resume', aliases=['unpause'])
     @commands.guild_only()
     async def resume_(self, ctx):
         vc = ctx.voice_client
@@ -298,7 +298,7 @@ class Music:
             if (thumbs_up.count - 1) == 0 and (thumbs_down.count - 1) == 0:
                 await ctx.send(':information_source: Vote ended and song continued.')
                 await cache_msg.clear_reactions()
-            elif not thumbs_up.count >= thumbs_down.count:
+            elif not thumbs_up.count > thumbs_down.count:
                 await ctx.send(':information_source: Vote ended and song continued.')
                 await cache_msg.clear_reactions()                
             else:
@@ -306,9 +306,9 @@ class Music:
                 await ctx.send(':information_source: Vote ended and song skipped.')
                 await cache_msg.clear_reactions()                
 
-    @commands.command(name='playlist')
+    @commands.command(name='playlist', aliases=['queue', 'upcoming'])
     @commands.guild_only()
-    async def queue_info(self, ctx):
+    async def playlist_(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
@@ -319,14 +319,14 @@ class Music:
                 return
 
             upcoming = list(itertools.islice(player.queue._queue, 0, 5))
-            fmt = '\n'.join(f"**{_['title']}**" for _ in upcoming)
+            fmt = '\n'.join(f"**{u['title']}**" for u in upcoming)
             embed = discord.Embed()
             embed.title = f'Upcoming - Next {len(upcoming)} Songs'
             embed.description = fmt
             embed.colour = 0x0000ff
             await ctx.send(embed=embed)
 
-    @commands.command(name='np')
+    @commands.command(name='np', aliases=['now_playing'])
     @commands.guild_only()
     async def now_playing_(self, ctx):
         vc = ctx.voice_client

@@ -19,6 +19,7 @@ class GuildSettings:
 
     @setting.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
     async def prefix(self, ctx, new_prefix: str = None):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
@@ -43,6 +44,7 @@ class GuildSettings:
 
     @setting.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
     async def default_volume(self, ctx, new_volume: int = None):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
