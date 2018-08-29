@@ -4,6 +4,8 @@
 import asyncio
 import json
 import random
+import sys
+import traceback
 
 import aiohttp
 import discord
@@ -14,6 +16,20 @@ from src.locations import FORTNITE_LOCATIONS
 class Random:
     def __init__(self, bot):
         self.bot = bot
+
+    async def __error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            if str(ctx.command) == 'roll':
+                await ctx.send(':x: Please specify a **whole number** of sides.')
+            elif str(ctx.command) == 'gay' or 'xp':
+                await ctx.send(':x: I could not find that member.')
+
+        elif isinstance(error, commands.CommandInvokeError):
+            await ctx.send(':x: Fetching a picture of a cat failed.')
+
+        else:
+            print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)            
 
     @commands.command()
     async def roll(self, ctx, number: int = None):

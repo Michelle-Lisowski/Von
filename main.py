@@ -549,13 +549,7 @@ class Procbot(commands.Bot):
 
         # Otherwise, send the error message
         else:
-            embed = discord.Embed()
-            embed.title = ':x: Error!'
-            embed.description = f'```{error}```'
-            embed.colour = 0xff0000
-            embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':\n{error}')
-            await ctx.send(embed=embed)
+            await ctx.send(f':x: Error: `{error}`')
 
     # Global event error handler;
     # Called whenever an error is raised in an event

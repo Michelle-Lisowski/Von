@@ -163,29 +163,17 @@ class Music:
             except discord.HTTPException:
                 pass
 
+        elif isinstance(error, commands.BadArgument):
+            if str(ctx.command) == 'connect':
+                await ctx.send(':x: I could not find that voice channel.')
+            if str(ctx.command) == 'volume':
+                await ctx.send(':x: Please specify a **whole number** for the volume.')
+
         elif isinstance(error, InvalidVoiceChannel):
             await ctx.send(error)
 
         elif isinstance(error, VoiceConnectionError):
             await ctx.send(error)
-
-        elif isinstance(error, commands.UserInputError):
-            embed = discord.Embed()
-            embed.title = ':x: Error!'
-            embed.description = f'```{error}```'
-            embed.colour = 0xff0000
-            embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':\n{error}')
-            await ctx.send(embed=embed)
-
-        elif isinstance(error, commands.CommandInvokeError):
-            embed = discord.Embed()
-            embed.title = ':x: Error!'
-            embed.description = f'```{error}```'
-            embed.colour = 0xff0000
-            embed.set_footer(text=f'This will be logged | {datetime.datetime.now()}')
-            print(f'Exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':\n{error}')
-            await ctx.send(embed=embed)
 
         else:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)

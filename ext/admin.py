@@ -3,13 +3,36 @@
 
 import datetime
 import json
+import sys
+import traceback
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandInvokeError
 
 class Administration:
     def __init__(self, bot):
         self.bot = bot
+
+    async def __error(self, ctx, error):
+        if isinstance(error, commands.NoPrivateMessage):
+            try:
+                await ctx.send(':x: This command can\'t be used in private messages.')
+            except discord.HTTPException:
+                pass
+
+        elif isinstance(error, commands.CheckFailure):
+            if str(ctx.command) == 'kick':
+                await ctx.send(':no_entry_sign: You require the `Kick Members` permission to use this command.')
+            elif str(ctx.command) == 'ban':
+                await ctx.send(':no_entry_sign: You require the `Ban Members` permission to use this command.')
+
+        elif isinstance(error, commands.CommandInvokeError):
+            await ctx.send(':x: I require the `Manage Channels` permission to create a channel and log this case.')
+
+        else:
+            print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     @commands.command()
     @commands.guild_only()
@@ -21,9 +44,9 @@ class Administration:
         if member is None:
             await ctx.send(':grey_exclamation: Please mention a member to kick.')
         elif member.id == ctx.author.id:
-            await ctx.send(':no_entry_sign: Why would you want to kick yourself?')
+            await ctx.send(':grey_exclamation: Why would you want to kick yourself?')
         elif member.id == self.bot.user.id:
-            await ctx.send(':no_entry_sign: Why would you want to kick me? I can\'t kick myself anyway.')
+            await ctx.send(':grey_exclamation: Why would you want to kick me? I can\'t kick myself anyway.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')
         else:
@@ -56,9 +79,9 @@ class Administration:
         if member is None:
             await ctx.send(':grey_exclamation: Please mention a member to ban.')
         elif member.id == ctx.author.id:
-            await ctx.send(':no_entry_sign: Why would you want to ban yourself?')
+            await ctx.send(':grey_exclamation: Why would you want to ban yourself?')
         elif member.id == self.bot.user.id:
-            await ctx.send(':no_entry_sign: Why would you want to ban me? I can\'t ban myself anyway.')
+            await ctx.send(':grey_exclamation: Why would you want to ban me? I can\'t ban myself anyway.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role!')
         else:
