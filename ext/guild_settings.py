@@ -20,7 +20,10 @@ class GuildSettings:
                 pass
 
         elif isinstance(error, commands.CheckFailure):
-            await ctx.send(':x: You require the `Manage Messages` permission to use this command.')
+            await ctx.send(':x: You require the `Manage Server` permission to use this command.')
+
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(':x: Please specify a **whole number** for the new default volume.')
 
         else:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
@@ -35,7 +38,7 @@ class GuildSettings:
 
     @setting.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_server=True)
+    @commands.has_permissions(manage_guild=True)
     async def prefix(self, ctx, new_prefix: str = None):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
@@ -44,14 +47,16 @@ class GuildSettings:
             if new_prefix is None:
                 await ctx.send(f":information_source: Current server prefix: **{guilds[str(ctx.guild.id)]['GUILD_PREFIX']}**")
             else:
-                guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = {}
+                # guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = {}
+                del guilds[str(ctx.guild.id)]['GUILD_PREFIX']
                 guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = new_prefix
                 await ctx.send(f":information_source: New server prefix: **{new_prefix}**")
         else:
             if new_prefix is None:
                 await ctx.send(':information_source: Current server prefix: **.**')
             else:
-                guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = {}
+                # guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = {}
+                guilds[str(ctx.guild.id)] = {}
                 guilds[str(ctx.guild.id)]['GUILD_PREFIX'] = new_prefix
                 await ctx.send(f":information_source: New server prefix: **{new_prefix}**")
 
@@ -60,7 +65,7 @@ class GuildSettings:
 
     @setting.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_server=True)
+    @commands.has_permissions(manage_guild=True)
     async def default_volume(self, ctx, new_volume: int = None):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
@@ -69,13 +74,15 @@ class GuildSettings:
             if new_volume is None:
                 await ctx.send(f":information_source: Current default volume: **{round(guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] * 100)}%**")
             else:
-                guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] = {}
+                # guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] = {}
+                del guilds[str(ctx.guild.id)]['DEFAULT_VOLUME']
                 guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] = (new_volume / 100)
                 await ctx.send(f":information_source: New default volume: **{new_volume}%**")
         else:
             if new_volume is None:
                 await ctx.send(":information_source: Current default volume: **50%**")
             else:
+                # guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] = {}
                 guilds[str(ctx.guild.id)] = {}
                 guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] = (new_volume / 100)
                 await ctx.send(f":information_source: New default volume: **{new_volume}%**")

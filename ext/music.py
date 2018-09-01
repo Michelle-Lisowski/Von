@@ -101,12 +101,14 @@ class MusicPlayer:
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             self.next.clear()
+            if not self._guild.voice_client:
+                return
+
             try:
                 async with timeout(300):
                     source = await self.queue.get()
             except asyncio.TimeoutError:
                 self.end(self._guild)
-                return
 
             if not isinstance(source, YTDLSource):
                 try:
@@ -135,8 +137,13 @@ class MusicPlayer:
             except discord.HTTPException:
                 pass
 
+            if self.current is None and len(self.queue._queue) == 0:
+                await self._guild.voice_client.disconnect()
+                await self._channel.send(':information_source: End of the playlist.')
+
     def end(self, guild):
-        return self.bot.loop.create_task(self._cog.stop(guild))
+        self.bot.loop.create_task(self._cog.stop(guild))
+        return
 
 class Music:
     __slots__ = ('bot', 'players')
@@ -145,11 +152,10 @@ class Music:
         self.players = {}
 
     async def stop(self, guild):
-        try:
-            await guild.voice_client.disconnect()
+        if not guild.voice_client:
             return
-        except AttributeError:
-            pass
+        else:
+            await guild.voice_client.disconnect()
 
         try:
             del self.players[str(guild.id)]
@@ -166,7 +172,7 @@ class Music:
         elif isinstance(error, commands.BadArgument):
             if str(ctx.command) == 'connect':
                 await ctx.send(':x: I could not find that voice channel.')
-            if str(ctx.command) == 'volume':
+            elif str(ctx.command) == 'volume':
                 await ctx.send(':x: Please specify a **whole number** for the volume.')
 
         elif isinstance(error, InvalidVoiceChannel):
@@ -174,6 +180,9 @@ class Music:
 
         elif isinstance(error, VoiceConnectionError):
             await ctx.send(error)
+
+        elif isinstance(error, AttributeError):
+            print(f'Missing voice client in guild \'{str(ctx.guild)}\'')
 
         else:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
