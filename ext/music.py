@@ -138,8 +138,9 @@ class MusicPlayer:
                 pass
 
             if self.current is None and len(self.queue._queue) == 0:
-                await self._guild.voice_client.disconnect()
+                self.end(self._guild)
                 await self._channel.send(':information_source: End of the playlist.')
+                return
 
     def end(self, guild):
         self.bot.loop.create_task(self._cog.stop(guild))
