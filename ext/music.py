@@ -93,8 +93,8 @@ class MusicPlayer:
         self.next = asyncio.Event()
 
         self.np = None
-        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
         self.current = None
+        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
         ctx.bot.loop.create_task(self.player_loop())
 
     async def player_loop(self):
