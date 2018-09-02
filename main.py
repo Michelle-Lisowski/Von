@@ -20,7 +20,7 @@ from src.colours import DISCORD_COLOURS
 # Functions in this class can easily be used in cogs without imports;
 # For example, my_function in this class can be called in a cog via self.bot.my_function()
 class Procbot(commands.Bot):
-    '''Custom `discord.ext.commands.Bot`-based class'''
+    '''Custom `discord.ext.commands.Bot`-based class.'''
 
     # Gets the activity type of the specified member;
     # Called in a cog via self.bot.get_at(member)
@@ -131,9 +131,9 @@ class Procbot(commands.Bot):
     # Adds the specified amount of experience to the specified user;
     # Called in on_message
     async def add_experience(self, user_xp, user, xp):
-        # If the user is a bot, return
+        # If the user is a bot, pass
         if user.bot:
-            return
+            pass
 
         # Otherwise, add the specified amount of experience to the specified user
         else:
@@ -143,9 +143,9 @@ class Procbot(commands.Bot):
     # Called in on_message to check if the user has levelled up or not;
     # If the user has levelled up, a message is sent to the channel saying so;
     async def level_up(self, user_xp, user, channel):
-        # If the user is a bot, return
+        # If the user is a bot, pass
         if user.bot:
-            return
+            pass
 
         # Otherwise, check for a level up
         else:
@@ -172,26 +172,29 @@ class Procbot(commands.Bot):
         print(f'ID: {self.user.id}')
 
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Game(name=f'with 1 server!'))
+            await self.change_presence(activity=discord.Game('with 1 server!'))
         else:
-            await self.change_presence(activity=discord.Game(name=f'with {len(self.guilds)} servers!'))
+            await self.change_presence(activity=discord.Game(f'with {len(self.guilds)} servers!'))
 
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
         print('Procbot has reawakened.')
         print(f'Name: {str(self.user)}')
         print(f'ID: {self.user.id}')
-        await self.change_presence(activity=discord.Game(name=f'with {len(self.guilds)} servers!'))
+
+        if len(self.guilds) == 1:
+            await self.change_presence(activity=discord.Game('with 1 server!'))
+        else:
+            await self.change_presence(activity=discord.Game(f'with {len(self.guilds)} servers!'))
 
     # Do stuff whenever a message is sent;
     # This includes experience-related functions;
     # After everything has been called, process_commands is called;
     # If process_commands is not called, the bot won't respond to commands
     async def on_message(self, message):
-        # If the message is from private messages, process commands and return
+        # If the message is from private messages, only process commands
         if not message.guild:
             await self.process_commands(message)
-            return
 
         # Otherwise, run experience, prefix and log-related functions
         else:
@@ -267,10 +270,10 @@ class Procbot(commands.Bot):
         # If the current guild is in guilds.json, fetch its prefix
         p = guilds[str(before.guild.id)]['GUILD_PREFIX']
 
-        # If the original message was a command, return
+        # If the original message was a command, pass
         if f'{p}help' or f'{p}kick' or f'{p}ban' or f'{p}mute' or f'{p}unmute' or f'{p}purge' or f'{p}setting' or f'{p}info' or f'{p}profile' or f'{p}serverinfo' or f'{p}load' or f'{p}unload' or f'{p}reload' or f'{p}logout' or f'{p}roll' or f'{p}gay' or f'{p}ping' or f'{p}cat' or f'{p}xp' or f'{p}play' or f'{p}pause' or f'{p}resume' or f'{p}skip' or f'{p}np' or f'{p}playlist' or f'{p}stop' or f'{p}volume' in before.content:
-            # self.process_commands(before) re-invokes the recently invoked command, so return must be used instead
-            return
+            # self.process_commands(before) re-invokes the recently invoked command, so use pass instead
+            pass
         # If the original message wasn't a command, process the commands in the edited message
         else:
             await self.process_commands(after)
@@ -285,13 +288,13 @@ class Procbot(commands.Bot):
         print(f'Invocation - Command \'{ctx.command}\' from {str(ctx.author)}')
 
     # Called whenever the bot has joined a guild;
-    # Does things such as creating the 'Muted' role and updating the server count
+    # Does things such as creating the 'Muted' role and updating the guild count
     async def on_guild_join(self, guild):
-        # Update server count
+        # Update guild count
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Game(name='with 1 server!'))
+            await self.change_presence(activity=discord.Game('with 1 server!'))
         else:
-            await self.change_presence(activity=discord.Game(name=f'with {len(self.guilds)} servers!'))
+            await self.change_presence(activity=discord.Game(f'with {len(self.guilds)} servers!'))
 
         # Get a random role colour
         role_colour = random.choice(DISCORD_COLOURS)
@@ -348,9 +351,9 @@ class Procbot(commands.Bot):
     async def on_guild_remove(self, guild):
         # Update guild count
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Game(name='with 1 server!'))
+            await self.change_presence(activity=discord.Game('with 1 server!'))
         else:
-            await self.change_presence(activity=discord.Game(name=f'with {len(self.guilds)} servers!'))
+            await self.change_presence(activity=discord.Game(f'with {len(self.guilds)} servers!'))
 
     # Called whenever a member has joined a guild;
     # Finds a logs channel in the guild and logs that the member has joined
@@ -364,17 +367,28 @@ class Procbot(commands.Bot):
             # Find the 'welcome' channel
             channel = utils.get(member.guild.text_channels, name='welcome')
 
-            # If the channel is non-existent, create it
+            # Find the 'Staff' role
+            staff_role = utils.get(member.guild.roles, name='Staff')
+
+            # Get a random role colour
+            role_colour = random.choice(DISCORD_COLOURS)
+
+            # If the 'Staff' role is non-existent, create it
+            if staff_role is None:
+                staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+
+            # If the 'welcome' channel is non-existent, create it
             if channel is None:
-                # Set channel overwrites for @everyone and the bot
+                # Set channel overwrites for @everyone, the bot, and the 'Staff' role
                 overwrites = {
                     member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                    member.guild.me: discord.PermissionOverwrite(send_messages=True)
+                    member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                    staff_role: discord.PermissionOverwrite(send_messages=True)
                 }
 
                 # Create the 'Information' category and the 'welcome' channel
-                category = await member.guild.create_category_channel('Information', overwrites, 'Category for information-based channels.')
-                channel = await member.guild.create_text_channel('welcome', category, 'Channel for welcome and leave messages.')
+                category = await member.guild.create_category_channel(name='Information', overwrites=overwrites, reason='Category for information-based channels.')
+                channel = await member.guild.create_text_channel(name='welcome', overwrites=overwrites, category=category, reason='Channel for welcome and leave messages.')
 
             # Send the join message
             await channel.send(f'Welcome to the server, **{member.name}**! We\'re so happy to see you here! :tada:')
@@ -403,12 +417,23 @@ class Procbot(commands.Bot):
             # Find the 'welcome' channel
             channel = utils.get(member.guild.text_channels, name='welcome')
 
+            # Find the 'Staff' role
+            staff_role = utils.get(member.guild.roles, name='Staff')
+
+            # Get a random role colour
+            role_colour = random.choice(DISCORD_COLOURS)
+
+            # If the 'Staff' role is non-existent, create it
+            if staff_role is None:
+                staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+
             # If the channel is non-existent, create it
             if channel is None:
-                # Set channel overwrites for @everyone and the bot
+                # Set channel overwrites for @everyone, the bot, and the 'Staff' role
                 overwrites = {
                     member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                    member.guild.me: discord.PermissionOverwrite(send_messages=True)
+                    member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                    staff_role: discord.PermissionOverwrite(send_messages=True)
                 }
 
                 # Create the 'Information' category and the 'welcome' channel
@@ -429,12 +454,23 @@ class Procbot(commands.Bot):
         # Find the 'mod-logs' channel
         channel = utils.get(member.guild.text_channels, name='mod-logs')
 
+        # Find the 'Staff' role
+        staff_role = utils.get(member.guild.roles, name='Staff')
+
+        # Get a random role colour
+        role_colour = random.choice(DISCORD_COLOURS)
+
+        # If the 'Staff' role is non-existent, create it
+        if staff_role is None:
+            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+
         # If it doesn't exist, create it
         if channel is None:
-            # Set channel overwrites for @everyone and the bot
+            # Set channel overwrites for @everyone, the bot, and the 'Staff' role
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                member.guild.me: discord.PermissionOverwrite(send_messages=True)
+                member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                staff_role: discord.PermissionOverwrite(send_messages=True)
             }
 
             # Create the 'Logs' category and the 'mod-logs' channel
@@ -464,12 +500,23 @@ class Procbot(commands.Bot):
         # Find the 'mod-logs' channel
         channel = utils.get(member.guild.text_channels, name='mod-logs')
 
+        # Find the 'Staff' role
+        staff_role = utils.get(member.guild.roles, name='Staff')
+
+        # Get a random role colour
+        role_colour = random.choice(DISCORD_COLOURS)
+
+        # If the 'Staff' role is non-existent, create it
+        if staff_role is None:
+            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+
         # If it doesn't exist, create it
         if channel is None:
-            # Set channel overwrites for @everyone and the bot
+            # Set channel overwrites for @everyone, the bot, and the 'Staff' role
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                member.guild.me: discord.PermissionOverwrite(send_messages=True)
+                member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                staff_role: discord.PermissionOverwrite(send_messages=True)
             }
 
             # Create the 'Logs' category and the 'mod-logs' channel
@@ -499,12 +546,23 @@ class Procbot(commands.Bot):
         # Find the 'mod-logs' channel
         channel = utils.get(member.guild.text_channels, name='mod-logs')
 
+        # Find the 'Staff' role
+        staff_role = utils.get(member.guild.roles, name='Staff')
+
+        # Get a random role colour
+        role_colour = random.choice(DISCORD_COLOURS)
+
+        # If the 'Staff' role is non-existent, create it
+        if staff_role is None:
+            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+
         # If it doesn't exist, create it
         if channel is None:
             # Set channel overwrites for @everyone and the bot
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                member.guild.me: discord.PermissionOverwrite(send_messages=True)
+                member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                staff_role: discord.PermissionOverwrite(send_messages=True)
             }
 
             # Create the 'Logs' category and the 'mod-logs' channel

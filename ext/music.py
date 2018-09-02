@@ -95,7 +95,7 @@ class MusicPlayer:
         self.np = None
         self.current = None
         self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
-        ctx.bot.loop.create_task(self.player_loop())
+        self.bot.loop.create_task(self.player_loop())
 
     async def player_loop(self):
         await self.bot.wait_until_ready()
