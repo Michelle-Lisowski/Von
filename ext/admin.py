@@ -7,8 +7,14 @@ import sys
 import traceback
 
 import discord
+from discord import utils
 from discord.ext import commands
-from discord.ext.commands import CommandInvokeError
+
+class MissingStaffRole(commands.CommandError):
+    pass
+
+class RoleHierarchyError(commands.CommandError):
+    pass
 
 class Administration:
     def __init__(self, bot):
@@ -21,11 +27,11 @@ class Administration:
             except discord.HTTPException:
                 pass
 
-        elif isinstance(error, commands.CheckFailure):
-            if str(ctx.command) == 'kick':
-                await ctx.send(':no_entry_sign: You require the `Kick Members` permission to use this command.')
-            elif str(ctx.command) == 'ban':
-                await ctx.send(':no_entry_sign: You require the `Ban Members` permission to use this command.')
+        elif isinstance(error, MissingStaffRole):
+            await ctx.send(':no_entry_sign: You require the `Staff` role to use this command.')
+
+        elif isinstance(error, RoleHierarchyError):
+            await ctx.send(error)
 
         elif isinstance(error, commands.CommandInvokeError):
             await ctx.send(':x: I require the `Manage Channels` permission to create a channel and log this case.')
@@ -36,8 +42,8 @@ class Administration:
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None, *, reason: str = None):
+        staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
@@ -47,8 +53,14 @@ class Administration:
             await ctx.send(':grey_exclamation: Why would you want to kick yourself?')
         elif member.id == self.bot.user.id:
             await ctx.send(':grey_exclamation: Why would you want to kick me? I can\'t kick myself anyway.')
+        elif staff_role in member.roles:
+            await ctx.send(':no_entry_sign: You can\'t kick someone who also has the `Staff` role.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')
+        elif member.top_role >= ctx.guild.me.top_role:
+            raise RoleHierarchyError(':x: The mentioned member has a role higher than or equal to my role.')
+        elif not staff_role in ctx.author.roles:
+            raise MissingStaffRole
         else:
             if reason is None:
                 reason = 'No reason given.'
@@ -71,8 +83,8 @@ class Administration:
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member = None, *, reason: str = None):
+        staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
@@ -82,8 +94,14 @@ class Administration:
             await ctx.send(':grey_exclamation: Why would you want to ban yourself?')
         elif member.id == self.bot.user.id:
             await ctx.send(':grey_exclamation: Why would you want to ban me? I can\'t ban myself anyway.')
+        elif staff_role in member.roles:
+            await ctx.send(':no_entry_sign: You can\'t ban someone who also has the `Staff` role.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role!')
+            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')
+        elif member.top_role >= ctx.guild.me.top_role:
+            raise RoleHierarchyError(':x: The mentioned member has a role higher than or equal to my role.')
+        elif not staff_role in ctx.author.roles:
+            raise MissingStaffRole
         else:
             if reason is None:
                 reason = 'No reason given.'

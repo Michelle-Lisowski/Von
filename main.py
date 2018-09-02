@@ -304,14 +304,14 @@ class Procbot(commands.Bot):
 
         # If the 'Muted' role is non-existent, create it
         if role is None:
-            role = await guild.create_role(name='Muted', colour=role_colour, hoist=True, reason='Role created for mute function')
+            role = await guild.create_role(name='Muted', colour=role_colour, hoist=True, reason='Role for mute command')
 
         # Find the 'Staff' role
         staff_role = utils.get(guild.roles, name='Staff')
 
         # If the 'Staff' role is non-existent, create it
         if staff_role is None:
-            staff_role = await guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff')
+            staff_role = await guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators')
 
         # Find all guild channels
         channels = utils.get(self.get_all_channels(), guild__name=guild.name)
