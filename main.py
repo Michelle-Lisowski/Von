@@ -382,7 +382,7 @@ class Procbot(commands.Bot):
 
             # If the 'Staff' role is non-existent, create it
             if staff_role is None:
-                staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+                staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
             # If the 'welcome' channel is non-existent, create it
             if channel is None:
@@ -432,7 +432,7 @@ class Procbot(commands.Bot):
 
             # If the 'Staff' role is non-existent, create it
             if staff_role is None:
-                staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+                staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
             # If the channel is non-existent, create it
             if channel is None:
@@ -469,7 +469,7 @@ class Procbot(commands.Bot):
 
         # If the 'Staff' role is non-existent, create it
         if staff_role is None:
-            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
         # If it doesn't exist, create it
         if channel is None:
@@ -515,7 +515,7 @@ class Procbot(commands.Bot):
 
         # If the 'Staff' role is non-existent, create it
         if staff_role is None:
-            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
         # If it doesn't exist, create it
         if channel is None:
@@ -561,7 +561,7 @@ class Procbot(commands.Bot):
 
         # If the 'Staff' role is non-existent, create it
         if staff_role is None:
-            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True)
+            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
         # If it doesn't exist, create it
         if channel is None:
