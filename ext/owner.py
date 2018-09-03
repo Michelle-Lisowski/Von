@@ -14,7 +14,7 @@ class Owner:
 
     async def __error(self, ctx, error):
         if isinstance(error, commands.NotOwner):
-            await ctx.send(':x: You must be the owner of me to use this command.')
+            await ctx.send(':no_entry_sign: You must be the owner of me to use this command.')
 
         elif isinstance(error, commands.CommandInvokeError):
             await ctx.send(':x: I could not find that extension.')
