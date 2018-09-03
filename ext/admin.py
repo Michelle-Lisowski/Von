@@ -47,7 +47,9 @@ class Administration:
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
-        if member is None:
+        if not staff_role in ctx.author.roles:
+            raise MissingPermissions  
+        elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to kick.')
         elif member.id == ctx.author.id:
             await ctx.send(':grey_exclamation: Why would you want to kick yourself?')
@@ -56,9 +58,7 @@ class Administration:
         elif staff_role in member.roles:
             await ctx.send(':no_entry_sign: You can\'t kick someone who also has the `Staff` role.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')
-        elif not staff_role in ctx.author.roles:
-            raise MissingPermissions            
+            await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')          
         elif member.top_role >= ctx.guild.me.top_role:
             raise Forbidden
         else:
@@ -87,8 +87,10 @@ class Administration:
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
-
-        if member is None:
+            
+        if not staff_role in ctx.author.roles:
+            raise MissingPermissions
+        elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to ban.')
         elif member.id == ctx.author.id:
             await ctx.send(':grey_exclamation: Why would you want to ban yourself?')
@@ -97,9 +99,7 @@ class Administration:
         elif staff_role in member.roles:
             await ctx.send(':no_entry_sign: You can\'t ban someone who also has the `Staff` role.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')
-        elif not staff_role in ctx.author.roles:
-            raise MissingPermissions           
+            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')           
         elif member.top_role >= ctx.guild.me.top_role:
             raise Forbidden
         else:

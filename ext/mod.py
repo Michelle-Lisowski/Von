@@ -10,6 +10,12 @@ import discord
 from discord import utils
 from discord.ext import commands
 
+class MissingPermissions(commands.CommandError):
+    pass
+
+class Forbidden(commands.CommandError):
+    pass
+
 class Moderation:
     def __init__(self, bot):
         self.bot = bot
@@ -21,8 +27,11 @@ class Moderation:
             except discord.HTTPException:
                 pass
 
-        elif isinstance(error, commands.CheckFailure):
-            await ctx.send(':no_entry_sign: You require the `Manage Messages` permission to use this command.')
+        elif isinstance(error, MissingPermissions):
+            await ctx.send(':no_entry_sign: You require the `Staff` role to use this command.')
+
+        elif isinstance(error, Forbidden):
+            await ctx.send(':x: The mentioned member has a role higher than or equal to my role.')
 
         elif isinstance(error, commands.BadArgument):
             await ctx.send(':x: Please specify a **whole number** of messages to delete.')
@@ -39,12 +48,14 @@ class Moderation:
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member = None, *, reason: str = None):
+        staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
-        if member is None:
+        if not staff_role in ctx.author.roles:
+            raise MissingPermissions
+        elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to mute.')
         elif member.id == ctx.author.id:
             await ctx.send(':grey_exclamation: Why would you want to mute yourself?')
@@ -52,6 +63,8 @@ class Moderation:
             await ctx.send(':grey_exclamation: Why would you want to mute me? I can\'t mute myself anyway.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t mute someone with a role higher than or equal to your role.')
+        elif member.top_role >= ctx.guild.me.top_role:
+            raise Forbidden
         else:
             role = utils.get(ctx.guild.roles, name='Muted')
             if role in member.roles:
@@ -79,9 +92,11 @@ class Moderation:
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
     async def unmute(self, ctx, member: discord.Member = None):
-        if member is None:
+        staff_role = utils.get(ctx.guild.roles, name='Staff')
+        if not staff_role in ctx.author.roles:
+            raise MissingPermissions        
+        elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to unmute.')
         elif member.id == ctx.author.id:
             await ctx.send(':grey_exclamation: You\'re able to run this command, so you were never muted in the first place.')
@@ -89,6 +104,8 @@ class Moderation:
             await ctx.send(':grey_exclamation: I can\'t mute myself, so I guess I can\'t unmute myself.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t unmute someone with a role higher than or equal to your role.')
+        elif member.top_role >= ctx.guild.me.top_role:
+            raise Forbidden
         else:
             role = utils.get(ctx.guild.roles, name='Muted')
             if not role in member.roles:
@@ -106,9 +123,11 @@ class Moderation:
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, number: int = None):
-        if number is None:
+        staff_role = utils.get(ctx.guild.roles, name='Staff')
+        if not staff_role in ctx.author.roles:
+            raise MissingPermissions
+        elif number is None:
             await ctx.send(':grey_exclamation: Please specify a number of messages to delete.')
         elif not 1 < number < 101:
             await ctx.send(':grey_exclamation: Please specify a number between `2` and `100`.')
