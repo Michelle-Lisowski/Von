@@ -10,10 +10,10 @@ import discord
 from discord import utils
 from discord.ext import commands
 
-class MissingStaffRole(commands.CommandError):
+class MissingPermissions(commands.CommandError):
     pass
 
-class RoleHierarchyError(commands.CommandError):
+class Forbidden(commands.CommandError):
     pass
 
 class Administration:
@@ -27,10 +27,10 @@ class Administration:
             except discord.HTTPException:
                 pass
 
-        elif isinstance(error, MissingStaffRole):
+        elif isinstance(error, MissingPermissions):
             await ctx.send(':no_entry_sign: You require the `Staff` role to use this command.')
 
-        elif isinstance(error, RoleHierarchyError):
+        elif isinstance(error, Forbidden):
             await ctx.send(':x: The mentioned member has a role higher than or equal to my role.')
 
         elif isinstance(error, commands.CommandInvokeError):
@@ -58,9 +58,9 @@ class Administration:
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')
         elif not staff_role in ctx.author.roles:
-            raise MissingStaffRole            
+            raise MissingPermissions            
         elif member.top_role >= ctx.guild.me.top_role:
-            raise RoleHierarchyError
+            raise Forbidden
         else:
             if reason is None:
                 reason = 'No reason given.'
@@ -99,9 +99,9 @@ class Administration:
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')
         elif not staff_role in ctx.author.roles:
-            raise MissingStaffRole            
+            raise MissingPermissions           
         elif member.top_role >= ctx.guild.me.top_role:
-            raise RoleHierarchyError
+            raise Forbidden
         else:
             if reason is None:
                 reason = 'No reason given.'
