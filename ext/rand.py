@@ -84,6 +84,11 @@ class Random:
                 await ctx.send(embed=embed)
 
     @commands.command()
+    async def drop(self, ctx):
+        destination = random.choice(FORTNITE_LOCATIONS)
+        await ctx.send(f':airplane_departure: Next destination: **{destination}**')
+
+    @commands.command()
     @commands.guild_only()
     async def xp(self, ctx, member: discord.Member = None):
         if member is None:
