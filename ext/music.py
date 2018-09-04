@@ -139,12 +139,9 @@ class MusicPlayer:
                 pass
 
             if self.current is None and len(self.queue._queue) == 0:
-                if not str(self._command) == 'stop':
-                    return
-                else:
-                    self.end(self._guild)
-                    await self._channel.send(':information_source: End of the playlist.')
-                    return
+                self.end(self._guild)
+                await self._channel.send(':information_source: End of the playlist.')
+                return
 
     def end(self, guild):
         self.bot.loop.create_task(self._cog.stop(guild))
@@ -355,7 +352,6 @@ class Music:
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         else:
             await self.stop(ctx.guild)
-            await ctx.send(f':information_source: Music stopped by **{ctx.author.name}**.')
             return
 
     @commands.command(name='volume')
