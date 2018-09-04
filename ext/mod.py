@@ -3,12 +3,15 @@
 
 import datetime
 import json
+import random
 import sys
 import traceback
 
 import discord
 from discord import utils
 from discord.ext import commands
+
+from src.colours import DISCORD_COLOURS
 
 class MissingPermissions(commands.CommandError):
     pass
@@ -52,6 +55,10 @@ class Moderation:
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
+        
+        role_colour = random.choice(DISCORD_COLOURS)
+        if staff_role is None:
+            staff_role = await ctx.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
         if not staff_role in ctx.author.roles:
             raise MissingPermissions

@@ -82,10 +82,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
         return cls(discord.FFmpegPCMAudio(data['url']), data=data, requester=requester)
 
 class MusicPlayer:
-    __slots__ = ('bot', '_guild', '_channel', '_cog', 'queue', 'next', 'current', 'np', 'volume')
+    __slots__ = ('bot', '_guild', '_command', '_channel', '_cog', 'queue', 'next', 'current', 'np', 'volume')
     def __init__(self, ctx):
         self.bot = ctx.bot
         self._guild = ctx.guild
+        self._command = ctx.command
         self._channel = ctx.channel
         self._cog = ctx.cog
 
@@ -138,9 +139,12 @@ class MusicPlayer:
                 pass
 
             if self.current is None and len(self.queue._queue) == 0:
-                self.end(self._guild)
-                await self._channel.send(':information_source: End of the playlist.')
-                return
+                if not str(self._command) == 'stop':
+                    return
+                else:
+                    self.end(self._guild)
+                    await self._channel.send(':information_source: End of the playlist.')
+                    return
 
     def end(self, guild):
         self.bot.loop.create_task(self._cog.stop(guild))
@@ -250,7 +254,7 @@ class Music:
             await ctx.send(':grey_exclamation: The current song has already been paused.')
         else:
             vc.pause()
-            await ctx.send(f':pause: Song paused by **{ctx.author.name}**.')
+            await ctx.send(f':pause_button: Song paused by **{ctx.author.name}**.')
 
     @commands.command(name='resume', aliases=['unpause'])
     @commands.guild_only()
@@ -352,6 +356,7 @@ class Music:
         else:
             await self.stop(ctx.guild)
             await ctx.send(f':information_source: Music stopped by **{ctx.author.name}**.')
+            return
 
     @commands.command(name='volume')
     @commands.guild_only()
