@@ -298,10 +298,7 @@ class Music:
             thumbs_up = utils.get(cache_msg.reactions, emoji='👍')
             thumbs_down = utils.get(cache_msg.reactions, emoji='👎')
 
-            if (thumbs_up.count - 1) == 0 and (thumbs_down.count - 1) == 0:
-                await ctx.send(':information_source: Vote ended and song continued.')
-                await cache_msg.clear_reactions()
-            elif not thumbs_up.count > thumbs_down.count:
+            if not thumbs_up.count > thumbs_down.count:
                 await ctx.send(':information_source: Vote ended and song continued.')
                 await cache_msg.clear_reactions()                
             else:
@@ -355,8 +352,31 @@ class Music:
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         else:
-            await self.stop(ctx.guild)
-            return
+            if not len(vc.channel.members) >= 3:
+                await self.stop(ctx.guild)
+                return
+
+            embed = discord.Embed()
+            embed.title = 'Procbot'
+            embed.description = '**Decide whether or not to stop the current playlist!**'
+            embed.colour = 0x0000ff
+            embed.set_footer(text='You have 15 seconds to vote.')
+            bot_msg = await ctx.send(embed=embed)
+
+            await bot_msg.add_reaction('👍')
+            await bot_msg.add_reaction('👎')
+            await asyncio.sleep(15)
+
+            cache_msg = await ctx.get_message(bot_msg.id)
+            thumbs_up = utils.get(cache_msg.reactions, emoji='👍')
+            thumbs_down = utils.get(cache_msg.reactions, emoji='👎')
+
+            if not thumbs_up.count > thumbs_down.count:
+                await ctx.send(':information_source: Vote ended and playlist continued.')
+                await cache_msg.clear_reactions()                
+            else:
+                await self.stop(ctx.guild)
+                await cache_msg.clear_reactions()              
 
     @commands.command(name='volume')
     @commands.guild_only()
