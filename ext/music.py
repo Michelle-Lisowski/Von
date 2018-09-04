@@ -247,6 +247,8 @@ class Music:
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
+        elif not ctx.author.voice:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')            
         elif vc.is_paused():
             await ctx.send(':grey_exclamation: The current song has already been paused.')
         else:
@@ -259,6 +261,8 @@ class Music:
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
+        elif not ctx.author.voice:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')            
         elif not vc.is_paused():
             await ctx.send(':grey_exclamation: The current song was never paused.')
         else:
@@ -361,7 +365,9 @@ class Music:
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         elif volume is None:
-            await ctx.send(f':sound: Current volume level: **{round(vc.source.volume * 100)}%**.')            
+            await ctx.send(f':sound: Current volume level: **{round(vc.source.volume * 100)}%**.')
+        elif not ctx.author.voice:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')         
         elif not 0 < volume < 101:
             await ctx.send(':grey_exclamation: Please specify a number between `1` and `100`.')
         else:
