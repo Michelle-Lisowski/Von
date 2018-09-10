@@ -313,6 +313,13 @@ class Procbot(commands.Bot):
         if staff_role is None:
             staff_role = await guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
+        # Find the 'Admin' role
+        admin_role = utils.get(guild.roles, name='Admin')
+
+        # If the 'Admin' role is non-existent, create it
+        if admin_role is None:
+            admin_role = await guild.create_role(name='Admin', colour=role_colour, hoist=True, reason='Role for server moderators.')
+
         # Find all guild channels
         channels = utils.get(self.get_all_channels(), guild__name=guild.name)
 
