@@ -9,7 +9,7 @@
 <body>
     <hr>
     <h2>Usage</h2>
-    <p>Add Procbot to your own server by clicking on <a href="https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=271609046&scope=bot">this link</a>!</p>
+    <p>Add Procbot to your own server by clicking on this<a href="https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=271609046&scope=bot">link</a>!</p>
     <hr>
     <h2>License</h2>
     <p>Copyright (C) 2018 <b>sirtezza451</b></p>
