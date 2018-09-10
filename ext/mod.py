@@ -11,8 +11,6 @@ import discord
 from discord import utils
 from discord.ext import commands
 
-from src.colours import DISCORD_COLOURS
-
 class MissingPermissions(commands.CommandError):
     pass
 
