@@ -26,6 +26,9 @@ class GuildSettings:
             except discord.HTTPException:
                 pass
 
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send(':no_entry_sign: You must be the owner of this server to use this command.')
+
         elif isinstance(error, MissingPermissions):
             await ctx.send(':no_entry_sign: You require the `Staff` role to use this command.')
 
@@ -34,10 +37,12 @@ class GuildSettings:
 
         else:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)            
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
+    async def is_guild_owner(self, ctx):
+        return ctx.author.id == ctx.guild.owner.id
         
     @commands.group(aliases=['settings'])
-    @commands.guild_only()
     async def setting(self, ctx):
         if ctx.invoked_subcommand is None:
             subcommands = '`prefix` `default_volume`'
@@ -45,6 +50,7 @@ class GuildSettings:
 
     @setting.command()
     @commands.guild_only()
+    @commands.check(is_guild_owner)
     async def prefix(self, ctx, new_prefix: str = None):
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('guilds.json', 'r') as fp:
@@ -77,6 +83,7 @@ class GuildSettings:
 
     @setting.command()
     @commands.guild_only()
+    @commands.check(is_guild_owner)
     async def default_volume(self, ctx, new_volume: int = None):
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('guilds.json', 'r') as fp:
