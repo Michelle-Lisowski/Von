@@ -50,11 +50,7 @@ class Administration:
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
-        role_colour = random.choice(DISCORD_COLOURS)
-        if admin_role is None:
-            admin_role = await ctx.guild.create_role(name='Admin', colour=role_colour, hoist=True, reason='Role for server administrators.')
-
-        if not admin_role in ctx.author.roles:
+        if not admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions  
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to kick.')
@@ -62,7 +58,7 @@ class Administration:
             await ctx.send(':grey_exclamation: Why would you want to kick yourself?')
         elif member.id == self.bot.user.id:
             await ctx.send(':grey_exclamation: Why would you want to kick me? I can\'t kick myself anyway.')
-        elif admin_role in member.roles and not ctx.author.id == ctx.guild.owner.id:
+        elif admin_role in member.roles and ctx.author.id != ctx.guild.owner.id:
             await ctx.send(':no_entry_sign: You can\'t kick someone who also has the `Admin` role.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')          
@@ -94,12 +90,8 @@ class Administration:
         admin_role = utils.get(ctx.guild.roles, name='Admin')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
-
-        role_colour = random.choice(DISCORD_COLOURS)
-        if admin_role is None:
-            admin_role = await ctx.guild.create_role(name='Admin', colour=role_colour, hoist=True, reason='Role for server administrators.')
             
-        if not admin_role in ctx.author.roles:
+        if not admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to ban.')
@@ -107,7 +99,7 @@ class Administration:
             await ctx.send(':grey_exclamation: Why would you want to ban yourself?')
         elif member.id == self.bot.user.id:
             await ctx.send(':grey_exclamation: Why would you want to ban me? I can\'t ban myself anyway.')
-        elif admin_role in member.roles and not ctx.author.id == ctx.guild.owner.id:
+        elif admin_role in member.roles and ctx.author.id != ctx.guild.owner.id:
             await ctx.send(':no_entry_sign: You can\'t ban someone who also has the `Staff` role.')
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')           

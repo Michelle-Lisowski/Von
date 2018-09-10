@@ -53,14 +53,12 @@ class Moderation:
     @commands.guild_only()
     async def mute(self, ctx, member: discord.Member = None, *, reason: str = None):
         staff_role = utils.get(ctx.guild.roles, name='Staff')
+        admin_role = utils.get(ctx.guild.roles, name='Admin')
+
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
-        
-        role_colour = random.choice(DISCORD_COLOURS)
-        if staff_role is None:
-            staff_role = await ctx.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
-        if not staff_role in ctx.author.roles:
+        if not staff_role or admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to mute.')
@@ -101,7 +99,9 @@ class Moderation:
     @commands.guild_only()
     async def unmute(self, ctx, member: discord.Member = None):
         staff_role = utils.get(ctx.guild.roles, name='Staff')
-        if not staff_role in ctx.author.roles:
+        admin_role = utils.get(ctx.guild.roles, name='Admin')
+
+        if not staff_role or admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions        
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to unmute.')
@@ -132,7 +132,9 @@ class Moderation:
     @commands.guild_only()
     async def purge(self, ctx, number: int = None):
         staff_role = utils.get(ctx.guild.roles, name='Staff')
-        if not staff_role in ctx.author.roles:
+        admin_role = utils.get(ctx.guild.roles, name='Admin')
+
+        if not staff_role or admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif number is None:
             await ctx.send(':grey_exclamation: Please specify a number of messages to delete.')
