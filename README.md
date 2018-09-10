@@ -9,7 +9,7 @@
 <body>
     <hr>
     <h2>Usage</h2>
-    <p>Add Procbot to your own server by clicking on this<a href="https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=271609046&scope=bot">link</a>!</p>
+    <p>Add Procbot to your own server by clicking on <a href="https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=271609046&scope=bot">this link</a>!</p>
     <hr>
     <h2>License</h2>
     <p>Copyright (C) 2018 <b>sirtezza451</b></p>
@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </code>
         </pre>
-        <p>The full license can be <a href="../master/LICENSE">found here</a>.</p>
+        <p>The full license can be found <a href="../master/LICENSE">here</a>.</p>
         <hr>
         <p><i>Bot inspired by <a href="https://github.com/Shadorc/Shadbot">Shadbot</a> and <a href="https://github.com/cookkkie/mee6">Mee6</i></a></p>
 </body>
