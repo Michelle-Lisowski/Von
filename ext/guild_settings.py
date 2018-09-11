@@ -10,8 +10,6 @@ import discord
 from discord import utils
 from discord.ext import commands
 
-from src.colours import DISCORD_COLOURS
-
 def is_guild_owner():
     async def predicate(ctx):
         return ctx.author.id == ctx.guild.owner.id
@@ -51,13 +49,8 @@ class GuildSettings:
     @commands.guild_only()
     @is_guild_owner()
     async def prefix(self, ctx, new_prefix: str = None):
-        staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
-
-        role_colour = random.choice(DISCORD_COLOURS)
-        if staff_role is None:
-            staff_role = await ctx.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
         if str(ctx.guild.id) in guilds:
             if new_prefix is None:
@@ -81,13 +74,8 @@ class GuildSettings:
     @commands.guild_only()
     @is_guild_owner()
     async def default_volume(self, ctx, new_volume: int = None):
-        staff_role = utils.get(ctx.guild.roles, name='Staff')
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
-
-        role_colour = random.choice(DISCORD_COLOURS)
-        if staff_role is None:
-            staff_role = await ctx.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
         if str(ctx.guild.id) in guilds:
             if new_volume is None:
