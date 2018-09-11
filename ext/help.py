@@ -24,8 +24,9 @@ class Help:
             embed.add_field(name='Music', value=f' `{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
             embed.add_field(name='Random', value=f'`{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
-            embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban` `{p}setting`', inline=False)
+            embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
             embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
+            embed.add_field(name='Server Settings', value=f'`{p}setting`', inline=False)
             await ctx.send(embed=embed)
 
     @help_.command()

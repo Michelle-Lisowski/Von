@@ -318,7 +318,7 @@ class Procbot(commands.Bot):
 
         # If the 'Admin' role is non-existent, create it
         if admin_role is None:
-            admin_role = await guild.create_role(name='Admin', colour=role_colour, hoist=True, reason='Role for server moderators.')
+            admin_role = await guild.create_role(name='Admin', permissions=discord.Permissions(permissions=8), colour=role_colour, hoist=True, reason='Role for server moderators.')
 
         # Find all guild channels
         channels = utils.get(self.get_all_channels(), guild__name=guild.name)
