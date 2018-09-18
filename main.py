@@ -172,9 +172,9 @@ class Procbot(commands.Bot):
         print(f'ID: {self.user.id}')
 
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Streaming(name='on 1 server!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
         else:
-            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
@@ -183,9 +183,9 @@ class Procbot(commands.Bot):
         print(f'ID: {self.user.id}')
 
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Streaming(name='on 1 server!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
         else:
-            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
     # Do stuff whenever a message is sent;
     # This includes experience-related functions;
@@ -292,9 +292,9 @@ class Procbot(commands.Bot):
     async def on_guild_join(self, guild):
         # Update guild count
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Streaming(name='on 1 server!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
         else:
-            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
         # Get a random role colour
         role_colour = random.choice(DISCORD_COLOURS)
@@ -365,9 +365,9 @@ class Procbot(commands.Bot):
     async def on_guild_remove(self, guild):
         # Update guild count
         if len(self.guilds) == 1:
-            await self.change_presence(activity=discord.Streaming(name='on 1 server!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
         else:
-            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers!', url='https://twitch.tv/kraken'))
+            await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
     # Called whenever a member has joined a guild;
     # Finds a logs channel in the guild and logs that the member has joined
