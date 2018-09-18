@@ -2,9 +2,9 @@
 <html>
 <header>
     <img align="right" src="https://i.imgur.com/NTgAGc0.png" height="220" width="220">
-    <h1>Procbot</h1> <a href="https://discordbots.org/bot/477014316063784961">
+    <h1>Procbot <a href="https://discordbots.org/bot/477014316063784961">
     <img src="https://discordbots.org/api/widget/status/477014316063784961.svg" alt="Procbot">
-    </a>
+    </a></h1>
     <p><b>Procbot is a Discord bot which plays music, executes fun and admin commands, and more!</b></p>
 </header>
 
