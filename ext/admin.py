@@ -48,7 +48,7 @@ class Administration:
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
-        if not admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions  
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to kick.')
@@ -89,7 +89,7 @@ class Administration:
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
             
-        if not admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to ban.')

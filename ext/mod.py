@@ -56,7 +56,7 @@ class Moderation:
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
-        if not staff_role or admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if staff_role and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to mute.')
@@ -99,8 +99,8 @@ class Moderation:
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         admin_role = utils.get(ctx.guild.roles, name='Admin')
 
-        if not staff_role or admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
-            raise MissingPermissions        
+        if staff_role and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+            raise MissingPermissions     
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to unmute.')
         elif member.id == ctx.author.id:
@@ -132,7 +132,7 @@ class Moderation:
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         admin_role = utils.get(ctx.guild.roles, name='Admin')
 
-        if not staff_role or admin_role in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if staff_role and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif number is None:
             await ctx.send(':grey_exclamation: Please specify a number of messages to delete.')
