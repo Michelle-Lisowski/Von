@@ -39,8 +39,6 @@ class Information:
         embed.title = 'Procbot'
         embed.description = '**Procbot by sirtezza_451#9856. Created using discord.py rewrite.**'
         embed.colour = 0x0000ff
-        embed.add_field(name='Source Code', value='https://github.com/sirtezza451/Procbot', inline=False)
-        embed.add_field(name='Discord Bots Page', value='https://discordbots.org/bot/477014316063784961', inline=False)
         embed.add_field(name='Uptime', value=f'Procbot has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
         embed.add_field(name='Username', value=str(self.bot.user), inline=True)
         embed.add_field(name='ID', value=self.bot.user.id, inline=True)
@@ -48,6 +46,8 @@ class Information:
         embed.add_field(name='Server Count', value=len(self.bot.guilds), inline=True)
         embed.add_field(name='User Count', value=len(self.bot.users), inline=True)
         embed.add_field(name='Python Version', value='v{0.major}.{0.minor}.{0.micro}'.format(sys.version_info), inline=True)
+        embed.add_field(name='Discord Bots Page', value='https://discordbots.org/bot/477014316063784961', inline=False)
+        embed.add_field(name='Source Code', value='https://github.com/sirtezza451/Procbot', inline=False)
         await ctx.send(embed=embed)
 
     @commands.command()
