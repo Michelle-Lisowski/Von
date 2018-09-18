@@ -10,7 +10,7 @@
     <hr>
     <h2>Usage</h2>
     <p>Add Procbot to your own server by clicking on <a href="https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=8&scope=bot">this link</a>!</p>
-    <p><b>Procbot is often online since it is currently not being hosted 24/7. This means you are free to host it yourself if you'd like to, or reuse the code for your own bot as long as you credit it. All you need is a bot token from Discord.</b></p>
+    <p><b>Procbot is often offline since it is currently not being hosted 24/7. This means you are free to host it yourself if you'd like to, or reuse the code for your own bot as long as you credit it. All you need is a bot token from Discord.</b></p>
     <hr>
     <h2>License</h2>
     <p>Copyright (C) 2018 <b>sirtezza451</b></p>
