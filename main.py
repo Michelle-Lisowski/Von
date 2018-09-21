@@ -11,6 +11,7 @@ from os import listdir
 from os.path import isfile, join
 
 import discord
+from aiohttp import client_exceptions
 from discord import ActivityType, Status, VerificationLevel, VoiceRegion, utils
 from discord.ext import commands
 
@@ -689,5 +690,8 @@ if __name__ == '__main__':
         else:
             # Log that the cog was successfully loaded
             print(f'Successfully loaded {ext}')
-    # Run the bot         
-    bot.initialise()
+    # Run the bot
+    try:        
+        bot.initialise()
+    except Exception as e:
+        print(f'ERROR: {e}')

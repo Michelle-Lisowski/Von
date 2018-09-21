@@ -29,15 +29,25 @@ class Random:
 
         else:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)            
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
+    @commands.command(aliases=['coin_flip'])
+    async def flip(self, ctx):
+        possibilities = ['Heads', 'Tails']
+        result = random.choice(possibilities)
+        await ctx.send(':coin: The result is...')
+
+        async with ctx.typing():
+            await asyncio.sleep(1)
+            await ctx.send(f'**{result}**!')
 
     @commands.command()
     async def roll(self, ctx, number: int = None):
         if not number:
             number = 6
-        
         result = random.randint(1, number)
         await ctx.send(':game_die: The die rolls...')
+
         async with ctx.typing():
             await asyncio.sleep(1)
             await ctx.send(f'**{result}**!')

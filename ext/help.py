@@ -21,8 +21,8 @@ class Help:
             embed.title = 'Procbot'
             embed.description = f'Any issues, suggestions or questions? Add my developer **sirtezza_451#9856** and send him a message!\nGet command-specific information by using `{p}help <command>`'
             embed.colour = 0x0000ff
-            embed.add_field(name='Music', value=f' `{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
-            embed.add_field(name='Random', value=f'`{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp`', inline=False)
+            embed.add_field(name='Music', value=f'`{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
+            embed.add_field(name='Random', value=f'`{p}flip` `{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
             embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
             embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
@@ -139,6 +139,19 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}volume <volume>`', inline=False)
         embed.add_field(name='Arguments', value='`volume` - **number** (optional)', inline=False)
         embed.add_field(name='Example', value=f'`{p}volume 75`', inline=False)
+        await ctx.send(embed=embed)
+
+    @help_.command()
+    async def flip(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        embed = discord.Embed()
+        embed.title = f'Procbot | {p}flip'
+        embed.description = '**Flips a coin and returns either heads or tails**'
+        embed.colour = 0x0000ff
+        embed.add_field(name='Usage', value=f'`{p}flip`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}coin_flip`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -334,6 +347,7 @@ class Help:
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}setting <subcommand> <argument>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}setting prefix -`', inline=False)
+        embed.add_field(name='Aliases', value='`settings`', inline=False)
         embed.set_footer(text='Using the command with no arguments returns the subcommands that can be used.')
         await ctx.send(embed=embed)
 
