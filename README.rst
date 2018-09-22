@@ -36,5 +36,5 @@ Requirements
 ------------
 
 * Python 3.6.x
-* ``discord.py`` library (``GitHub link <https://github.com/Rapptz/discord.py/tree/rewrite>``__)
-* ``youtube_dl`` library (``GitHub link <https://github.com/rg3/youtube-dl>``__)
+* ``discord.py`` library (`GitHub link <https://github.com/Rapptz/discord.py/tree/rewrite>`__)
+* ``youtube_dl`` library (`GitHub link <https://github.com/rg3/youtube-dl>`__)
