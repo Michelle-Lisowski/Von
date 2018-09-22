@@ -1,4 +1,4 @@
-.. image:: https://i.imgur.com/ztwZ8VR.png
+.. image:: https://i.imgur.com/ztwZ8VR.jpg
 ==========================================
 
 .. image:: https://discordbots.org/api/widget/status/477014316063784961.svg?noavatar=true
