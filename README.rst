@@ -4,14 +4,14 @@ Procbot
 .. image:: https://discordbots.org/api/widget/status/477014316063784961.svg?noavatar=true
    :target: https://discordbots.org/bot/477014316063784961
 
-Procbot is a music, levelling and moderation bot for Discord written in Python.
+Procbot is a music, leveling and moderation bot for Discord written in Python.
 
-This bot is often offline, so you are welcome to host the bot yourself or reuse the code for your own bot, as long as you credit it.
+This bot is offline quite often, so if you are willing to host it yourself, you are welcome to do so.
 
 Usage
 -----
 
-To add Procbot to your own server, just click on `this link <https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=8&scope=bot>`__.
+To add Procbot to your own server, click on `this link <https://discordapp.com/api/oauth2/authorize?client_id=477014316063784961&permissions=8&scope=bot>`__.
 
 Installing
 ----------
@@ -38,3 +38,4 @@ Requirements
 * Python 3.6.x
 * ``discord.py`` library (`GitHub link <https://github.com/Rapptz/discord.py/tree/rewrite>`__)
 * ``youtube_dl`` library (`GitHub link <https://github.com/rg3/youtube-dl>`__)
+* Bot token from Discord
