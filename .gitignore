@@ -110,3 +110,6 @@ settings.json
 guilds.json
 mod_logs.json
 xp.json
+
+# Logging
+logs.txt
