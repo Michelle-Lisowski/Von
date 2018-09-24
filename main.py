@@ -3,6 +3,7 @@
 
 import datetime
 import json
+import logging
 import os
 import random
 import time
@@ -16,6 +17,12 @@ from discord import ActivityType, Status, VerificationLevel, VoiceRegion, utils
 from discord.ext import commands
 
 from src.colours import DISCORD_COLOURS
+
+logger = logging.getLogger('logs.txt')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='logs.txt', mode='w', encoding='utf-8')
+handler.setFormatter(logging.Formatter('%(levelname)s/%(module)s @ %(asctime)s: %(message)s'))
+logger.addHandler(handler)
 
 # Create a custom Bot class;
 # Functions in this class can easily be used in cogs without imports;
