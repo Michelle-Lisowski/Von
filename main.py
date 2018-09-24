@@ -678,10 +678,10 @@ def get_prefix(bot, message):
         # Return guild prefix
         return commands.when_mentioned_or(*prefixes)(bot, message)
 
-logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel} | Procbot 1.0.0'.format(discord.version_info))
 bot = Procbot(get_prefix)
 bot.remove_command('help')
 ext_dir = 'ext'
+logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel} | {1.user.name} 1.0.0'.format(discord.version_info, bot))
 
 # Bot initialisation
 if __name__ == '__main__':
