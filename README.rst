@@ -48,9 +48,9 @@ The following files must also be created:
     mod_logs.json
     xp.json
 
-Each file must contain an empty dictionary:
+Each of these files must contain an empty dictionary:
 
-.. code:: javascript
+.. code::
 
     {}
 
@@ -61,7 +61,7 @@ After you have configured the bot, open a command prompt or PowerShell window an
     drive>cd bot_directory
     bot_directory>python main.py
 
-The bot must always be started by running ``python main.py``.
+This will log the bot in to Discord, setting up the commands for use.
 
 Requirements
 ------------
