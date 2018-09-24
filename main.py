@@ -175,6 +175,7 @@ class Procbot(commands.Bot):
 
     # Set bot presence and log that the bot is ready
     async def on_ready(self):
+        logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
         logger.debug('Beep boop. Boop beep?')
         logger.debug(f'Name: {str(self.user)}')
         logger.debug(f'ID: {self.user.id}')
@@ -186,6 +187,7 @@ class Procbot(commands.Bot):
 
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
+        logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
         logger.debug('Procbot has reawakened.')
         logger.debug(f'Name: {str(self.user)}')
         logger.debug(f'ID: {self.user.id}')
@@ -701,5 +703,3 @@ if __name__ == '__main__':
         bot.initialise()
     except Exception as e:
         logger.error(f'ERROR: {e}')
-    # Confirm login
-    logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel} | {1.user.name} 1.0.0'.format(discord.version_info, bot))
