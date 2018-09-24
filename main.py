@@ -681,7 +681,6 @@ def get_prefix(bot, message):
 bot = Procbot(get_prefix)
 bot.remove_command('help')
 ext_dir = 'ext'
-logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel} | {1.user.name} 1.0.0'.format(discord.version_info, bot))
 
 # Bot initialisation
 if __name__ == '__main__':
@@ -702,3 +701,5 @@ if __name__ == '__main__':
         bot.initialise()
     except Exception as e:
         logger.error(f'ERROR: {e}')
+    # Confirm login
+    logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel} | {1.user.name} 1.0.0'.format(discord.version_info, bot))
