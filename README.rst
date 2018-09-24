@@ -40,13 +40,19 @@ Bot Initialisation
 Once you have installed Procbot on your computer, you will need to get a bot token by creating an app `here <https://discordapp.com/developers/applications>`_.
 You will then need to rename ``settings_example.json`` to ``settings.json`` and replace ``BOT_TOKEN_HERE`` with your bot token.
 
-The following files must also be created, each containing an empty dictionary (``{}``)
+The following files must also be created:
 
 .. code::
 
     guilds.json
     mod_logs.json
     xp.json
+
+Each file must contain an empty dictionary:
+
+.. code:: javascript
+
+    {}
 
 After you have configured the bot, open a command prompt or PowerShell window and do the following:
 
@@ -61,6 +67,6 @@ Requirements
 ------------
 
 * Python 3.6.x
-* ``discord`` rewrite library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_)
+* ``discord`` **rewrite** library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_)
 * ``youtube_dl`` library (`GitHub repository <https://github.com/rg3/youtube-dl>`_)
 * Bot token from Discord
