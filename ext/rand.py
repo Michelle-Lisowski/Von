@@ -39,7 +39,7 @@ class Random:
     async def flip(self, ctx):
         possibilities = ['Heads', 'Tails']
         result = random.choice(possibilities)
-        await ctx.send(':coin: The result is...')
+        await ctx.send('The result is...')
 
         async with ctx.typing():
             await asyncio.sleep(1)
