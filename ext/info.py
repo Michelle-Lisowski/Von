@@ -8,6 +8,8 @@ import traceback
 import discord
 from discord.ext import commands
 
+from main import handler, logger
+
 start_time = time.time()
 
 class Information:
@@ -25,8 +27,10 @@ class Information:
             await ctx.send(':x: I could not find that member.')
 
         else:
-            print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+            # print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
+            # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+            logger.warning(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':')
+            logger.error(traceback.format_exc())
 
     @commands.command()
     async def info(self, ctx):
