@@ -66,7 +66,7 @@ This will log the bot in to Discord, setting up the commands for use.
 Requirements
 ------------
 
-* Python 3.6.x
-* ``discord`` **rewrite** library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_)
+* Python 3.6.x (voice breaks with 3.7)
+* ``discord`` library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_; **rewrite** branch required)
 * ``youtube_dl`` library (`GitHub repository <https://github.com/rg3/youtube-dl>`_)
 * Bot token from Discord
