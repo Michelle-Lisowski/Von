@@ -18,6 +18,8 @@ from discord.ext import commands
 
 from src.colours import DISCORD_COLOURS
 
+global logger
+global handler
 logger = logging.getLogger('logs.txt')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='logs.txt', mode='w', encoding='utf-8')
