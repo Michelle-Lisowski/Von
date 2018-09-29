@@ -6,5 +6,5 @@ jobs:
 
     steps:
       - checkout
-      - run: pip install -r requirements.txt
+      - run: pip install --user -r requirements.txt
       - run: python main.py
