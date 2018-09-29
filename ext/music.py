@@ -1,5 +1,26 @@
-# Procbot Copyright (C) 2018 sirtezza451
-# The full license can be found at master/LICENSE
+"""
+The MIT License (MIT)
+
+Copyright (c) 2018 sirtezza451
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
 
 import asyncio
 import datetime
@@ -211,7 +232,7 @@ class Music:
                 channel = ctx.author.voice.channel
             except AttributeError:
                 raise InvalidVoiceChannel(':grey_exclamation: Please join a voice channel or specify one for me to join.')
-        
+
         vc = ctx.voice_client
         if vc:
             if vc.channel.id == channel.id:
@@ -253,7 +274,7 @@ class Music:
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         elif not ctx.author.voice:
-            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')            
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')
         elif vc.is_paused():
             await ctx.send(':grey_exclamation: The current song has already been paused.')
         else:
@@ -267,7 +288,7 @@ class Music:
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         elif not ctx.author.voice:
-            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')            
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')
         elif not vc.is_paused():
             await ctx.send(':grey_exclamation: The current song was never paused.')
         else:
@@ -305,11 +326,11 @@ class Music:
 
             if not thumbs_up.count > thumbs_down.count:
                 await ctx.send(':information_source: Vote ended and song continued.')
-                await cache_msg.clear_reactions()                
+                await cache_msg.clear_reactions()
             else:
                 vc.stop()
                 await ctx.send(':information_source: Vote ended and song skipped.')
-                await cache_msg.clear_reactions()                
+                await cache_msg.clear_reactions()
 
     @commands.command(name='playlist', aliases=['queue', 'upcoming'])
     @commands.guild_only()
@@ -378,10 +399,10 @@ class Music:
 
             if not thumbs_up.count > thumbs_down.count:
                 await ctx.send(':information_source: Vote ended and playlist continued.')
-                await cache_msg.clear_reactions()                
+                await cache_msg.clear_reactions()
             else:
                 await self.stop(ctx.guild)
-                await cache_msg.clear_reactions()              
+                await cache_msg.clear_reactions()
 
     @commands.command(name='volume')
     @commands.guild_only()
@@ -392,7 +413,7 @@ class Music:
         elif volume is None:
             await ctx.send(f':sound: Current volume level: **{round(vc.source.volume * 100)}%**.')
         elif not ctx.author.voice:
-            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')         
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')
         elif not 0 < volume < 101:
             await ctx.send(':grey_exclamation: Please specify a number between `1` and `100`.')
         else:

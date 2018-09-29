@@ -1,5 +1,26 @@
-# Procbot Copyright (C) 2018 sirtezza451
-# The full license can be found at master/LICENSE
+"""
+The MIT License (MIT)
+
+Copyright (c) 2018 sirtezza451
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
 
 import datetime
 import json
@@ -251,7 +272,7 @@ class Procbot(commands.Bot):
             # Open guilds.json in write mode
             with open('guilds.json', 'w') as fp:
                 # Write any file changes to guilds.json
-                json.dump(guilds, fp, indent=4)                
+                json.dump(guilds, fp, indent=4)
 
             # Open mod_logs.json in read mode
             with open('mod_logs.json', 'r') as fp:
@@ -465,7 +486,7 @@ class Procbot(commands.Bot):
                 # Create the 'Information' category and the 'welcome' channel
                 category = await member.guild.create_category(name='Information', overwrites=overwrites, reason='Category for information-based channels.')
                 channel = await member.guild.create_text_channel(name='welcome', overwrites=overwrites, category=category, reason='Channel for welcome and leave messages.')
-            
+
             # Send the leave message
             await channel.send(f'We\'re sad to see you leave, **{member.name}**... :cry:')
 
@@ -597,7 +618,7 @@ class Procbot(commands.Bot):
 
         # Fetch the number of mute cases
         case = mod_logs[str(member.guild.id)]['MUTE_COUNT']
-        
+
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':zipper_mouth: Mute | Case {case}'
@@ -607,7 +628,7 @@ class Procbot(commands.Bot):
         embed.add_field(name='Reason', value=str(reason), inline=False)
         embed.add_field(name='Muted By', value=str(author), inline=False)
         embed.set_footer(text=datetime.datetime.now())
-        await channel.send(embed=embed)           
+        await channel.send(embed=embed)
 
     # Global command error handler;
     # Called whenever an error is raised in a command;
@@ -701,7 +722,7 @@ if __name__ == '__main__':
             # Log that the cog was successfully loaded
             logger.debug(f'Successfully loaded {ext}')
     # Run the bot
-    try:        
+    try:
         bot.initialise()
     except Exception as e:
         logger.error(f'ERROR: {e}')

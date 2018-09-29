@@ -1,6 +1,3 @@
-# Procbot Copyright (C) 2018 sirtezza451
-# The full license can be found at master/LICENSE
-
 from discord import Colour
 
 DISCORD_COLOURS = [

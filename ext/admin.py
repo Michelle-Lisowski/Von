@@ -1,5 +1,26 @@
-# Procbot Copyright (C) 2018 sirtezza451
-# The full license can be found at master/LICENSE
+"""
+The MIT License (MIT)
+
+Copyright (c) 2018 sirtezza451
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
 
 import datetime
 import json
@@ -53,7 +74,7 @@ class Administration:
             mod_logs = json.load(fp)
 
         if admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
-            raise MissingPermissions  
+            raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to kick.')
         elif member.id == ctx.author.id:
@@ -63,7 +84,7 @@ class Administration:
         elif admin_role in member.roles and ctx.author.id != ctx.guild.owner.id:
             await ctx.send(':no_entry_sign: You can\'t kick someone who also has the `Admin` role.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')          
+            await ctx.send(':no_entry_sign: You can\'t kick someone with a role higher than or equal to your role.')
         elif member.top_role >= ctx.guild.me.top_role:
             raise Forbidden
         else:
@@ -92,7 +113,7 @@ class Administration:
         admin_role = utils.get(ctx.guild.roles, name='Admin')
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
-            
+
         if admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
@@ -104,7 +125,7 @@ class Administration:
         elif admin_role in member.roles and ctx.author.id != ctx.guild.owner.id:
             await ctx.send(':no_entry_sign: You can\'t ban someone who also has the `Staff` role.')
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')           
+            await ctx.send(':no_entry_sign: You can\'t ban someone with a role higher than or equal to your role.')
         elif member.top_role >= ctx.guild.me.top_role:
             raise Forbidden
         else:
