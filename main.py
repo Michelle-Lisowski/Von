@@ -669,7 +669,8 @@ class Procbot(commands.Bot):
             settings = json.load(fp)
 
         # Fetch bot token
-        token = settings['DISCORD_TOKEN']
+        # token = settings['DISCORD_TOKEN']
+        token = os.environ['DISCORD_TOKEN']
 
         # Run bot
         self.run(token)
