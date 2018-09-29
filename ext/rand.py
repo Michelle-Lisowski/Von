@@ -74,7 +74,7 @@ class Random:
             emoji = ':gay_pride_flag:'
         elif percentage < 50:
             emoji = ':smiley:'
-        
+
         await ctx.send(f'**{member.name}** is {percentage}% gay. {emoji}')
 
     @commands.command()
@@ -127,7 +127,7 @@ class Random:
                     user_xp[str(member.id)]['LEVEL'] = 1
 
             with open('xp.json', 'w') as fp:
-                json.dump(user_xp, fp, indent=4)            
+                json.dump(user_xp, fp, indent=4)
 
             embed = discord.Embed()
             embed.title = 'Procbot'
@@ -136,6 +136,30 @@ class Random:
             embed.add_field(name='Level', value=user_xp[str(member.id)]['LEVEL'], inline=True)
             embed.add_field(name='XP', value=user_xp[str(member.id)]['EXPERIENCE'], inline=True)
             await ctx.send(embed=embed)
+
+    @commands.command(aliases=['calc'])
+    async def calculator(self, ctx, arg1: int = None, operation: str = None, arg2: int = None):
+        if arg1 is None:
+            await ctx.send(':grey_exclamation: Please specify a base number.')
+        elif operation is None:
+            await ctx.send(':grey_exclamation: Please specify an operation. This can be the following:')
+            await ctx.send('`+` (add), `-` (subtract), `*` (multiply), `/` (divide), `//` (floor divide) or `**` (exponent)')
+        elif arg2 is None:
+            await ctx.send(':grey_exclamation: Please specify a second number.')
+        else:
+            if operation == '+':
+                result = arg1 + arg2
+            if operation == '-':
+                result = arg1 - arg2
+            if operation == '*':
+                result = arg1 * arg2
+            if operation == '/':
+                result = arg1 / arg2
+            if operation == '//':
+                result = arg1 // arg2
+            if operation == '**':
+                result = arg1 ** arg2
+            await ctx.send(f'According to my calculations, the answer is **{result}**.')
 
 def setup(bot):
     bot.add_cog(Random(bot))

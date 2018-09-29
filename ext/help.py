@@ -22,7 +22,7 @@ class Help:
             embed.description = f'Any issues, suggestions or questions? Add my developer **sirtezza_451#9856** and send him a message!\nGet command-specific information by using `{p}help <command>`'
             embed.colour = 0x0000ff
             embed.add_field(name='Music', value=f'`{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
-            embed.add_field(name='Random', value=f'`{p}flip` `{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp`', inline=False)
+            embed.add_field(name='Random', value=f'`{p}flip` `{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp` `{p}calculator`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
             embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
             embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
@@ -45,7 +45,7 @@ class Help:
     @help_.command()
     async def play(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)        
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}play'
@@ -58,7 +58,7 @@ class Help:
     @help_.command()
     async def pause(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)        
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}pause'
@@ -70,7 +70,7 @@ class Help:
     @help_.command()
     async def resume(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)        
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}resume'
@@ -82,7 +82,7 @@ class Help:
     @help_.command()
     async def skip(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)        
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}skip'
@@ -94,7 +94,7 @@ class Help:
     @help_.command()
     async def np(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}np'
@@ -106,7 +106,7 @@ class Help:
     @help_.command()
     async def playlist(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}playlist'
@@ -118,7 +118,7 @@ class Help:
     @help_.command()
     async def stop(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}stop'
@@ -130,7 +130,7 @@ class Help:
     @help_.command()
     async def volume(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}volume'
@@ -157,7 +157,7 @@ class Help:
     @help_.command()
     async def roll(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}roll'
@@ -172,7 +172,7 @@ class Help:
     @help_.command()
     async def gay(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}gay'
@@ -186,7 +186,7 @@ class Help:
     @help_.command()
     async def ping(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}ping'
@@ -198,7 +198,7 @@ class Help:
     @help_.command()
     async def cat(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}cat'
@@ -210,7 +210,7 @@ class Help:
     @help_.command()
     async def drop(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}drop'
@@ -222,7 +222,7 @@ class Help:
     @help_.command()
     async def xp(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}xp'
@@ -233,9 +233,24 @@ class Help:
         await ctx.send(embed=embed)
 
     @help_.command()
+    async def calculator(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        embed = discord.Embed()
+        embed.title = f'Procbot | {p}calculator'
+        embed.description = '**Performs calculations of 2 numbers with a specific operation**'
+        embed.colour = 0x0000ff
+        embed.add_field(name='Usage', value=f'`{p}calculator <number> <operation> <number>`', inline=False)
+        embed.add_field(name='Arguments', value='`number` - **number**\n`operation` - `+`, `-`, `*`, `/`, `//`, or `**`', inline=False)
+        embed.add_field(name='Example', value=f'`{p}calculator 4 ** 4` - 4 to the power of 4', inline=False)
+        embed.add_field(name='Aliases', value='`calc`', inline=False)
+        await ctx.send(embed=embed)
+
+    @help_.command()
     async def kick(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}kick'
@@ -248,7 +263,7 @@ class Help:
     @help_.command()
     async def ban(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}ban'
@@ -261,7 +276,7 @@ class Help:
     @help_.command()
     async def mute(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}mute'
@@ -274,7 +289,7 @@ class Help:
     @help_.command()
     async def unmute(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}unmute'
@@ -287,7 +302,7 @@ class Help:
     @help_.command()
     async def purge(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}purge'
@@ -301,7 +316,7 @@ class Help:
     @help_.command()
     async def info(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}info'
@@ -313,7 +328,7 @@ class Help:
     @help_.command()
     async def profile(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}profile'
@@ -327,7 +342,7 @@ class Help:
     @help_.command()
     async def serverinfo(self, ctx):
         with open('guilds.json', 'r') as fp:
-            guilds = json.load(fp)         
+            guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Procbot | {p}serverinfo'
