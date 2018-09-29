@@ -5,6 +5,8 @@
    :target: https://discordbots.org/bot/477014316063784961
 .. image:: https://discordbots.org/api/widget/lib/477014316063784961.svg?noavatar=true
    :target: https://discordbots.org/bot/477014316063784961
+.. image:: https://semaphoreci.com/api/v1/sirtezza451/procbot/branches/development/badge.svg
+   :target: https://semaphoreci.com/sirtezza451/procbot
 
 Procbot is a music, levelling and moderation bot for Discord written in Python.
 
