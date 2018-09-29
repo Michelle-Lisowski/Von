@@ -4,34 +4,10 @@ jobs:
     docker:
       - image: circleci/python:3.6.6
 
-    working_directory: ~/Procbot
-
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          - v1-dependencies-
+      - install:
+          pip install -r requirements.txt
 
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      - run:
-          name: run code
-          command: |
-            . venv/bin/activate
-            python main.py
-
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+      - run: python main.py
