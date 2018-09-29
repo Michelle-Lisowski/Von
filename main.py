@@ -665,12 +665,12 @@ class Procbot(commands.Bot):
     # Login
     def initialise(self):
         # Open settings.json in read mode
-        with open('settings.json', 'r') as fp:
-            settings = json.load(fp)
+        # with open('settings.json', 'r') as fp:
+        #     settings = json.load(fp)
 
         # Fetch bot token
         # token = settings['DISCORD_TOKEN']
-        token = os.environ['DISCORD_TOKEN']
+        token = os.getenv('DISCORD_TOKEN')
 
         # Run bot
         self.run(token)
