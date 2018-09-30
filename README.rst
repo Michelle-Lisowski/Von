@@ -45,8 +45,8 @@ As the owner, you can log the bot out of Discord any time using the ``.logout`` 
 you can run ``setup.py`` and choose from these three options without needing your token:
 
 * Run Procbot
-* Update Procbot from master branch
-* Update Procbot from development branch
+* Update Procbot from ``master`` branch
+* Update Procbot from ``development`` branch
 
 The second option will pull the code from the ``master`` branch, and you'll need to setup your token again.
 The third option does the same, but for the ``development`` branch.
@@ -62,4 +62,4 @@ Requirements
 * ``discord`` library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_; **rewrite** branch required)
 * ``youtube_dl`` library (`GitHub repository <https://github.com/rg3/youtube-dl>`_)
 * Bot token from Discord
-* Git (optional)
+* `Git <https://git-scm.com/>`_ (optional)
