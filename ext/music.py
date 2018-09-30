@@ -114,6 +114,10 @@ class MusicPlayer:
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
 
+        if not str(self._guild) in guilds:
+            guilds[str(self._guild)] = {}
+            guilds[str(self._guild)]['DEFAULT_VOLUME'] = 0.5
+
         self.np = None
         self.current = None
         self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
