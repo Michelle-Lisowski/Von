@@ -48,7 +48,10 @@ class Random:
                 await ctx.send(':x: I could not find that member.')
 
         elif isinstance(error, commands.CommandInvokeError):
-            await ctx.send(':x: Fetching a picture of a cat failed.')
+            if str(ctx.command) == 'calculator':
+                await ctx.send(':grey_exclamation: Please specify a base number.')
+            elif str(ctx.command) == 'cat':
+                await ctx.send(':x: Fetching a picture of a cat failed.')
 
         else:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
@@ -158,9 +161,7 @@ class Random:
 
     @commands.command(aliases=['calc'])
     async def calculator(self, ctx, arg1: int = None, operation: str = None, arg2: int = None):
-        if arg1 is None:
-            await ctx.send(':grey_exclamation: Please specify a base number.')
-        elif operation is None:
+        if operation is None:
             await ctx.send(':grey_exclamation: Please specify an operation. This can be the following:')
             await ctx.send('`+` (add), `-` (subtract), `*` (multiply), `/` (divide), `//` (floor divide) or `**` (exponent)')
         elif arg2 is None:
