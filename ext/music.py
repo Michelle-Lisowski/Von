@@ -114,18 +114,18 @@ class MusicPlayer:
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
 
-        if not str(self._guild) in guilds:
-            guilds[str(self._guild)] = {}
-            guilds[str(self._guild)]['DEFAULT_VOLUME'] = 0.5
-
         self.np = None
         self.current = None
-        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
         self.bot.loop.create_task(self.player_loop())
 
     async def player_loop(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
+            if not str(self._guild) in guilds:
+                guilds[str(self._guild)] = {}
+                guilds[str(self._guild)]['DEFAULT_VOLUME'] = 0.5
+
+            self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
             self.next.clear()
             if not self._guild.voice_client:
                 return
