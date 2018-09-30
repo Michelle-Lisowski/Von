@@ -38,7 +38,7 @@ Bot Initialisation
 ------------------
 
 Once you have installed Procbot on your computer, you will need to get a bot token by creating an app `here <https://discordapp.com/developers/applications>`_.
-Copy that token and run ``setup.py``. Paste your token in when asked for your token, and it
+Copy that token and run ``setup.py``. Paste your token in when asked, and it
 will save it in ``settings.json``. The bot will then be run automatically.
 
 As the owner, you can log the bot out of Discord any time using the ``.logout`` command. After the first time setup,
@@ -49,9 +49,11 @@ you can run ``setup.py`` and choose from these three options without needing you
 * Update Procbot from development branch
 
 The second option will pull the code from the ``master`` branch, and you'll need to setup your token again.
-The third option will pull the code from the ``development`` branch, and you'll need to setup your token again.
+The third option does the same, but for the ``development`` branch.
 
-These two options require `Git <https://git-scm.com/>`_ to function properly.
+The last two options require `Git <https://git-scm.com/>`_ to function properly.
+
+Note that when running your own instance of Procbot, you will also need your own server invite link.
 
 Requirements
 ------------
