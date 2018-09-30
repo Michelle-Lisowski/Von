@@ -27,7 +27,7 @@ Otherwise, you can clone the repository using Git:
 .. code:: sh
 
     $ git clone https://github.com/sirtezza451/Procbot
-    
+
 To install the development version, do the following:
 
 .. code:: sh
@@ -40,30 +40,20 @@ Bot Initialisation
 ------------------
 
 Once you have installed Procbot on your computer, you will need to get a bot token by creating an app `here <https://discordapp.com/developers/applications>`_.
-You will then need to rename ``settings_example.json`` to ``settings.json`` and replace ``BOT_TOKEN_HERE`` with your bot token.
+Copy that token and run ``setup.py``. Paste your token in when asked for your token, and it
+ will save it in ``settings.json``. The bot will then be run automatically.
 
-The following files must also be created:
+As the owner, you can log the bot out of Discord any time using the ``.logout`` command. After the first time setup,
+you can run ``setup.py`` and choose from these three options without needing your token:
 
-.. code::
+* Run Procbot
+* Update Procbot from master branch
+* Update Procbot from development branch
 
-    guilds.json
-    mod_logs.json
-    xp.json
+The second option will pull the code from the ``master`` branch, and you'll need to setup your token again.
+The third option will pull the code from the ``development`` branch, and you'll need to setup your token again.
 
-Each of these files must contain an empty dictionary:
-
-.. code::
-
-    {}
-
-After you have configured the bot, open a command prompt or PowerShell window and do the following:
-
-.. code:: sh
-
-    drive>cd bot_directory
-    bot_directory>python main.py
-
-This will log the bot in to Discord, setting up the commands for use.
+These two options require `Git <https://git-scm.com/>`_ for them to work
 
 Requirements
 ------------
