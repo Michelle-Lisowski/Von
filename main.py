@@ -39,14 +39,6 @@ from discord.ext import commands
 
 from src.colours import DISCORD_COLOURS
 
-global logger
-global handler
-logger = logging.getLogger('logs.txt')
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='logs.txt', mode='w', encoding='utf-8')
-handler.setFormatter(logging.Formatter('%(levelname)s/%(module)s @ %(asctime)s: %(message)s'))
-logger.addHandler(handler)
-
 # Create a custom Bot class;
 # Functions in this class can easily be used in cogs without imports;
 # For example, my_function in this class can be called in a cog via self.bot.my_function()
@@ -198,10 +190,10 @@ class Procbot(commands.Bot):
 
     # Set bot presence and log that the bot is ready
     async def on_ready(self):
-        logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
-        logger.debug('Beep boop. Boop beep?')
-        logger.debug(f'Name: {str(self.user)}')
-        logger.debug(f'ID: {self.user.id}')
+        print('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
+        print('Beep boop. Boop beep?')
+        print(f'Name: {str(self.user)}')
+        print(f'ID: {self.user.id}')
 
         if len(self.guilds) == 1:
             await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
@@ -210,10 +202,10 @@ class Procbot(commands.Bot):
 
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
-        logger.debug('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
-        logger.debug('Procbot has reawakened.')
-        logger.debug(f'Name: {str(self.user)}')
-        logger.debug(f'ID: {self.user.id}')
+        print('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
+        print('Procbot has reawakened.')
+        print(f'Name: {str(self.user)}')
+        print(f'ID: {self.user.id}')
 
         if len(self.guilds) == 1:
             await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
@@ -318,7 +310,7 @@ class Procbot(commands.Bot):
 
     # Logs that a command has been invoked
     async def on_command(self, ctx):
-        logger.debug(f'Invocation - Command \'{ctx.command}\' from {str(ctx.author)}')
+        print(f'Invocation - Command \'{ctx.command}\' from {str(ctx.author)}')
 
     # Called whenever the bot has joined a guild;
     # Does things such as creating the 'Muted' role and updating the guild count
@@ -659,8 +651,8 @@ class Procbot(commands.Bot):
     # Global event error handler;
     # Called whenever an error is raised in an event
     async def on_error(self, event, *args, **kwargs):
-        logger.warning(f'Exception in event {event}:')
-        logger.error(traceback.format_exc())
+        print(f'Exception in event {event}:')
+        print(traceback.format_exc())
 
     # Login
     def initialise(self):
@@ -718,13 +710,13 @@ if __name__ == '__main__':
             bot.load_extension(ext_dir + '.' + ext)
         except (discord.ClientException, ModuleNotFoundError):
             # Print an error if needed
-            logger.warning(f'ERROR: Failed to load {ext}')
-            logger.error(traceback.format_exc())
+            print(f'ERROR: Failed to load {ext}')
+            print(traceback.format_exc())
         else:
             # Log that the cog was successfully loaded
-            logger.debug(f'Successfully loaded {ext}')
+            print(f'Successfully loaded {ext}')
     # Run the bot
     try:
         bot.initialise()
     except Exception as e:
-        logger.error(f'ERROR: {e}')
+        print(f'ERROR: {e}')

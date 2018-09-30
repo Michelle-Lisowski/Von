@@ -51,10 +51,8 @@ class Random:
             await ctx.send(':x: Fetching a picture of a cat failed.')
 
         else:
-            # print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
-            # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-            logger.warning(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':')
-            logger.error(traceback.format_exc())
+            print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     @commands.command(aliases=['coin_flip'])
     async def flip(self, ctx):
