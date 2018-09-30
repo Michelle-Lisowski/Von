@@ -5,8 +5,6 @@
    :target: https://discordbots.org/bot/477014316063784961
 .. image:: https://discordbots.org/api/widget/lib/477014316063784961.svg?noavatar=true
    :target: https://discordbots.org/bot/477014316063784961
-.. image:: https://semaphoreci.com/api/v1/sirtezza451/procbot/branches/development/badge.svg
-   :target: https://semaphoreci.com/sirtezza451/procbot
 
 Procbot is a music, levelling and moderation bot for Discord written in Python.
 
@@ -41,7 +39,7 @@ Bot Initialisation
 
 Once you have installed Procbot on your computer, you will need to get a bot token by creating an app `here <https://discordapp.com/developers/applications>`_.
 Copy that token and run ``setup.py``. Paste your token in when asked for your token, and it
- will save it in ``settings.json``. The bot will then be run automatically.
+will save it in ``settings.json``. The bot will then be run automatically.
 
 As the owner, you can log the bot out of Discord any time using the ``.logout`` command. After the first time setup,
 you can run ``setup.py`` and choose from these three options without needing your token:
@@ -53,7 +51,7 @@ you can run ``setup.py`` and choose from these three options without needing you
 The second option will pull the code from the ``master`` branch, and you'll need to setup your token again.
 The third option will pull the code from the ``development`` branch, and you'll need to setup your token again.
 
-These two options require `Git <https://git-scm.com/>`_ for them to work
+These two options require `Git <https://git-scm.com/>`_ to function properly.
 
 Requirements
 ------------
@@ -62,3 +60,4 @@ Requirements
 * ``discord`` library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_; **rewrite** branch required)
 * ``youtube_dl`` library (`GitHub repository <https://github.com/rg3/youtube-dl>`_)
 * Bot token from Discord
+* Git (optional)
