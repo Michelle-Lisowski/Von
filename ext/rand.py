@@ -34,8 +34,6 @@ from discord.ext import commands
 
 from src.locations import FORTNITE_LOCATIONS
 
-from main import handler, logger
-
 class Random:
     def __init__(self, bot):
         self.bot = bot
