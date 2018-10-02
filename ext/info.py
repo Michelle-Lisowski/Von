@@ -59,7 +59,7 @@ class Information:
         embed = discord.Embed()
         embed.title = 'Jaffa'
         embed.description = '**Jaffa by sirtezza_451#9856. Created using discord.py rewrite.**'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.add_field(name='Uptime', value=f'Jaffa has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
         embed.add_field(name='Username', value=str(self.bot.user), inline=True)
         embed.add_field(name='ID', value=self.bot.user.id, inline=True)
@@ -68,7 +68,7 @@ class Information:
         embed.add_field(name='User Count', value=len(self.bot.users), inline=True)
         embed.add_field(name='Python Version', value='v{0.major}.{0.minor}.{0.micro}'.format(sys.version_info), inline=True)
         embed.add_field(name='Discord Bots Page', value='https://discordbots.org/bot/477014316063784961', inline=False)
-        embed.add_field(name='Source Code', value='https://github.com/sirtezza451/Procbot', inline=False)
+        embed.add_field(name='Source Code', value='https://github.com/sirtezza451/Jaffa', inline=False)
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -83,7 +83,7 @@ class Information:
 
         embed = discord.Embed()
         embed.title = 'Jaffa'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.set_thumbnail(url=member.avatar_url)
         embed.add_field(name='Username', value=str(member), inline=True)
         embed.add_field(name='User ID', value=str(member.id), inline=True)
@@ -101,7 +101,7 @@ class Information:
         guild = ctx.guild
         embed = discord.Embed()
         embed.title = 'Jaffa'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.set_thumbnail(url=guild.icon_url)
         embed.add_field(name='Server Name', value=str(guild.name), inline=True)
         embed.add_field(name='Server ID', value=str(guild.id), inline=True)

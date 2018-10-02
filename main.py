@@ -181,7 +181,7 @@ class Jaffa(commands.Bot):
                 embed = discord.Embed()
                 embed.title = 'Jaffa'
                 embed.description = f'**{user.name}** has levelled up!'
-                embed.colour = 0x0000ff
+                embed.colour = 0x0099ff
                 embed.add_field(name='Level', value=level_end, inline=True)
                 embed.add_field(name='XP', value=experience, inline=True)
                 embed.set_footer(text=datetime.datetime.now())
@@ -522,7 +522,7 @@ class Jaffa(commands.Bot):
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':boot: Kick | Case {case}'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.add_field(name='Member Name', value=str(member), inline=False)
         embed.add_field(name='Member ID', value=str(member.id), inline=False)
         embed.add_field(name='Reason', value=str(reason), inline=False)
@@ -568,7 +568,7 @@ class Jaffa(commands.Bot):
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':no_entry_sign: Ban | Case {case}'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.add_field(name='Member Name', value=str(member), inline=False)
         embed.add_field(name='Member ID', value=str(member.id), inline=False)
         embed.add_field(name='Reason', value=str(reason), inline=False)
@@ -614,7 +614,7 @@ class Jaffa(commands.Bot):
         # Send an embed to the 'mod-logs' channel
         embed = discord.Embed()
         embed.title = f':zipper_mouth: Mute | Case {case}'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.add_field(name='Member Name', value=str(member), inline=False)
         embed.add_field(name='Member ID', value=str(member.id), inline=False)
         embed.add_field(name='Reason', value=str(reason), inline=False)

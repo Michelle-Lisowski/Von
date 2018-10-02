@@ -102,7 +102,7 @@ class Random:
         embed = discord.Embed()
         embed.title = 'Jaffa'
         embed.description = 'Pong! :ping_pong:'
-        embed.colour = 0x0000ff
+        embed.colour = 0x0099ff
         embed.set_footer(text=f'This took {round(self.bot.latency * 1000)}ms.')
         await ctx.send(embed=embed)
 
@@ -113,7 +113,7 @@ class Random:
                 pic = await r.json()
                 embed = discord.Embed()
                 embed.title = ':cat: Meow'
-                embed.colour = 0x0000ff
+                embed.colour = 0x0099ff
                 embed.set_image(url=pic['file'])
                 await ctx.send(embed=embed)
 
@@ -152,7 +152,7 @@ class Random:
             embed = discord.Embed()
             embed.title = 'Jaffa'
             embed.description = f'Here are **{member.name}**\'s stats.'
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             embed.add_field(name='Level', value=user_xp[str(member.id)]['LEVEL'], inline=True)
             embed.add_field(name='XP', value=user_xp[str(member.id)]['EXPERIENCE'], inline=True)
             await ctx.send(embed=embed)

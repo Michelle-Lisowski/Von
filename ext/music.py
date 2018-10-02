@@ -315,7 +315,7 @@ class Music:
             embed = discord.Embed()
             embed.title = 'Jaffa'
             embed.description = '**Decide whether or not to skip the currently playing song!**'
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             embed.set_footer(text='You have 15 seconds to vote.')
             bot_msg = await ctx.send(embed=embed)
 
@@ -352,7 +352,7 @@ class Music:
             embed = discord.Embed()
             embed.title = f'Upcoming - Next {len(upcoming)} Songs'
             embed.description = fmt
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             await ctx.send(embed=embed)
 
     @commands.command(name='np', aliases=['now_playing'])
@@ -388,7 +388,7 @@ class Music:
             embed = discord.Embed()
             embed.title = 'Jaffa'
             embed.description = '**Decide whether or not to stop the current playlist!**'
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             embed.set_footer(text='You have 15 seconds to vote.')
             bot_msg = await ctx.send(embed=embed)
 

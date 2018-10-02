@@ -90,7 +90,7 @@ class Administration:
             await ctx.guild.kick(user=member)
             embed = discord.Embed()
             embed.title = ':boot: Member Kicked'
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             embed.add_field(name='Member Name', value=member.name, inline=False)
             embed.add_field(name='Member ID', value=member.id, inline=False)
             embed.add_field(name='Kicked By', value=ctx.author.name, inline=False)
@@ -131,7 +131,7 @@ class Administration:
             await ctx.guild.ban(user=member)
             embed = discord.Embed()
             embed.title = ':no_entry_sign: Member Banned'
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             embed.add_field(name='Member Name', value=member.name, inline=False)
             embed.add_field(name='Member ID', value=member.id, inline=False)
             embed.add_field(name='Banned By', value=ctx.author.name, inline=False)

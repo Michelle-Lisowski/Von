@@ -101,7 +101,7 @@ class Moderation:
             await member.add_roles(role)
             embed = discord.Embed()
             embed.title = ':zipper_mouth: Member Muted'
-            embed.colour = 0x0000ff
+            embed.colour = 0x0099ff
             embed.add_field(name='Member Name', value=member.name, inline=False)
             embed.add_field(name='Member ID', value=member.id, inline=False)
             embed.add_field(name='Muted By', value=ctx.author.name, inline=False)
@@ -140,7 +140,7 @@ class Moderation:
                 await member.remove_roles(role)
                 embed = discord.Embed()
                 embed.title = ':open_mouth: Member Unmuted'
-                embed.colour = 0x0000ff
+                embed.colour = 0x0099ff
                 embed.add_field(name='Member Name', value=member.name, inline=False)
                 embed.add_field(name='Member ID', value=member.id, inline=False)
                 embed.add_field(name='Unmuted By', value=ctx.author.name, inline=False)
