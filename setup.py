@@ -42,19 +42,23 @@ def main():
     if not str('DISCORD_TOKEN') in settings:
         print('Please enter your token from Discord below. '
               'You will not need to do this every time you '
-              'run Procbot; this is just first time setup.')
+              'run Procbot; this is just first time setup. '
+              'You can exit the setup by typing \'exit\'.')
         token = user_input()
 
-        try:
-            settings['DISCORD_TOKEN'] = str(token)
-            with open('settings.json', 'w') as fp:
-                json.dump(settings, fp, indent=4)
-        except:
-            print('An error occurred. Aborting setup...')
+        if token.lower() == 'exit':
             os.system('exit')
         else:
-            print('Your token has been successfully set. Running Procbot...')
-            subprocess.call('python main.py')
+            try:
+                settings['DISCORD_TOKEN'] = str(token)
+                with open('settings.json', 'w') as fp:
+                    json.dump(settings, fp, indent=4)
+            except:
+                print('An error occurred. Aborting setup...')
+                os.system('exit')
+            else:
+                print('Your token has been successfully set. Running Procbot...')
+                subprocess.call('python main.py')
     else:
         print('Please choose an option below using the corresponding number:')
         print('1. Run Procbot')
