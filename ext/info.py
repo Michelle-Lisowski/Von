@@ -57,10 +57,10 @@ class Information:
         days, hours = divmod(hours, 24)
 
         embed = discord.Embed()
-        embed.title = 'Procbot'
-        embed.description = '**Procbot by sirtezza_451#9856. Created using discord.py rewrite.**'
+        embed.title = 'Jaffa'
+        embed.description = '**Jaffa by sirtezza_451#9856. Created using discord.py rewrite.**'
         embed.colour = 0x0000ff
-        embed.add_field(name='Uptime', value=f'Procbot has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
+        embed.add_field(name='Uptime', value=f'Jaffa has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
         embed.add_field(name='Username', value=str(self.bot.user), inline=True)
         embed.add_field(name='ID', value=self.bot.user.id, inline=True)
         embed.add_field(name='Version', value='v1.0.0', inline=True)
@@ -82,7 +82,7 @@ class Information:
             activity = member.activity
 
         embed = discord.Embed()
-        embed.title = 'Procbot'
+        embed.title = 'Jaffa'
         embed.colour = 0x0000ff
         embed.set_thumbnail(url=member.avatar_url)
         embed.add_field(name='Username', value=str(member), inline=True)
@@ -100,7 +100,7 @@ class Information:
     async def serverinfo(self, ctx):
         guild = ctx.guild
         embed = discord.Embed()
-        embed.title = 'Procbot'
+        embed.title = 'Jaffa'
         embed.colour = 0x0000ff
         embed.set_thumbnail(url=guild.icon_url)
         embed.add_field(name='Server Name', value=str(guild.name), inline=True)

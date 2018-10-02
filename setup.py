@@ -27,9 +27,9 @@ import json
 import os
 import subprocess
 
-INTRO = ('=============\n'
-         'Procbot Setup\n'
-         '=============\n')
+INTRO = ('===========\n'
+         'Jaffa Setup\n'
+         '===========\n')
 print(INTRO)
 
 def user_input():
@@ -42,7 +42,7 @@ def main():
     if not str('DISCORD_TOKEN') in settings:
         print('Please enter your token from Discord below. '
               'You will not need to do this every time you '
-              'run Procbot; this is just first time setup. '
+              'run Jaffa; this is just first time setup. '
               'You can exit the setup by typing \'exit\'.')
         token = user_input()
 
@@ -57,37 +57,37 @@ def main():
                 print('An error occurred. Aborting setup...')
                 os.system('exit')
             else:
-                print('Your token has been successfully set. Running Procbot...')
+                print('Your token has been successfully set. Running Jaffa...')
                 subprocess.call('python main.py')
     else:
         print('Please choose an option below using the corresponding number:')
-        print('1. Run Procbot')
-        print('2. Update Procbot from master branch')
-        print('3. Update Procbot from development branch')
+        print('1. Run Jaffa')
+        print('2. Update Jaffa from master branch')
+        print('3. Update Jaffa from development branch')
         print('4. Quit')
         choice = user_input()
         if choice == '1':
             try:
                 subprocess.call('python main.py')
             except:
-                print('An error occurred while running Procbot. Aborting setup...')
+                print('An error occurred while running Jaffa. Aborting setup...')
                 os.system('exit')
         elif choice == '2':
             try:
                 subprocess.call('git pull . master')
             except:
-                print('An error occurred while updating Procbot. Make sure Git is'
+                print('An error occurred while updating Jaffa. Make sure Git is'
                       'installed AND added to the PATH environment variable.')
             else:
-                print('Procbot has been successfully updated.')
+                print('Jaffa has been successfully updated.')
         elif choice == '3':
             try:
                 subprocess.call('git pull . development')
             except:
-                print('An error occurred while updating Procbot. Make sure Git is'
+                print('An error occurred while updating Jaffa. Make sure Git is'
                       'installed AND added to the PATH environment variable.')
             else:
-                print('Procbot has been successfully updated.')
+                print('Jaffa has been successfully updated.')
         elif choice == '4':
             os.system('exit')
 

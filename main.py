@@ -42,7 +42,7 @@ from src.colours import DISCORD_COLOURS
 # Create a custom Bot class;
 # Functions in this class can easily be used in cogs without imports;
 # For example, my_function in this class can be called in a cog via self.bot.my_function()
-class Procbot(commands.Bot):
+class Jaffa(commands.Bot):
     '''Custom `discord.ext.commands.Bot`-based class.'''
 
     # Gets the activity type of the specified member;
@@ -179,7 +179,7 @@ class Procbot(commands.Bot):
             # If the user has levelled up, send a message to the channel saying so
             if level_start < level_end:
                 embed = discord.Embed()
-                embed.title = 'Procbot'
+                embed.title = 'Jaffa'
                 embed.description = f'**{user.name}** has levelled up!'
                 embed.colour = 0x0000ff
                 embed.add_field(name='Level', value=level_end, inline=True)
@@ -203,7 +203,7 @@ class Procbot(commands.Bot):
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
         print('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
-        print('Procbot has reawakened.')
+        print('Jaffa has reawakened.')
         print(f'Name: {str(self.user)}')
         print(f'ID: {self.user.id}')
 
@@ -697,7 +697,7 @@ def get_prefix(bot, message):
         # Return guild prefix
         return commands.when_mentioned_or(*prefixes)(bot, message)
 
-bot = Procbot(get_prefix)
+bot = Jaffa(get_prefix)
 bot.remove_command('help')
 ext_dir = 'ext'
 

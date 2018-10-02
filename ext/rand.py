@@ -100,7 +100,7 @@ class Random:
     @commands.command()
     async def ping(self, ctx):
         embed = discord.Embed()
-        embed.title = 'Procbot'
+        embed.title = 'Jaffa'
         embed.description = 'Pong! :ping_pong:'
         embed.colour = 0x0000ff
         embed.set_footer(text=f'This took {round(self.bot.latency * 1000)}ms.')
@@ -150,7 +150,7 @@ class Random:
                 json.dump(user_xp, fp, indent=4)
 
             embed = discord.Embed()
-            embed.title = 'Procbot'
+            embed.title = 'Jaffa'
             embed.description = f'Here are **{member.name}**\'s stats.'
             embed.colour = 0x0000ff
             embed.add_field(name='Level', value=user_xp[str(member.id)]['LEVEL'], inline=True)

@@ -39,7 +39,7 @@ class Help:
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         if ctx.invoked_subcommand is None:
             embed = discord.Embed()
-            embed.title = 'Procbot'
+            embed.title = 'Jaffa'
             embed.description = f'Any issues, suggestions or questions? Add my developer **sirtezza_451#9856** and send him a message!\nGet command-specific information by using `{p}help <command>`'
             embed.colour = 0x0000ff
             embed.add_field(name='Music', value=f'`{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
@@ -56,7 +56,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}connect'
+        embed.title = f'Jaffa | {p}connect'
         embed.description = '**Connects to the specified voice channel**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}connect <voice channel>`', inline=False)
@@ -69,7 +69,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}play'
+        embed.title = f'Jaffa | {p}play'
         embed.description = '**Plays a song from YouTube based on the search query**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}play <search query>`', inline=False)
@@ -82,7 +82,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}pause'
+        embed.title = f'Jaffa | {p}pause'
         embed.description = '**Pauses the currently playing music**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}pause`', inline=False)
@@ -94,7 +94,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}resume'
+        embed.title = f'Jaffa | {p}resume'
         embed.description = '**Resumes the currently paused music**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}resume`', inline=False)
@@ -106,7 +106,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}skip'
+        embed.title = f'Jaffa | {p}skip'
         embed.description = '**Skips the currently playing song**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}skip`', inline=False)
@@ -118,7 +118,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}np'
+        embed.title = f'Jaffa | {p}np'
         embed.description = '**Displays the currently playing song**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}np`', inline=False)
@@ -130,7 +130,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}playlist'
+        embed.title = f'Jaffa | {p}playlist'
         embed.description = '**Displays the next 5 songs in the playlist**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}playlist`', inline=False)
@@ -142,7 +142,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}stop'
+        embed.title = f'Jaffa | {p}stop'
         embed.description = '**Stops the currently playing music**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}stop`', inline=False)
@@ -154,7 +154,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}volume'
+        embed.title = f'Jaffa | {p}volume'
         embed.description = '**Adjusts the volume or displays the current volume**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}volume <volume>`', inline=False)
@@ -168,7 +168,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}flip'
+        embed.title = f'Jaffa | {p}flip'
         embed.description = '**Flips a coin and returns either heads or tails**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}flip`', inline=False)
@@ -181,7 +181,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}roll'
+        embed.title = f'Jaffa | {p}roll'
         embed.description = '**Rolls a die with the number of sides specified**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}roll <number of sides>`', inline=False)
@@ -196,7 +196,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}gay'
+        embed.title = f'Jaffa | {p}gay'
         embed.description = '**Tells you how gay the mentioned member is**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}gay <member>`', inline=False)
@@ -210,8 +210,8 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}ping'
-        embed.description = '**Returns Procbot\'s latency in milliseconds**'
+        embed.title = f'Jaffa | {p}ping'
+        embed.description = '**Returns Jaffa\'s latency in milliseconds**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}ping`', inline=False)
         await ctx.send(embed=embed)
@@ -222,7 +222,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}cat'
+        embed.title = f'Jaffa | {p}cat'
         embed.description = '**Returns a random picture of a cat**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}cat`', inline=False)
@@ -234,7 +234,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}drop'
+        embed.title = f'Jaffa | {p}drop'
         embed.description = '**Returns the Fortnite location you should land at**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}drop`', inline=False)
@@ -246,7 +246,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}xp'
+        embed.title = f'Jaffa | {p}xp'
         embed.description = '**Returns the amount of XP the mentioned member has**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}xp <member>`', inline=False)
@@ -259,7 +259,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}calculator'
+        embed.title = f'Jaffa | {p}calculator'
         embed.description = '**Performs calculations of 2 numbers with a specific operation**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}calculator <number> <operation> <number>`', inline=False)
@@ -274,7 +274,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}kick'
+        embed.title = f'Jaffa | {p}kick'
         embed.description = '**Kicks the mentioned member**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}kick <member>`', inline=False)
@@ -287,7 +287,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}ban'
+        embed.title = f'Jaffa | {p}ban'
         embed.description = '**Bans the mentioned member**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}ban <member>`', inline=False)
@@ -300,7 +300,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}mute'
+        embed.title = f'Jaffa | {p}mute'
         embed.description = '**Prevents the mentioned member from sending messages**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}mute <member>`', inline=False)
@@ -313,7 +313,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}unmute'
+        embed.title = f'Jaffa | {p}unmute'
         embed.description = '**Allows the mentioned member to chat again**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}unmute <member>`', inline=False)
@@ -326,7 +326,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}purge'
+        embed.title = f'Jaffa | {p}purge'
         embed.description = '**Bulk deletes the specified number of messages**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}purge <number of messages>`', inline=False)
@@ -340,8 +340,8 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}info'
-        embed.description = '**Returns information about Procbot**'
+        embed.title = f'Jaffa | {p}info'
+        embed.description = '**Returns information about Jaffa**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}info`', inline=False)
         await ctx.send(embed=embed)
@@ -352,7 +352,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}profile'
+        embed.title = f'Jaffa | {p}profile'
         embed.description = '**Returns information about the mentioned member**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}profile <member>`', inline=False)
@@ -366,7 +366,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}serverinfo'
+        embed.title = f'Jaffa | {p}serverinfo'
         embed.description = '**Returns information about the current server**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}serverinfo`', inline=False)
@@ -378,7 +378,7 @@ class Help:
             guilds = json.load(fp)
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
-        embed.title = f'Procbot | {p}setting'
+        embed.title = f'Jaffa | {p}setting'
         embed.description = '**Allows you to change various things related to the bot**'
         embed.colour = 0x0000ff
         embed.add_field(name='Usage', value=f'`{p}setting <subcommand> <argument>`', inline=False)

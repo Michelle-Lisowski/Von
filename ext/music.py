@@ -313,7 +313,7 @@ class Music:
                 return
 
             embed = discord.Embed()
-            embed.title = 'Procbot'
+            embed.title = 'Jaffa'
             embed.description = '**Decide whether or not to skip the currently playing song!**'
             embed.colour = 0x0000ff
             embed.set_footer(text='You have 15 seconds to vote.')
@@ -386,7 +386,7 @@ class Music:
                 return
 
             embed = discord.Embed()
-            embed.title = 'Procbot'
+            embed.title = 'Jaffa'
             embed.description = '**Decide whether or not to stop the current playlist!**'
             embed.colour = 0x0000ff
             embed.set_footer(text='You have 15 seconds to vote.')
