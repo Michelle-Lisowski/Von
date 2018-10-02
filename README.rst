@@ -37,7 +37,22 @@ To install the development version, do the following:
 Bot Initialisation
 ------------------
 
-Once you have installed Procbot on your computer, you will need to get a bot token by creating an app `here <https://discordapp.com/developers/applications>`_.
+Once you have installed Procbot on your computer, you will need to create the JSON files required
+for specific functions. The following files must be created:
+
+.. code:
+    guilds.json
+    mod_logs.json
+    xp.json
+
+Each of these must contain an empty dictionary:
+
+.. code:
+
+    {}
+
+Once you have prepared the necessary files, you will need to get a bot token
+by creating an app `here <https://discordapp.com/developers/applications>`_.
 Copy that token and run ``setup.py``. Paste your token in when asked, and it
 will save it in ``settings.json``. The bot will then be run automatically.
 
