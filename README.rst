@@ -40,14 +40,14 @@ Bot Initialisation
 Once you have installed Procbot on your computer, you will need to create the JSON files required
 for specific functions. The following files must be created:
 
-.. code:
+.. code::
     guilds.json
     mod_logs.json
     xp.json
 
 Each of these must contain an empty dictionary:
 
-.. code:
+.. code::
 
     {}
 
