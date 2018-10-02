@@ -77,17 +77,23 @@ def main():
                 subprocess.call('git pull . master')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
-                      'installed AND added to the PATH environment variable.')
+                      'installed as well as available in the PATH environment '
+                      'variable. Aborting setup...')
+                os.system('exit')
             else:
-                print('Jaffa has been successfully updated.')
+                print('Jaffa has been successfully updated. Running Jaffa...')
+                subprocess.call('python main.py')
         elif choice == '3':
             try:
                 subprocess.call('git pull . development')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
-                      'installed AND added to the PATH environment variable.')
+                      'installed as well as available in the PATH environment '
+                      'variable. Aborting setup...')
+                os.system('exit')
             else:
-                print('Jaffa has been successfully updated.')
+                print('Jaffa has been successfully updated. Running Jaffa...')
+                subprocess.call('python main.py')
         elif choice == '4':
             os.system('exit')
 
