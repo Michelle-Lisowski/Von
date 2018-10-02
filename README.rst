@@ -41,6 +41,7 @@ Once you have installed Procbot on your computer, you will need to create the JS
 for specific functions. The following files must be created:
 
 .. code::
+
     guilds.json
     mod_logs.json
     xp.json
