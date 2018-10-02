@@ -202,6 +202,10 @@ class Music:
             elif str(ctx.command) == 'volume':
                 await ctx.send(':x: Please specify a **whole number** for the volume.')
 
+        elif isinstance(error, commands.CommandInvokeError):
+            if str(ctx.command) == 'volume':
+                await ctx.send(f":sound: Current volume level: **{round(guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] * 100)}%**.")
+
         elif isinstance(error, InvalidVoiceChannel):
             await ctx.send(error)
 
