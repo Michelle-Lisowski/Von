@@ -37,7 +37,7 @@ from discord.ext import commands
 from youtube_dl import YoutubeDL
 
 ytdlopts = {
-    'format': 'bestaudio/best',
+    'format': 'bestaudio/worst',
     'outtmpl': 'downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s',
     'restrictfilenames': True,
     'noplaylist': True,
@@ -71,6 +71,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         super().__init__(source)
         self.requester = requester
         self.title = data.get('title')
+        self.uploader = data.get('uploader')
         self.web_url = data.get('webpage_url')
 
     def __getitem__(self, item: str):
@@ -85,12 +86,12 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if 'entries' in data:
             data = data['entries'][0]
 
-        await ctx.send(f":information_source: **{data['title']}** has been added to the queue.")
+        await ctx.send(f":information_source: **{data['uploader']}** - **{data['title']}** has been added to the queue.")
 
         if download:
             source = ytdl.prepare_filename(data)
         else:
-            return {'webpage_url': data['webpage_url'], 'requester': ctx.author, 'title': data['title']}
+            return {'webpage_url': data['webpage_url'], 'requester': ctx.author, 'title': data['title'], 'uploader': data['uploader']}
         return cls(discord.FFmpegPCMAudio(source), data=data, requester=ctx.author)
 
     @classmethod
@@ -152,7 +153,7 @@ class MusicPlayer:
             self.current = source
 
             self._guild.voice_client.play(source, after=lambda n: self.bot.loop.call_soon_threadsafe(self.next.set))
-            self.np = await self._channel.send(f':musical_note: Now playing: **{source.title}**.')
+            self.np = await self._channel.send(f':musical_note: Now playing: **{source.uploader}** - **{source.title}**.')
             await self.next.wait()
 
             source.cleanup()
@@ -232,7 +233,7 @@ class Music:
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
         if not channel:
             try:
-                channel = ctx.author.voice.channel
+                vc_channel = ctx.author.voice.channel
             except AttributeError:
                 raise InvalidVoiceChannel(':grey_exclamation: Please join a voice channel or specify one for me to join.')
 
@@ -247,8 +248,11 @@ class Music:
                 raise VoiceConnectionError(f':x: Moving to voice channel **{channel}** timed out.')
         else:
             try:
-                await channel.connect(reconnect=True)
-                await ctx.send(f':information_source: Connected to voice channel **{channel}**.')
+                if channel:
+                    await channel.connect(reconnect=True)
+                    await ctx.send(f':information_source: Connected to voice channel **{channel}**.')
+                else:
+                    await vc_channel.connect(reconnect=True)
             except asyncio.TimeoutError:
                 raise VoiceConnectionError(f':x: Connecting to voice channel **{channel}** timed out.')
 
