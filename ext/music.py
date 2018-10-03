@@ -353,7 +353,7 @@ class Music:
                 return
 
             upcoming = list(itertools.islice(player.queue._queue, 0, 5))
-            fmt = '\n'.join(f"**{u['uploader']} - {u['title']}**" for u in upcoming)
+            fmt = '\n'.join(f"**{u['uploader']}** - **{u['title']}**" for u in upcoming)
             embed = discord.Embed()
             embed.title = f'Upcoming - Next {len(upcoming)} Songs'
             embed.description = fmt
