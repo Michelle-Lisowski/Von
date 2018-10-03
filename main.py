@@ -22,6 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import aiohttp
 import datetime
 import json
 import logging
@@ -44,6 +45,24 @@ from src.colours import DISCORD_COLOURS
 # For example, my_function in this class can be called in a cog via self.bot.my_function()
 class Jaffa(commands.Bot):
     '''Custom `discord.ext.commands.Bot`-based class.'''
+
+    # Posts the guild count to DBL
+    async def post_guilds_dbl(self):
+        # Fetch DBL token
+        dbl_token = os.getenv('DBL_TOKEN')
+
+        # Set token on DBL
+        headers = {'Authorization': dbl_token}
+
+        # Set guild count
+        data = {'server_count': len(self.guilds)}
+
+        # Set bot page URL
+        api_url = 'https://discordbots.org/api/bots/477014316063784961/stats'
+
+        # Post data
+        async with aiohttp.ClientSession() as session:
+            await session.post(api_url, data=data, headers=headers)
 
     # Gets the activity type of the specified member;
     # Called in a cog via self.bot.get_at(member)
@@ -200,6 +219,9 @@ class Jaffa(commands.Bot):
         else:
             await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
+        # Post guild count to DBL
+        self.post_guilds_dbl()
+
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
         print('discord.py {0.major}.{0.minor}.{0.micro} {0.releaselevel}'.format(discord.version_info))
@@ -211,6 +233,9 @@ class Jaffa(commands.Bot):
             await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
         else:
             await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
+
+        # Post guild count to DBL
+        self.post_guilds_dbl()
 
     # Do stuff whenever a message is sent;
     # This includes experience-related functions;
@@ -389,6 +414,9 @@ class Jaffa(commands.Bot):
             # Write any file changes to mod_logs.json
             json.dump(mod_logs, fp, indent=4)
 
+        # Post guild count to DBL
+        self.post_guilds_dbl()
+
     # Called whenever the bot has been removed from a guild;
     # Updates the bot's visible guild count
     async def on_guild_remove(self, guild):
@@ -397,6 +425,9 @@ class Jaffa(commands.Bot):
             await self.change_presence(activity=discord.Streaming(name='on 1 server! | .help', url='https://twitch.tv/kraken'))
         else:
             await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
+
+        # Post guild count to DBL
+        self.post_guilds_dbl()
 
     # Called whenever a member has joined a guild;
     # Finds a logs channel in the guild and logs that the member has joined
