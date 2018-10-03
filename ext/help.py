@@ -122,6 +122,7 @@ class Help:
         embed.description = '**Displays the currently playing song**'
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}np`', inline=False)
+        embed.add_field(name='Aliases', value='`now_playing`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -134,6 +135,7 @@ class Help:
         embed.description = '**Displays the next 5 songs in the playlist**'
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}playlist`', inline=False)
+        embed.add_field(name='Aliases', value='`queue`, `upcoming`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
