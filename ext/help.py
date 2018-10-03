@@ -122,7 +122,7 @@ class Help:
         embed.description = '**Displays the currently playing song**'
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}np`', inline=False)
-        embed.add_field(name='Aliases', value='`now_playing`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}now_playing`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command(aliases=['queue', 'upcoming'])
@@ -135,7 +135,7 @@ class Help:
         embed.description = '**Displays the next 5 songs in the playlist**'
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}playlist`', inline=False)
-        embed.add_field(name='Aliases', value='`queue`, `upcoming`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}queue`, `{p}upcoming`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -279,7 +279,7 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}calculator <number> <operation> <number>`', inline=False)
         embed.add_field(name='Arguments', value='`number` - **number**\n`operation` - `+`, `-`, `*`, `/`, `//`, or `**`', inline=False)
         embed.add_field(name='Example', value=f'`{p}calculator 4 ** 4` - 4 to the power of 4', inline=False)
-        embed.add_field(name='Aliases', value='`calc`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}calc`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -359,7 +359,7 @@ class Help:
         embed.description = '**Returns information about Jaffa**'
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}info`', inline=False)
-        embed.add_field(name='Aliases', value='`prune`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}prune`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
@@ -399,7 +399,7 @@ class Help:
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}setting <subcommand> <argument>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}setting prefix -`', inline=False)
-        embed.add_field(name='Aliases', value='`settings`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}settings`', inline=False)
         embed.set_footer(text='Using the command with no arguments returns the subcommands that can be used.')
         await ctx.send(embed=embed)
 
