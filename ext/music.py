@@ -133,6 +133,7 @@ class MusicPlayer:
 
             try:
                 async with timeout(300):
+                    global source
                     source = await self.queue.get()
             except asyncio.TimeoutError:
                 self.end(self._guild)
@@ -352,7 +353,7 @@ class Music:
                 return
 
             upcoming = list(itertools.islice(player.queue._queue, 0, 5))
-            fmt = '\n'.join(f"**{u['title']}**" for u in upcoming)
+            fmt = '\n'.join(f"**{u['uploader']} - {u['title']}**" for u in upcoming)
             embed = discord.Embed()
             embed.title = f'Upcoming - Next {len(upcoming)} Songs'
             embed.description = fmt
@@ -376,7 +377,7 @@ class Music:
                 await player.np.delete()
             except discord.HTTPException:
                 pass
-            player.np = await ctx.send(f':musical_note: Now playing: **{vc.source.title}**.')
+            player.np = await ctx.send(f':musical_note: Now playing: **{source.uploader}** - **{source.title}**.')
 
     @commands.command(name='stop')
     @commands.guild_only()
