@@ -436,6 +436,10 @@ class Jaffa(commands.Bot):
         if member.id == self.user.id:
             pass
 
+        # If the member is in the Discord Bots List guild, pass
+        elif member.guild.id == 264445053596991498:
+            pass
+
         # Otherwise, log that the member has joined
         else:
             # Find the 'welcome' channel
@@ -484,6 +488,10 @@ class Jaffa(commands.Bot):
     async def on_member_remove(self, member):
         # If the member's ID is the bot's user ID, pass
         if member.id == self.user.id:
+            pass
+
+        # If the member is in the Discord Bots List guild, pass
+        elif member.guild.id == 264445053596991498:
             pass
 
         # Otherwise, log that the member has left
