@@ -101,7 +101,7 @@ class Administration:
             mod_logs[str(ctx.guild.id)]['KICK_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
-            await self.bot.on_kick(author=ctx.author, member=member, reason=str(reason))
+            await self.bot.on_mod_case(ctx=ctx, author=ctx.author, member=member, reason=str(reason))
 
     @commands.command()
     @commands.guild_only()
@@ -142,7 +142,7 @@ class Administration:
             mod_logs[str(ctx.guild.id)]['BAN_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
-            await self.bot.on_ban(author=ctx.author, member=member, reason=None)
+            await self.bot.on_mod_case(ctx=ctx, author=ctx.author, member=member, reason=str(reason))
 
 def setup(bot):
     bot.add_cog(Administration(bot))

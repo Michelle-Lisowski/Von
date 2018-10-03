@@ -112,7 +112,7 @@ class Moderation:
             mod_logs[str(ctx.guild.id)]['MUTE_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
-            await self.bot.on_mute(author=ctx.author, member=member, reason=str(reason))
+            await self.bot.on_mod_case(ctx=ctx, author=ctx.author, member=member, reason=str(reason))
 
     @commands.command()
     @commands.guild_only()

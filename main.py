@@ -482,10 +482,9 @@ class Jaffa(commands.Bot):
             # Send the leave message
             await channel.send(f'We\'re sad to see you leave, **{member.name}**... :cry:')
 
-    # Custom 'events';
-    # on_kick, on_ban, on_mute;
-    # Called in a cog via self.bot.on_kick(author, member, reason)
-    async def on_kick(self, author, member, reason):
+    # Custom 'event' for moderation cases;
+    # Called in a cog via self.bot.on_mod_case(ctx, author, member, reason)
+    async def on_mod_case(self, ctx, author, member, reason):
         # Open mod_logs.json in read mode
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
@@ -499,13 +498,13 @@ class Jaffa(commands.Bot):
         # Get a random role colour
         role_colour = random.choice(DISCORD_COLOURS)
 
-        # If the 'Staff' role is non-existent, create it
+        # If the 'Staff' role doesn't exist, create it
         if staff_role is None:
             staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
-        # If it doesn't exist, create it
+        # If the 'mod-logs' channel doesn't exist, create it as well as its category
         if channel is None:
-            # Set channel overwrites for @everyone, the bot, and the 'Staff' role
+            # Set permission overwrites for @everyone, Jaffa, and the 'Staff' role
             overwrites = {
                 member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
                 member.guild.me: discord.PermissionOverwrite(send_messages=True),
@@ -516,109 +515,30 @@ class Jaffa(commands.Bot):
             category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
             channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
 
-        # Fetch the number of kick cases
-        case = mod_logs[str(member.guild.id)]['KICK_COUNT']
+        # Fetch the number of cases for each case type
+        kicks = mod_logs[str(member.guild.id)]['KICK_COUNT']
+        bans = mod_logs[str(member.guild.id)]['BAN_COUNT']
+        mutes = mod_logs[str(member.guild.id)]['MUTE_COUNT']
 
-        # Send an embed to the 'mod-logs' channel
+        # Different titles and fields for different case types
+        if str(ctx.command) == 'kick':
+            title = f':boot: Kick | Case {kicks}'
+            field_title = 'Kicked By'
+        elif str(ctx.command) == 'ban':
+            title = f':no_entry_sign: Ban | Case {bans}'
+            field_title = 'Banned By'
+        elif str(ctx.command) == 'mute':
+            title = f':zipper_mouth: Mute | Case {mutes}'
+            field_title = 'Muted By'
+
+        # Base embed
         embed = discord.Embed()
-        embed.title = f':boot: Kick | Case {case}'
+        embed.title = title
         embed.colour = 0x0099ff
         embed.add_field(name='Member Name', value=str(member), inline=False)
         embed.add_field(name='Member ID', value=str(member.id), inline=False)
         embed.add_field(name='Reason', value=str(reason), inline=False)
-        embed.add_field(name='Kicked By', value=str(author), inline=False)
-        embed.set_footer(text=datetime.datetime.now())
-        await channel.send(embed=embed)
-
-    # Called in a cog via self.bot.on_ban(author, member, reason)
-    async def on_ban(self, author, member, reason):
-        # Open mod_logs.json in read mode
-        with open('mod_logs.json', 'r') as fp:
-            mod_logs = json.load(fp)
-
-        # Find the 'mod-logs' channel
-        channel = utils.get(member.guild.text_channels, name='mod-logs')
-
-        # Find the 'Staff' role
-        staff_role = utils.get(member.guild.roles, name='Staff')
-
-        # Get a random role colour
-        role_colour = random.choice(DISCORD_COLOURS)
-
-        # If the 'Staff' role is non-existent, create it
-        if staff_role is None:
-            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
-
-        # If it doesn't exist, create it
-        if channel is None:
-            # Set channel overwrites for @everyone, the bot, and the 'Staff' role
-            overwrites = {
-                member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                member.guild.me: discord.PermissionOverwrite(send_messages=True),
-                staff_role: discord.PermissionOverwrite(send_messages=True)
-            }
-
-            # Create the 'Logs' category and the 'mod-logs' channel
-            category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
-            channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
-
-        # Fetch the number of ban cases
-        case = mod_logs[str(member.guild.id)]['BAN_COUNT']
-
-        # Send an embed to the 'mod-logs' channel
-        embed = discord.Embed()
-        embed.title = f':no_entry_sign: Ban | Case {case}'
-        embed.colour = 0x0099ff
-        embed.add_field(name='Member Name', value=str(member), inline=False)
-        embed.add_field(name='Member ID', value=str(member.id), inline=False)
-        embed.add_field(name='Reason', value=str(reason), inline=False)
-        embed.add_field(name='Banned By', value=str(author), inline=False)
-        embed.set_footer(text=datetime.datetime.now())
-        await channel.send(embed=embed)
-
-    # Called in a cog via self.bot.on_mute(author, member, reason)
-    async def on_mute(self, author, member, reason):
-        # Open mod_logs.json in read mode
-        with open('mod_logs.json', 'r') as fp:
-            mod_logs = json.load(fp)
-
-        # Find the 'mod-logs' channel
-        channel = utils.get(member.guild.text_channels, name='mod-logs')
-
-        # Find the 'Staff' role
-        staff_role = utils.get(member.guild.roles, name='Staff')
-
-        # Get a random role colour
-        role_colour = random.choice(DISCORD_COLOURS)
-
-        # If the 'Staff' role is non-existent, create it
-        if staff_role is None:
-            staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
-
-        # If it doesn't exist, create it
-        if channel is None:
-            # Set channel overwrites for @everyone and the bot
-            overwrites = {
-                member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                member.guild.me: discord.PermissionOverwrite(send_messages=True),
-                staff_role: discord.PermissionOverwrite(send_messages=True)
-            }
-
-            # Create the 'Logs' category and the 'mod-logs' channel
-            category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
-            channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
-
-        # Fetch the number of mute cases
-        case = mod_logs[str(member.guild.id)]['MUTE_COUNT']
-
-        # Send an embed to the 'mod-logs' channel
-        embed = discord.Embed()
-        embed.title = f':zipper_mouth: Mute | Case {case}'
-        embed.colour = 0x0099ff
-        embed.add_field(name='Member Name', value=str(member), inline=False)
-        embed.add_field(name='Member ID', value=str(member.id), inline=False)
-        embed.add_field(name='Reason', value=str(reason), inline=False)
-        embed.add_field(name='Muted By', value=str(author), inline=False)
+        embed.add_field(name=field_title, value=str(author), inline=False)
         embed.set_footer(text=datetime.datetime.now())
         await channel.send(embed=embed)
 
