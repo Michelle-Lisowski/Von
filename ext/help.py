@@ -267,7 +267,7 @@ class Help:
         embed.add_field(name='Example', value=f'`{p}xp @sirtezza_451#9856`', inline=False)
         await ctx.send(embed=embed)
 
-    @help_.command()
+    @help_.command(aliases=['calc'])
     async def calculator(self, ctx):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
