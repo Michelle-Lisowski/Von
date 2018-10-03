@@ -221,6 +221,10 @@ class Jaffa(commands.Bot):
         if not message.guild:
             await self.process_commands(message)
 
+        # If the message is in the Discord Bots List guild, only process commands
+        elif message.guild.id == 264445053596991498:
+            await self.process_commands(message)
+
         # Otherwise, run experience, prefix and log-related functions
         else:
             # Open xp.json in read mode
