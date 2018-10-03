@@ -165,10 +165,11 @@ class MusicPlayer:
             except discord.HTTPException:
                 pass
 
-            if self.current is None and len(self.queue._queue) == 0:
-                self.end(self._guild)
-                await self._channel.send(':information_source: End of the playlist.')
-                return
+            if self.current is None:
+                if not self.queue._queue:
+                    self.end(self._guild)
+                    await self._channel.send(':information_source: End of the playlist.')
+                    return
 
     def end(self, guild):
         self.bot.loop.create_task(self._cog.stop(guild))
@@ -348,7 +349,7 @@ class Music:
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         else:
             player = self.get_player(ctx)
-            if player.queue.empty():
+            if not player.queue._queue:
                 await ctx.send(':grey_exclamation: There are currently no queued songs.')
                 return
 
@@ -378,6 +379,20 @@ class Music:
             except discord.HTTPException:
                 pass
             player.np = await ctx.send(f':musical_note: Now playing: **{source.uploader}** - **{source.title}**.')
+
+    @commands.command(name='clear')
+    @commands.guild_only()
+    async def clear_(self, ctx):
+        vc = ctx.voice_client
+        player = self.get_player(ctx)
+
+        if not vc.is_playing():
+            await ctx.send(':grey_exclamation: No music is currently playing.')
+        elif player.queue.empty():
+            await ctx.send(':grey_exclamation: There are currently no queued songs.')
+        else:
+            player.queue._queue.clear()
+            await ctx.send(':information_source: Playlist successfully cleared.')
 
     @commands.command(name='stop')
     @commands.guild_only()

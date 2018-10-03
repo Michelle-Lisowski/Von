@@ -42,7 +42,7 @@ class Help:
             embed.title = 'Jaffa'
             embed.description = f'Any issues, suggestions or questions? Add my developer **sirtezza_451#9856** and send him a message!\nGet command-specific information by using `{p}help <command>`'
             embed.colour = 0x0099ff
-            embed.add_field(name='Music', value=f'`{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}stop` `{p}volume`', inline=False)
+            embed.add_field(name='Music', value=f'`{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}clear` `{p}stop` `{p}volume`', inline=False)
             embed.add_field(name='Random', value=f'`{p}flip` `{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp` `{p}calculator`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
             embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
@@ -136,6 +136,18 @@ class Help:
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}playlist`', inline=False)
         embed.add_field(name='Aliases', value='`queue`, `upcoming`', inline=False)
+        await ctx.send(embed=embed)
+
+    @help_.command()
+    async def clear(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        embed = discord.Embed()
+        embed.title = f'Jaffa | {p}clear'
+        embed.description = '**Clears the playlist of currently queued songs**'
+        embed.colour = 0x0099ff
+        embed.add_field(name='Usage', value=f'`{p}clear`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()
