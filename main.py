@@ -220,7 +220,7 @@ class Jaffa(commands.Bot):
             await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
         # Post guild count to DBL
-        self.post_guilds_dbl()
+        await self.post_guilds_dbl()
 
     # Reset bot presence and log that the bot's session has resumed;
     async def on_resumed(self):
@@ -235,7 +235,7 @@ class Jaffa(commands.Bot):
             await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
         # Post guild count to DBL
-        self.post_guilds_dbl()
+        await self.post_guilds_dbl()
 
     # Do stuff whenever a message is sent;
     # This includes experience-related functions;
@@ -415,7 +415,7 @@ class Jaffa(commands.Bot):
             json.dump(mod_logs, fp, indent=4)
 
         # Post guild count to DBL
-        self.post_guilds_dbl()
+        await self.post_guilds_dbl()
 
     # Called whenever the bot has been removed from a guild;
     # Updates the bot's visible guild count
@@ -427,7 +427,7 @@ class Jaffa(commands.Bot):
             await self.change_presence(activity=discord.Streaming(name=f'on {len(self.guilds)} servers! | .help', url='https://twitch.tv/kraken'))
 
         # Post guild count to DBL
-        self.post_guilds_dbl()
+        await self.post_guilds_dbl()
 
     # Called whenever a member has joined a guild;
     # Finds a logs channel in the guild and logs that the member has joined
