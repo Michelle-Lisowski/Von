@@ -346,6 +346,7 @@ class Help:
         embed.description = '**Returns information about Jaffa**'
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}info`', inline=False)
+        embed.add_field(name='Aliases', value='`prune`', inline=False)
         await ctx.send(embed=embed)
 
     @help_.command()

@@ -147,7 +147,7 @@ class Moderation:
                 embed.set_footer(text=datetime.datetime.now())
                 await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(aliases=['prune'])
     @commands.guild_only()
     async def purge(self, ctx, number: int = None):
         staff_role = utils.get(ctx.guild.roles, name='Staff')
