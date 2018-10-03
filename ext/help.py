@@ -112,7 +112,7 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}skip`', inline=False)
         await ctx.send(embed=embed)
 
-    @help_.command()
+    @help_.command(aliases=['now_playing'])
     async def np(self, ctx):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
@@ -125,7 +125,7 @@ class Help:
         embed.add_field(name='Aliases', value='`now_playing`', inline=False)
         await ctx.send(embed=embed)
 
-    @help_.command()
+    @help_.command(aliases=['queue', 'upcoming'])
     async def playlist(self, ctx):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
@@ -374,7 +374,7 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}serverinfo`', inline=False)
         await ctx.send(embed=embed)
 
-    @help_.command()
+    @help_.command(aliases=['settings'])
     async def setting(self, ctx):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
