@@ -346,6 +346,7 @@ class Help:
         embed.add_field(name='Usage', value=f'`{p}purge <number of messages>`', inline=False)
         embed.add_field(name='Arguments', value='`number of messages` - **number**', inline=False)
         embed.add_field(name='Example', value=f'`{p}purge 50`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}prune', inline=False)
         embed.set_footer(text='Purging messages more than two weeks old may take a while.')
         await ctx.send(embed=embed)
 
