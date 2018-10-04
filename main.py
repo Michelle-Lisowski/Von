@@ -278,40 +278,6 @@ class Jaffa(commands.Bot):
                 # Write any file changes to xp.json
                 json.dump(xp, fp, indent=4)
 
-            # Open guilds.json in read mode
-            with open('guilds.json', 'r') as fp:
-                guilds = json.load(fp)
-
-            # If the guild's ID isn't in guilds.json, create an empty dict;
-            # Guild prefix is set to '.';
-            # Default volume is set to 0.5
-            if not str(message.guild.id) in guilds:
-                guilds[str(message.guild.id)] = {}
-                guilds[str(message.guild.id)]['GUILD_PREFIX'] = '.'
-                guilds[str(message.guild.id)]['DEFAULT_VOLUME'] = 0.5
-
-            # Open guilds.json in write mode
-            with open('guilds.json', 'w') as fp:
-                # Write any file changes to guilds.json
-                json.dump(guilds, fp, indent=4)
-
-            # Open mod_logs.json in read mode
-            with open('mod_logs.json', 'r') as fp:
-                mod_logs = json.load(fp)
-
-            # If the guild's ID isn't in mod_logs.json, create an empty dict;
-            # Case counts are set to 0
-            if not str(message.guild.id) in mod_logs:
-                mod_logs[str(message.guild.id)] = {}
-                mod_logs[str(message.guild.id)]['KICK_COUNT'] = 0
-                mod_logs[str(message.guild.id)]['BAN_COUNT'] = 0
-                mod_logs[str(message.guild.id)]['MUTE_COUNT'] = 0
-
-            # Open mod_logs.json in write mode
-            with open('mod_logs.json', 'w') as fp:
-                # Write any file changes to mod_logs.json
-                json.dump(mod_logs, fp, indent=4)
-
             # Process commands
             await self.process_commands(message)
 
@@ -321,21 +287,19 @@ class Jaffa(commands.Bot):
         with open('guilds.json', 'r') as fp:
             guilds = json.load(fp)
 
-        # If the current guild is in guilds.json, fetch its prefix
+        # Fetch prefix
         p = guilds[str(before.guild.id)]['GUILD_PREFIX']
 
-        # If the original message was a command, pass
-        if f'{p}help' or f'{p}kick' or f'{p}ban' or f'{p}mute' or f'{p}unmute' or f'{p}purge' or f'{p}setting' or f'{p}info' or f'{p}profile' or f'{p}serverinfo' or f'{p}load' or f'{p}unload' or f'{p}reload' or f'{p}logout' or f'{p}roll' or f'{p}gay' or f'{p}ping' or f'{p}cat' or f'{p}xp' or f'{p}play' or f'{p}pause' or f'{p}resume' or f'{p}skip' or f'{p}np' or f'{p}playlist' or f'{p}stop' or f'{p}volume' in before.content:
-            # self.process_commands(before) re-invokes the recently invoked command, so use pass instead
+        # Set context for use in below check
+        ctx = commands.Context(command=before, message=before, bot=self, prefix=p)
+
+        # Check if original message was a command
+        if str(ctx.prefix) in before.content:
+            # If so, pass
             pass
-        # If the original message wasn't a command, process the commands in the edited message
+        # Otherwise, process commands after message edit
         else:
             await self.process_commands(after)
-
-        # Open guilds.json in write mode
-        with open('guilds.json', 'w') as fp:
-            # Write any file changes to guilds.json
-            json.dump(guilds, fp, indent=4)
 
     # Logs that a command has been invoked
     async def on_command(self, ctx):
@@ -633,9 +597,10 @@ class Jaffa(commands.Bot):
 
 # Returns custom guild prefixes
 def get_prefix(bot, message):
-    # If the message is from private messages, return
+    # If the message is from private messages, return mention/default prefix
     if not message.guild:
-        return '.'
+        prefixes = ['.']
+        return commands.when_mentioned_or(*prefixes)
 
     # Otherwise, return the current guild's prefix
     else:
