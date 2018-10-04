@@ -57,14 +57,22 @@ def main():
                 print('An error occurred. Aborting setup...')
                 os.system('exit')
             else:
-                print('Your token has been successfully set. Running Jaffa...')
-                subprocess.call('python main.py')
+                print('Your token has been successfully set. Installing requirements...')
+                try:
+                    subprocess.call('pip install -r requirements.txt')
+                except:
+                    print('An error occurred. Aborting setup...')
+                    os.system('exit')
+                else:
+                    print('Requirements successfully installed. Running Jaffa...')
+                    subprocess.call('pip install -r requirements.txt')
     else:
         print('Please choose an option below using the corresponding number:')
         print('1. Run Jaffa')
         print('2. Update Jaffa from master branch')
         print('3. Update Jaffa from development branch')
-        print('4. Quit')
+        print('4. Update requirements')
+        print('5. Quit')
         choice = user_input()
         if choice == '1':
             try:
@@ -95,6 +103,16 @@ def main():
                 print('Jaffa has been successfully updated. Running Jaffa...')
                 subprocess.call('python main.py')
         elif choice == '4':
+            try:
+                subprocess.call('pip install --upgrade -r requirements.txt')
+            except:
+                print('An error occured while updating Jaffa\'s requirements.'
+                      'Aborting setup...')
+                os.system('exit')
+            else:
+                print('Requirements successfully updated. Running Jaffa...')
+                subprocess.call('python main.py')
+        elif choice == '5':
             os.system('exit')
 
 if __name__ == '__main__':
