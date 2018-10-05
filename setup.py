@@ -69,8 +69,8 @@ def main():
     else:
         print('Please choose an option below using the corresponding number:')
         print('1. Run Jaffa')
-        print('2. Update Jaffa from master branch')
-        print('3. Update Jaffa from development branch')
+        print('2. Pull code from master branch')
+        print('3. Pull code from development branch')
         print('4. Update requirements')
         print('5. Quit')
         choice = user_input()
@@ -82,26 +82,50 @@ def main():
                 os.system('exit')
         elif choice == '2':
             try:
-                subprocess.call('git pull . master')
+                subprocess.call('git pull')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
-                      'installed as well as available in the PATH environment '
+                      'installed and available in the PATH environment '
                       'variable. Aborting setup...')
                 os.system('exit')
             else:
-                print('Jaffa has been successfully updated. Running Jaffa...')
-                subprocess.call('python main.py')
+                print('Jaffa has been successfully updated. Please enter your bot '
+                      'token from Discord. Jaffa will then be run automatically.')
+                token = user_input()
+
+                try:
+                    settings['DISCORD_TOKEN'] = str(token)
+                    with open('settings.json', 'w') as fp:
+                        json.dump(settings, fp, indent=4)
+                except:
+                    print('An error occurred. Aborting setup...')
+                    os.system('exit')
+                else:
+                    print('Your token has been successfully set. Running Jaffa...')
+                    subprocess.call('python main.py')
         elif choice == '3':
             try:
                 subprocess.call('git pull . development')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
-                      'installed as well as available in the PATH environment '
+                      'installed and available in the PATH environment '
                       'variable. Aborting setup...')
                 os.system('exit')
             else:
-                print('Jaffa has been successfully updated. Running Jaffa...')
-                subprocess.call('python main.py')
+                print('Jaffa has been successfully updated. Please enter your bot '
+                      'token from Discord. Jaffa will then be run automatically.')
+                token = user_input()
+
+                try:
+                    settings['DISCORD_TOKEN'] = str(token)
+                    with open('settings.json', 'w') as fp:
+                        json.dump(settings, fp, indent=4)
+                except:
+                    print('An error occurred. Aborting setup...')
+                    os.system('exit')
+                else:
+                    print('Your token has been successfully set. Running Jaffa...')
+                    subprocess.call('python main.py')
         elif choice == '4':
             try:
                 subprocess.call('pip install --upgrade -r requirements.txt')
