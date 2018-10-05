@@ -278,20 +278,24 @@ class Music:
             await ctx.send(':grey_exclamation: Please specify a search query.')           
         else:
             async with ctx.typing():
-                if self.task:
-                    if ctx.author.voice.channel != vc.channel:
-                        await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
-                    else:
-                        player = self.get_player(ctx)
-                        await ctx.send(':grey_exclamation: Song repetition is currently enabled for:\n'
-                                    f'**{player.current.uploader}** - **{player.current.title}**.\n'
-                                    'This entry will be ignored.')
-                else:
-                    if not vc:
-                        await ctx.invoke(self.connect)
-                        player = self.get_player(ctx)
-                        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-                        await player.queue.put(source)
+                if not vc:
+                    await ctx.invoke(self.connect)
+                    player = self.get_player(ctx)
+                    source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                    await player.queue.put(source)
+                else:               
+                    if self.task:
+                        if ctx.author.voice.channel != vc.channel:
+                            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                        else:
+                            player = self.get_player(ctx)
+                            embed = discord.Embed()
+                            embed.title = 'Jaffa'
+                            embed.description = '**Song repetition is currently enabled**'
+                            embed.colour = 0x0099ff
+                            embed.add_field(name='Song', value='**{0.uploader}** - **{0.title}**'.format(player.current), inline=False)
+                            embed.set_footer(text='This entry will be ignored.')
+                            await ctx.send(embed=embed)
                     else:
                         if ctx.author.voice.channel != vc.channel:
                             await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
@@ -457,10 +461,14 @@ class Music:
     @commands.guild_only()
     async def stop_command(self, ctx):
         vc = ctx.voice_client
+        player = self.get_player(ctx)
+
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         else:
             if not len(vc.channel.members) >= 3:
+                if self.task:
+                    player.queue._queue.clear()
                 await self.stop(ctx.guild)
                 return
 
@@ -483,6 +491,8 @@ class Music:
                 await ctx.send(':information_source: Vote ended and playlist continued.')
                 await cache_msg.clear_reactions()
             else:
+                if self.task:
+                    player.queue._queue.clear()
                 await self.stop(ctx.guild)
                 await cache_msg.clear_reactions()
 
