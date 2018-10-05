@@ -27,6 +27,7 @@ import datetime
 import json
 import itertools
 import sys
+import time
 import traceback
 from functools import partial
 
@@ -37,7 +38,7 @@ from discord.ext import commands
 from youtube_dl import YoutubeDL
 
 ytdlopts = {
-    'format': 'bestaudio/worst',
+    'format': 'bestaudio/best',
     'outtmpl': 'downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s',
     'restrictfilenames': True,
     'noplaylist': True,
@@ -78,7 +79,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         return self.__getattribute__(item)
 
     @classmethod
-    async def create_source(cls, ctx, search: str, *, loop, download=False):
+    async def create_source(cls, ctx, search: str, *, loop, download=False, repeat=False):
         loop = loop or asyncio.get_event_loop()
         to_run = partial(ytdl.extract_info, url=search, download=download)
         data = await loop.run_in_executor(None, to_run)
@@ -86,7 +87,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if 'entries' in data:
             data = data['entries'][0]
 
-        await ctx.send(f":information_source: **{data['uploader']}** - **{data['title']}** has been added to the queue.")
+        if repeat:
+            pass
+        else:
+            await ctx.send(f":information_source: **{data['uploader']}** - **{data['title']}** has been added to the queue.")
 
         if download:
             source = ytdl.prepare_filename(data)
@@ -115,13 +119,8 @@ class MusicPlayer:
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
 
-        if not str(self._guild) in guilds:
-            guilds[str(self._guild.id)] = {}
-            guilds[str(self._guild.id)]['DEFAULT_VOLUME'] = 0.5
-
-        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
-        self.np = None
         self.current = None
+        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
         self.bot.loop.create_task(self.player_loop())
 
     async def player_loop(self):
@@ -133,7 +132,6 @@ class MusicPlayer:
 
             try:
                 async with timeout(300):
-                    global source
                     source = await self.queue.get()
             except asyncio.TimeoutError:
                 self.end(self._guild)
@@ -154,36 +152,30 @@ class MusicPlayer:
             self.current = source
 
             self._guild.voice_client.play(source, after=lambda n: self.bot.loop.call_soon_threadsafe(self.next.set))
-            self.np = await self._channel.send(f':musical_note: Now playing: **{source.uploader}** - **{source.title}**.')
+            await self._channel.send(f':musical_note: Now playing: **{self.current.uploader}** - **{self.current.title}**.')
             await self.next.wait()
 
             source.cleanup()
             self.current = None
 
-            try:
-                await self.np.delete()
-            except discord.HTTPException:
-                pass
-
             if self.current is None:
-                if not self.queue._queue:
-                    self.end(self._guild)
+                if len(self.queue._queue) == 0:
                     await self._channel.send(':information_source: End of the playlist.')
-                    return
+                    self.end(self._guild)
 
     def end(self, guild):
         self.bot.loop.create_task(self._cog.stop(guild))
-        return
 
 class Music:
-    __slots__ = ('bot', 'players')
+    __slots__ = ('bot', 'players', 'task')
     def __init__(self, bot):
         self.bot = bot
         self.players = {}
+        self.task = None
 
     async def stop(self, guild):
         if not guild.voice_client:
-            return
+            pass
         else:
             await guild.voice_client.disconnect()
 
@@ -191,6 +183,33 @@ class Music:
             del self.players[str(guild.id)]
         except KeyError:
             pass
+
+    def get_player(self, ctx):
+        try:
+            player = self.players[str(ctx.guild.id)]
+        except KeyError:
+            player = MusicPlayer(ctx)
+            self.players[str(ctx.guild.id)] = player
+        return player
+
+    async def repeat_on(self, ctx):
+        player = self.get_player(ctx)
+        search = str(player.current.title)
+        player.current = None
+
+        while player.current is None:
+            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False, repeat=True)
+            await player.queue.put(source)
+        time.sleep(1)
+
+    async def repeat_off(self, ctx):
+        player = self.get_player(ctx)
+        if self.task is None:
+            return
+
+        self.task.cancel()
+        self.task = None
+        player.queue._queue.clear()            
 
     async def __error(self, ctx, error):
         if isinstance(error, commands.NoPrivateMessage):
@@ -222,91 +241,96 @@ class Music:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-    def get_player(self, ctx):
-        try:
-            player = self.players[str(ctx.guild.id)]
-        except KeyError:
-            player = MusicPlayer(ctx)
-            self.players[str(ctx.guild.id)] = player
-        return player
-
-    @commands.command(name='connect')
+    @commands.command()
     @commands.guild_only()
-    async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
+    async def connect(self, ctx, *, channel: discord.VoiceChannel = None):
         if not channel:
             try:
-                vc_channel = ctx.author.voice.channel
+                channel = ctx.author.voice.channel
             except AttributeError:
                 raise InvalidVoiceChannel(':grey_exclamation: Please join a voice channel or specify one for me to join.')
 
         vc = ctx.voice_client
         if vc:
             if vc.channel.id == channel.id:
-                return
-            try:
-                await vc.move_to(channel)
-                await ctx.send(f':information_source: Moved to voice channel **{channel}**.')
-            except asyncio.TimeoutError:
-                raise VoiceConnectionError(f':x: Moving to voice channel **{channel}** timed out.')
+                await ctx.send(f':information_source: Current voice channel: **{vc.channel.name}**')
+            elif vc.is_playing():
+                await ctx.send(f':information_source: You can\'t move me to a different channel when music is playing.')
+            else:
+                try:
+                    await vc.move_to(channel)
+                    await ctx.send(f':information_source: Moved to voice channel **{channel}**.')
+                except asyncio.TimeoutError:
+                    raise VoiceConnectionError(f':x: Moving to voice channel **{channel}** timed out.')
         else:
             try:
                 if channel:
                     await channel.connect(reconnect=True)
                     await ctx.send(f':information_source: Connected to voice channel **{channel}**.')
-                else:
-                    await vc_channel.connect(reconnect=True)
             except asyncio.TimeoutError:
                 raise VoiceConnectionError(f':x: Connecting to voice channel **{channel}** timed out.')
 
-    @commands.command(name='play')
+    @commands.command()
     @commands.guild_only()
-    async def play_(self, ctx, *, search: str = None):
+    async def play(self, ctx, *, search: str = None):
+        vc = ctx.voice_client
         if search is None:
-            await ctx.send(':grey_exclamation: Please specify a search query.')
+            await ctx.send(':grey_exclamation: Please specify a search query.')           
         else:
             async with ctx.typing():
-                vc = ctx.voice_client
-                if not vc:
-                    await ctx.invoke(self.connect_)
-                    player = self.get_player(ctx)
-                    source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-                    await player.queue.put(source)
+                if self.task:
+                    if ctx.author.voice.channel != vc.channel:
+                        await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                    else:
+                        player = self.get_player(ctx)
+                        await ctx.send(':grey_exclamation: Song repetition is currently enabled for:\n'
+                                    f'**{player.current.uploader}** - **{player.current.title}**.\n'
+                                    'This entry will be ignored.')
                 else:
-                    player = self.get_player(ctx)
-                    source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-                    await player.queue.put(source)
+                    if not vc:
+                        await ctx.invoke(self.connect)
+                        player = self.get_player(ctx)
+                        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                        await player.queue.put(source)
+                    else:
+                        if ctx.author.voice.channel != vc.channel:
+                            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                        else:
+                            player = self.get_player(ctx)
+                            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                            await player.queue.put(source)
 
-    @commands.command(name='pause')
+    @commands.command()
     @commands.guild_only()
-    async def pause_(self, ctx):
+    async def pause(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
-        elif not ctx.author.voice:
-            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')
+        elif ctx.author.voice.channel != vc.channel:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         elif vc.is_paused():
             await ctx.send(':grey_exclamation: The current song has already been paused.')
         else:
             vc.pause()
             await ctx.send(f':pause_button: Song paused by **{ctx.author.name}**.')
 
-    @commands.command(name='resume', aliases=['unpause'])
+    @commands.command(aliases=['unpause'])
     @commands.guild_only()
-    async def resume_(self, ctx):
+    async def resume(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
-        elif not ctx.author.voice:
-            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')
+        elif ctx.author.voice.channel != vc.channel:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         elif not vc.is_paused():
             await ctx.send(':grey_exclamation: The current song was never paused.')
         else:
             vc.resume()
             await ctx.send(f':musical_note: Song resumed by **{ctx.author.name}**.')
 
-    @commands.command(name='skip')
+    @commands.command()
     @commands.guild_only()
-    async def skip_(self, ctx):
+    async def skip(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
@@ -341,18 +365,17 @@ class Music:
                 await ctx.send(':information_source: Vote ended and song skipped.')
                 await cache_msg.clear_reactions()
 
-    @commands.command(name='playlist', aliases=['queue', 'upcoming'])
+    @commands.command(aliases=['queue', 'upcoming'])
     @commands.guild_only()
-    async def playlist_(self, ctx):
+    async def playlist(self, ctx):
         vc = ctx.voice_client
+        player = self.get_player(ctx)
+
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
+        elif len(player.queue._queue) == 0:
+            await ctx.send(':grey_exclamation: There are currently no queued songs.')
         else:
-            player = self.get_player(ctx)
-            if not player.queue._queue:
-                await ctx.send(':grey_exclamation: There are currently no queued songs.')
-                return
-
             upcoming = list(itertools.islice(player.queue._queue, 0, 5))
             fmt = '\n'.join(f"**{u['uploader']}** - **{u['title']}**" for u in upcoming)
             embed = discord.Embed()
@@ -361,9 +384,9 @@ class Music:
             embed.colour = 0x0099ff
             await ctx.send(embed=embed)
 
-    @commands.command(name='np', aliases=['now_playing'])
+    @commands.command(aliases=['now_playing'])
     @commands.guild_only()
-    async def now_playing_(self, ctx):
+    async def np(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
@@ -373,16 +396,12 @@ class Music:
             player = self.get_player(ctx)
             if not player.current:
                 await ctx.send(':grey_exclamation: No music is currently playing.')
+            else:
+                await ctx.send(f':musical_note: Now playing: **{player.uploader}** - **{player.current.title}**.')
 
-            try:
-                await player.np.delete()
-            except discord.HTTPException:
-                pass
-            player.np = await ctx.send(f':musical_note: Now playing: **{source.uploader}** - **{source.title}**.')
-
-    @commands.command(name='clear')
+    @commands.command()
     @commands.guild_only()
-    async def clear_(self, ctx):
+    async def clear(self, ctx):
         vc = ctx.voice_client
         player = self.get_player(ctx)
 
@@ -391,12 +410,52 @@ class Music:
         elif player.queue.empty():
             await ctx.send(':grey_exclamation: There are currently no queued songs.')
         else:
-            player.queue._queue.clear()
-            await ctx.send(':information_source: Playlist successfully cleared.')
+            if not len(vc.channel.members) >= 3:     
+                player.queue._queue.clear()
+                await ctx.send(':information_source: Playlist successfully cleared.')
+                return
+
+            embed = discord.Embed()
+            embed.title = 'Jaffa'
+            embed.description = '**Decide whether or not to clear the current playlist!**'
+            embed.colour = 0x0099ff
+            embed.set_footer(text='You have 15 seconds to vote.')
+            bot_msg = await ctx.send(embed=embed)
+
+            await bot_msg.add_reaction('👍')
+            await bot_msg.add_reaction('👎')
+            await asyncio.sleep(15)
+
+            cache_msg = await ctx.get_message(bot_msg.id)
+            thumbs_up = utils.get(cache_msg.reactions, emoji='👍')
+            thumbs_down = utils.get(cache_msg.reactions, emoji='👎')
+
+            if not thumbs_up.count > thumbs_down.count:
+                await ctx.send(':information_source: Vote ended and playlist continued.')
+                await cache_msg.clear_reactions()
+            else:
+                player.queue._queue.clear()
+                await cache_msg.clear_reactions()                
+
+    @commands.command()
+    @commands.guild_only()
+    async def repeat(self, ctx):
+        vc = ctx.voice_client
+        if not vc.is_playing():
+            await ctx.send(':grey_exclamation: No music is currently playing.')
+        elif ctx.author.voice.channel != vc.channel:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+        else:
+            if not self.task:
+                self.task = self.bot.loop.create_task(self.repeat_on(ctx))
+                await ctx.send(':repeat_one: Song repetition enabled.')
+            else:
+                await self.repeat_off(ctx)
+                await ctx.send(':repeat_one: Song repetition disabled.')
 
     @commands.command(name='stop')
     @commands.guild_only()
-    async def stop_(self, ctx):
+    async def stop_command(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
@@ -427,20 +486,21 @@ class Music:
                 await self.stop(ctx.guild)
                 await cache_msg.clear_reactions()
 
-    @commands.command(name='volume')
+    @commands.command()
     @commands.guild_only()
-    async def volume_(self, ctx, *, volume: int = None):
+    async def volume(self, ctx, *, volume: int = None):
         vc = ctx.voice_client
+        player = self.get_player(ctx)
+
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         elif volume is None:
             await ctx.send(f':sound: Current volume level: **{round(vc.source.volume * 100)}%**.')
-        elif not ctx.author.voice:
-            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{ctx.voice_client.channel}**.')
+        elif ctx.author.voice.channel != vc.channel:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         elif not 0 < volume < 101:
             await ctx.send(':grey_exclamation: Please specify a number between `1` and `100`.')
         else:
-            player = self.get_player(ctx)
             if vc.source:
                 vc.source.volume = (volume / 100)
             player.volume = (volume / 100)
