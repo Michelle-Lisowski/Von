@@ -283,26 +283,13 @@ class Music:
                     player = self.get_player(ctx)
                     source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
                     await player.queue.put(source)
-                else:               
-                    if self.task:
-                        if ctx.author.voice.channel != vc.channel:
-                            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
-                        else:
-                            player = self.get_player(ctx)
-                            embed = discord.Embed()
-                            embed.title = 'Jaffa'
-                            embed.description = '**Song repetition is currently enabled**'
-                            embed.colour = 0x0099ff
-                            embed.add_field(name='Song', value='**{0.uploader}** - **{0.title}**'.format(player.current), inline=False)
-                            embed.set_footer(text='This entry will be ignored.')
-                            await ctx.send(embed=embed)
+                else:
+                    if ctx.author.voice.channel != vc.channel:
+                        await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
                     else:
-                        if ctx.author.voice.channel != vc.channel:
-                            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
-                        else:
-                            player = self.get_player(ctx)
-                            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-                            await player.queue.put(source)
+                        player = self.get_player(ctx)
+                        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                        await player.queue.put(source)
 
     @commands.command()
     @commands.guild_only()
