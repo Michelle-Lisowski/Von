@@ -81,18 +81,16 @@ class Random:
         if member is None:
             member = ctx.author
 
-        if member.id == self.bot.owner_id:
+        if int(member.id) == int(self.bot.owner_id):
             percentage = 0
-            emoji = ':smiley:'
-        elif member.id == self.bot.user.id:
+        elif int(member.id) == int(self.bot.user.id):
             percentage = 0
-            emoji = ':smiley:'
         else:
             percentage = random.randint(1, 100)
 
-        if percentage >= 50:
+        if int(percentage) >= 50:
             emoji = ':gay_pride_flag:'
-        elif percentage < 50:
+        else:
             emoji = ':smiley:'
 
         await ctx.send(f'**{member.name}** is {percentage}% gay. {emoji}')

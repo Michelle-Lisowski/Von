@@ -287,6 +287,8 @@ class Music:
                     if ctx.author.voice.channel != vc.channel:
                         await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
                     else:
+                        if self.task:
+                            await self.repeat_off(ctx)
                         player = self.get_player(ctx)
                         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
                         await player.queue.put(source)
@@ -388,7 +390,7 @@ class Music:
             if not player.current:
                 await ctx.send(':grey_exclamation: No music is currently playing.')
             else:
-                await ctx.send(f':musical_note: Now playing: **{player.uploader}** - **{player.current.title}**.')
+                await ctx.send(f':musical_note: Now playing: **{player.current.uploader}** - **{player.current.title}**.')
 
     @commands.command()
     @commands.guild_only()
@@ -432,12 +434,15 @@ class Music:
     @commands.guild_only()
     async def repeat(self, ctx):
         vc = ctx.voice_client
+        player = self.get_player(ctx)
+
         if not vc.is_playing():
             await ctx.send(':grey_exclamation: No music is currently playing.')
         elif ctx.author.voice.channel != vc.channel:
             await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         else:
             if not self.task:
+                player.queue._queue.clear()
                 self.task = self.bot.loop.create_task(self.repeat_on(ctx))
                 await ctx.send(':repeat_one: Song repetition enabled.')
             else:
