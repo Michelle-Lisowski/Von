@@ -83,9 +83,12 @@ As the owner of your own instance of Jaffa, only you can use the following comma
     .reload
 
 ``.logout`` logs the bot out from Discord.
-``.load <extension>`` loads a specific extension. For example: ``.load ext.admin``
-``.unload <extension>`` unloads a specific extension. For example: ``.unload ext.admin``
-``.reload <extension>`` reloads a specific extension. For example: ``.reload ext.admin``
+
+``.load <extension>`` loads a specific extension, for example: ``.load ext.admin``
+
+``.unload <extension>`` unloads a specific extension, for example: ``.unload ext.admin``
+
+``.reload <extension>`` reloads a specific extension, for example: ``.reload ext.admin``
 
 Requirements
 ------------
