@@ -82,6 +82,7 @@ def main():
                 os.system('exit')
         elif choice == '2':
             try:
+                subprocess.call('git checkout master')
                 subprocess.call('git pull')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
@@ -105,7 +106,8 @@ def main():
                     subprocess.call('python main.py')
         elif choice == '3':
             try:
-                subprocess.call('git pull . development')
+                subprocess.call('git checkout development')
+                subprocess.call('git pull')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
                       'installed and available in the PATH environment '
