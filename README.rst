@@ -25,12 +25,16 @@ Otherwise, you can clone the repository using Git:
 .. code:: sh
 
     $ git clone https://github.com/sirtezza451/Jaffa.git
+    $ cd Jaffa
 
 To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/sirtezza451/Jaffa/archive/development.zip
+    $ git clone https://github.com/sirtezza451/Jaffa.git
+    $ cd Jaffa
+    $ git checkout development
+    $ git pull
 
 Bot Initialisation
 ------------------
