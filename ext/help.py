@@ -90,7 +90,8 @@ class Help:
         embed.title = f'Jaffa | {p}resume'
         embed.description = '**Resumes the currently paused music**'
         embed.colour = 0x0099ff
-        embed.add_field(name='Usage', value=f'`{p}resume`, `{p}continue`', inline=False)
+        embed.add_field(name='Usage', value=f'`{p}resume`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}unpause`, `{p}continue`')
         await ctx.send(embed=embed)
 
     @help_.command()
