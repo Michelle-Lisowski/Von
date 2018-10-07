@@ -289,10 +289,10 @@ class Music:
                     source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
                     await player.queue.put(source)
                 else:
+                    player = self.get_player(ctx)
                     if self.task:
                         await self.repeat_off(ctx)
                         player.queue._queue.clear()
-                    player = self.get_player(ctx)
                     source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
                     await player.queue.put(source)
 

@@ -85,6 +85,8 @@ class Random:
             percentage = 0
         elif int(member.id) == int(self.bot.user.id):
             percentage = 0
+        elif int(member.id) == 292969313961377793:
+            percentage = 0
         else:
             percentage = random.randint(1, 100)
 
