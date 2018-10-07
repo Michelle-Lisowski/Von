@@ -63,7 +63,7 @@ class Information:
         embed.add_field(name='Uptime', value=f'Jaffa has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
         embed.add_field(name='Username', value=str(self.bot.user), inline=True)
         embed.add_field(name='ID', value=self.bot.user.id, inline=True)
-        embed.add_field(name='Version', value='v1.0.0', inline=True)
+        embed.add_field(name='Version', value='v1.3.2', inline=True)
         embed.add_field(name='Server Count', value=len(self.bot.guilds), inline=True)
         embed.add_field(name='User Count', value=len(self.bot.users), inline=True)
         embed.add_field(name='Python Version', value='v{0.major}.{0.minor}.{0.micro}'.format(sys.version_info), inline=True)

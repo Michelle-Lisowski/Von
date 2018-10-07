@@ -275,7 +275,12 @@ class Music:
     async def play(self, ctx, *, search: str = None):
         vc = ctx.voice_client
         if search is None:
-            await ctx.send(':grey_exclamation: Please specify a search query.')           
+            await ctx.send(':grey_exclamation: Please specify a search query.')
+        elif not ctx.author.voice:
+            if vc.is_playing():
+                await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+            else:
+                await ctx.send(':grey_exclamation: Please join a voice channel first.')         
         else:
             async with ctx.typing():
                 if not vc:
@@ -284,14 +289,12 @@ class Music:
                     source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
                     await player.queue.put(source)
                 else:
-                    if ctx.author.voice.channel != vc.channel:
-                        await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
-                    else:
-                        if self.task:
-                            await self.repeat_off(ctx)
-                        player = self.get_player(ctx)
-                        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-                        await player.queue.put(source)
+                    if self.task:
+                        await self.repeat_off(ctx)
+                        player.queue._queue.clear()
+                    player = self.get_player(ctx)
+                    source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                    await player.queue.put(source)
 
     @commands.command()
     @commands.guild_only()
@@ -299,7 +302,7 @@ class Music:
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
-        elif ctx.author.voice.channel != vc.channel:
+        elif not ctx.author.voice or ctx.author.voice.channel != vc.channel:
             await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         elif vc.is_paused():
             await ctx.send(':grey_exclamation: The current song has already been paused.')
@@ -307,13 +310,13 @@ class Music:
             vc.pause()
             await ctx.send(f':pause_button: Song paused by **{ctx.author.name}**.')
 
-    @commands.command(aliases=['unpause'])
+    @commands.command(aliases=['unpause', 'continue'])
     @commands.guild_only()
     async def resume(self, ctx):
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
-        elif ctx.author.voice.channel != vc.channel:
+        elif not ctx.author.voice or ctx.author.voice.channel != vc.channel:
             await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         elif not vc.is_paused():
             await ctx.send(':grey_exclamation: The current song was never paused.')
@@ -331,8 +334,11 @@ class Music:
             await ctx.send(':grey_exclamation: No music is currently playing.')
         else:
             if not len(vc.channel.members) >= 3:
-                vc.stop()
-                await ctx.send(f':information_source: Song skipped by **{ctx.author.name}**.')
+                if not ctx.author.voice or ctx.author.voice.channel != vc.channel:
+                    await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                else:
+                    vc.stop()
+                    await ctx.send(f':information_source: Song skipped by **{ctx.author.name}**.')
                 return
 
             embed = discord.Embed()
@@ -403,9 +409,14 @@ class Music:
         elif player.queue.empty():
             await ctx.send(':grey_exclamation: There are currently no queued songs.')
         else:
-            if not len(vc.channel.members) >= 3:     
-                player.queue._queue.clear()
-                await ctx.send(':information_source: Playlist successfully cleared.')
+            if not len(vc.channel.members) >= 3:
+                if not ctx.author.voice or ctx.author.voice.channel != vc.channel:
+                    await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                else:
+                    if self.task:
+                        await self.repeat_off(ctx)
+                    player.queue._queue.clear()
+                    await ctx.send(':information_source: Playlist successfully cleared.')
                 return
 
             embed = discord.Embed()
@@ -438,15 +449,20 @@ class Music:
 
         if not vc.is_playing():
             await ctx.send(':grey_exclamation: No music is currently playing.')
-        elif ctx.author.voice.channel != vc.channel:
+        elif not ctx.author.voice:
             await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
         else:
+            if ctx.author.voice.channel != vc.channel:
+                await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                return
+
             if not self.task:
                 player.queue._queue.clear()
                 self.task = self.bot.loop.create_task(self.repeat_on(ctx))
                 await ctx.send(':repeat_one: Song repetition enabled.')
             else:
                 await self.repeat_off(ctx)
+                player.queue._queue.clear()
                 await ctx.send(':repeat_one: Song repetition disabled.')
 
     @commands.command(name='stop')
@@ -459,9 +475,13 @@ class Music:
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         else:
             if not len(vc.channel.members) >= 3:
-                if self.task:
+                if not ctx.author.voice or ctx.author.voice.channel != vc.channel:
+                    await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
+                else:
+                    if self.task:
+                        await self.repeat_off(ctx)
                     player.queue._queue.clear()
-                await self.stop(ctx.guild)
+                    await self.stop(ctx.guild)
                 return
 
             embed = discord.Embed()
