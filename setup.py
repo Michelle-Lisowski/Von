@@ -65,7 +65,7 @@ def main():
                     os.system('exit')
                 else:
                     print('Requirements successfully installed. Running Jaffa...')
-                    subprocess.call('pip install -r requirements.txt')
+                    subprocess.call('python main.py')
     else:
         print('Please choose an option below using the corresponding number:')
         print('1. Run Jaffa')
