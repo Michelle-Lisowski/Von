@@ -427,6 +427,8 @@ class Music:
         vc = ctx.voice_client
         player = self.get_player(ctx)
 
+        if not vc or vc.is_connected():
+            await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         if not vc.is_playing():
             await ctx.send(':grey_exclamation: No music is currently playing.')
         elif player.queue.empty():
