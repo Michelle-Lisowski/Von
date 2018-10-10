@@ -61,6 +61,21 @@ ytdl = YoutubeDL(ytdlopts)
 with open('guilds.json', 'r') as fp:
     guilds = json.load(fp)
 
+def literal_duration(duration):
+    minutes, seconds = divmod(duration, 60)
+    hours, minutes = divmod(minutes, 60)
+    
+    duration = []
+    if seconds < 10:
+        seconds = f'0{seconds}'
+
+    if hours > 0:
+        duration.append(str(hours))
+    duration.append(str(minutes))
+    duration.append(str(seconds))
+
+    return ':'.join(duration)
+
 class VoiceConnectionError(commands.CommandError):
     pass
 
@@ -72,6 +87,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         super().__init__(source)
         self.requester = requester
         self.title = data.get('title')
+        self.duration = data.get('duration')
         self.uploader = data.get('uploader')
         self.web_url = data.get('webpage_url')
 
@@ -90,7 +106,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if repeat:
             pass
         else:
-            await ctx.send(f":information_source: **{data['uploader']}** - **{data['title']}** has been added to the queue.")
+            duration = literal_duration(data['duration'])
+            await ctx.send(f":information_source: **{data['uploader']}** - **{data['title']} ({duration})** has been added to the playlist.")
 
         if download:
             source = ytdl.prepare_filename(data)
@@ -150,18 +167,21 @@ class MusicPlayer:
 
             source.volume = self.volume
             self.current = source
+            duration = literal_duration(self.current.duration)
 
-            self._guild.voice_client.play(source, after=lambda n: self.bot.loop.call_soon_threadsafe(self.next.set))
-            await self._channel.send(f':musical_note: Now playing: **{self.current.uploader}** - **{self.current.title}**.')
-            await self.next.wait()
+            if self._guild.voice_client:
+                if not self._guild.voice_client.is_playing():
+                    self._guild.voice_client.play(self.current, after=lambda n: self.bot.loop.call_soon_threadsafe(self.next.set))
+                    await self._channel.send(f':musical_note: Now playing: **{self.current.uploader}** - **{self.current.title} ({duration})**')
+                    await self.next.wait()
 
             source.cleanup()
             self.current = None
 
             if self.current is None:
                 if len(self.queue._queue) == 0:
-                    await self._channel.send(':information_source: End of the playlist.')
                     self.end(self._guild)
+                    await self._channel.send(':information_source: End of the playlist.')
 
     def end(self, guild):
         self.bot.loop.create_task(self._cog.stop(guild))
@@ -226,7 +246,7 @@ class Music:
 
         elif isinstance(error, commands.CommandInvokeError):
             if str(ctx.command) == 'volume':
-                await ctx.send(f":sound: Current volume level: **{round(guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] * 100)}%**.")
+                await ctx.send(f":sound: Current volume level: **{round(guilds[str(ctx.guild.id)]['DEFAULT_VOLUME'] * 100)}%**")
 
         elif isinstance(error, InvalidVoiceChannel):
             await ctx.send(error)
@@ -277,10 +297,12 @@ class Music:
         if search is None:
             await ctx.send(':grey_exclamation: Please specify a search query.')
         elif not ctx.author.voice:
-            if vc.is_playing():
+            if vc:
                 await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')
             else:
-                await ctx.send(':grey_exclamation: Please join a voice channel first.')         
+                await ctx.send(':grey_exclamation: Please join a voice channel first.')
+        elif vc and ctx.author.voice.channel != vc.channel:
+            await ctx.send(f':grey_exclamation: Please join me in the voice channel **{vc.channel}**.')      
         else:
             async with ctx.typing():
                 if not vc:
@@ -322,7 +344,7 @@ class Music:
             await ctx.send(':grey_exclamation: The current song was never paused.')
         else:
             vc.resume()
-            await ctx.send(f':musical_note: Song resumed by **{ctx.author.name}**.')
+            await ctx.send(f':arrow_forward: Song resumed by **{ctx.author.name}**.')
 
     @commands.command()
     @commands.guild_only()
@@ -396,7 +418,8 @@ class Music:
             if not player.current:
                 await ctx.send(':grey_exclamation: No music is currently playing.')
             else:
-                await ctx.send(f':musical_note: Now playing: **{player.current.uploader}** - **{player.current.title}**.')
+                duration = literal_duration(player.current.duration)
+                await ctx.send(f':musical_note: Now playing: **{player.current.uploader}** - **{player.current.title} ({duration})**')
 
     @commands.command()
     @commands.guild_only()
@@ -439,6 +462,7 @@ class Music:
                 await cache_msg.clear_reactions()
             else:
                 player.queue._queue.clear()
+                await ctx.send(':information_source: Vote ended and playlist cleared.')
                 await cache_msg.clear_reactions()                
 
     @commands.command()
