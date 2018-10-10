@@ -239,7 +239,7 @@ class Jaffa(commands.Bot):
     # After everything has been called, process_commands is called;
     # If process_commands is not called, the bot won't respond to commands
     async def on_message(self, message):
-        # If the message is from private messages, only process commands
+        # If the message is from private messaging, only process commands
         if not message.guild:
             await self.process_commands(message)
 
@@ -594,7 +594,7 @@ class Jaffa(commands.Bot):
 
 # Returns custom guild prefixes
 def get_prefix(bot, message):
-    # If the message is from private messages, return mention/default prefix
+    # If the message is from private messaging, return mention/default prefix
     if not message.guild:
         prefixes = ['.']
         return commands.when_mentioned_or(*prefixes)

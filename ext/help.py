@@ -28,15 +28,14 @@ import json
 import discord
 from discord.ext import commands
 
-with open('guilds.json', 'r') as fp:
-    guilds = json.load(fp)
-
 class Help:
     def __init__(self, bot):
         self.bot = bot
 
     @commands.group(name='help')
     async def help_(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)        
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         if ctx.invoked_subcommand is None:
             embed = discord.Embed()
@@ -44,7 +43,7 @@ class Help:
             embed.description = f'Any issues, suggestions or questions? Add my developer **sirtezza_451#9856** and send him a message!\nGet command-specific information by using `{p}help <command>`'
             embed.colour = 0x0099ff
             embed.add_field(name='Music', value=f'`{p}connect` `{p}play` `{p}pause` `{p}resume` `{p}skip` `{p}np` `{p}playlist` `{p}clear` `{p}repeat` `{p}stop` `{p}volume`', inline=False)
-            embed.add_field(name='Random', value=f'`{p}flip` `{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp` `{p}calculator`', inline=False)
+            embed.add_field(name='Random', value=f'`{p}flip` `{p}roll` `{p}gay` `{p}ping` `{p}cat` `{p}drop` `{p}xp` `{p}calculator` `{p}prefix`', inline=False)
             embed.add_field(name='Information', value=f'`{p}info` `{p}profile` `{p}serverinfo`', inline=False)
             embed.add_field(name='Administration', value=f'`{p}kick` `{p}ban`', inline=False)
             embed.add_field(name='Moderation', value=f'`{p}mute` `{p}unmute` `{p}purge`', inline=False)
@@ -53,6 +52,8 @@ class Help:
 
     @help_.command()
     async def connect(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)         
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}connect'
@@ -64,6 +65,8 @@ class Help:
 
     @help_.command()
     async def play(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}play'
@@ -75,6 +78,8 @@ class Help:
 
     @help_.command()
     async def pause(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}pause'
@@ -85,6 +90,8 @@ class Help:
 
     @help_.command()
     async def resume(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}resume'
@@ -96,6 +103,8 @@ class Help:
 
     @help_.command()
     async def skip(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}skip'
@@ -106,6 +115,8 @@ class Help:
 
     @help_.command(aliases=['now_playing'])
     async def np(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}np'
@@ -117,6 +128,8 @@ class Help:
 
     @help_.command(aliases=['queue', 'upcoming'])
     async def playlist(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}playlist'
@@ -128,6 +141,8 @@ class Help:
 
     @help_.command()
     async def clear(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}clear'
@@ -138,6 +153,8 @@ class Help:
 
     @help_.command()
     async def repeat(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}repeat'
@@ -148,6 +165,8 @@ class Help:
 
     @help_.command()
     async def stop(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}stop'
@@ -158,6 +177,8 @@ class Help:
 
     @help_.command()
     async def volume(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}volume'
@@ -170,6 +191,8 @@ class Help:
 
     @help_.command()
     async def flip(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}flip'
@@ -181,6 +204,8 @@ class Help:
 
     @help_.command()
     async def roll(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}roll'
@@ -194,6 +219,8 @@ class Help:
 
     @help_.command()
     async def gay(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}gay'
@@ -206,6 +233,8 @@ class Help:
 
     @help_.command()
     async def ping(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}ping'
@@ -216,6 +245,8 @@ class Help:
 
     @help_.command()
     async def cat(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}cat'
@@ -226,6 +257,8 @@ class Help:
 
     @help_.command()
     async def drop(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}drop'
@@ -236,6 +269,8 @@ class Help:
 
     @help_.command()
     async def xp(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}xp'
@@ -247,6 +282,8 @@ class Help:
 
     @help_.command(aliases=['calc'])
     async def calculator(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}calculator'
@@ -259,7 +296,21 @@ class Help:
         await ctx.send(embed=embed)
 
     @help_.command()
+    async def prefix(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        embed = discord.Embed()
+        embed.title = f'Jaffa | {p}prefix'
+        embed.description = '**Returns the current custom prefix for this server**'
+        embed.colour = 0x0099ff
+        embed.add_field(name='Usage', value=f'`{p}prefix`', inline=False)
+        await ctx.send(embed=embed)
+
+    @help_.command()
     async def kick(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}kick'
@@ -271,6 +322,8 @@ class Help:
 
     @help_.command()
     async def ban(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}ban'
@@ -282,6 +335,8 @@ class Help:
 
     @help_.command()
     async def mute(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}mute'
@@ -293,6 +348,8 @@ class Help:
 
     @help_.command()
     async def unmute(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}unmute'
@@ -304,6 +361,8 @@ class Help:
 
     @help_.command()
     async def purge(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}purge'
@@ -318,6 +377,8 @@ class Help:
 
     @help_.command()
     async def info(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}info'
@@ -329,6 +390,8 @@ class Help:
 
     @help_.command()
     async def profile(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}profile'
@@ -341,6 +404,8 @@ class Help:
 
     @help_.command()
     async def serverinfo(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}serverinfo'
@@ -351,6 +416,8 @@ class Help:
 
     @help_.command(aliases=['settings'])
     async def setting(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp) 
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         embed = discord.Embed()
         embed.title = f'Jaffa | {p}setting'

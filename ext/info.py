@@ -38,7 +38,7 @@ class Information:
     async def __error(self, ctx, error):
         if isinstance(error, commands.NoPrivateMessage):
             try:
-                await ctx.send(':x: This command can\'t be used in private messages.')
+                await ctx.send(':x: This command can\'t be used in private messaging.')
             except:
                 pass
 
@@ -63,7 +63,7 @@ class Information:
         embed.add_field(name='Uptime', value=f'Jaffa has been awake for **{round(days)} days, {round(hours)} hours, {round(minutes)} minutes, and {round(seconds)} seconds.**', inline=False)
         embed.add_field(name='Username', value=str(self.bot.user), inline=True)
         embed.add_field(name='ID', value=self.bot.user.id, inline=True)
-        embed.add_field(name='Version', value='v1.3.3', inline=True)
+        embed.add_field(name='Version', value='v1.3.4', inline=True)
         embed.add_field(name='Server Count', value=len(self.bot.guilds), inline=True)
         embed.add_field(name='User Count', value=len(self.bot.users), inline=True)
         embed.add_field(name='Python Version', value='v{0.major}.{0.minor}.{0.micro}'.format(sys.version_info), inline=True)

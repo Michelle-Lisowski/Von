@@ -39,7 +39,10 @@ class Random:
         self.bot = bot
 
     async def __error(self, ctx, error):
-        if isinstance(error, commands.BadArgument):
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send(':x: This command cant\'t be used in private messaging.')
+
+        elif isinstance(error, commands.BadArgument):
             if str(ctx.command) == 'roll':
                 await ctx.send(':x: Please specify a **whole number** of sides.')
             elif str(ctx.command) == 'gay' or 'xp':
@@ -178,6 +181,14 @@ class Random:
             if operation == '**':
                 result = arg1 ** arg2
             await ctx.send(f'According to my calculations, the answer is **{result}**.')
+
+    @commands.command()
+    @commands.guild_only()
+    async def prefix(self, ctx):
+        with open('guilds.json', 'r') as fp:
+            guilds = json.load(fp)        
+        p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
+        await ctx.send(f':information_source: Current server prefix: **{p}**')
 
 def setup(bot):
     bot.add_cog(Random(bot))

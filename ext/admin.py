@@ -45,7 +45,7 @@ class Administration:
     async def __error(self, ctx, error):
         if isinstance(error, commands.NoPrivateMessage):
             try:
-                await ctx.send(':x: This command can\'t be used in private messages.')
+                await ctx.send(':x: This command can\'t be used in private messaging.')
             except discord.HTTPException:
                 pass
 
