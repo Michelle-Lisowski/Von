@@ -25,16 +25,13 @@ DEALINGS IN THE SOFTWARE.
 import aiohttp
 import datetime
 import json
-import logging
 import os
 import random
-import time
 import traceback
 from os import listdir
 from os.path import isfile, join
 
 import discord
-from aiohttp import client_exceptions
 from discord import ActivityType, Status, VerificationLevel, VoiceRegion, utils
 from discord.ext import commands
 
