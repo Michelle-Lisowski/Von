@@ -399,6 +399,7 @@ class Help:
         embed.colour = 0x0099ff
         embed.add_field(name='Usage', value=f'`{p}profile <member>`', inline=False)
         embed.add_field(name='Example', value=f'`{p}profile @sirtezza_451#9856`', inline=False)
+        embed.add_field(name='Aliases', value=f'`{p}userinfo`', inline=False)
         embed.set_footer(text='If no member is mentioned, the message returned will display information about you')
         await ctx.send(embed=embed)
 

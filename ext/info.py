@@ -49,7 +49,7 @@ class Information:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-    @commands.command()
+    @commands.command(aliases=['userinfo'])
     async def info(self, ctx):
         seconds = time.time() - start_time
         minutes, seconds = divmod(seconds, 60)
