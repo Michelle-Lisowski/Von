@@ -49,7 +49,7 @@ class Information:
             print(f'Ignoring exception in guild \'{str(ctx.guild)}\', command \'{str(ctx.command)}\':', file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-    @commands.command(aliases=['userinfo'])
+    @commands.command()
     async def info(self, ctx):
         seconds = time.time() - start_time
         minutes, seconds = divmod(seconds, 60)
@@ -71,7 +71,7 @@ class Information:
         embed.add_field(name='Source Code', value='https://github.com/sirtezza451/Jaffa', inline=False)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(aliases=['userinfo'])
     async def profile(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
