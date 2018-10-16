@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import datetime
 import json
@@ -101,7 +101,7 @@ class Administration:
             mod_logs[str(ctx.guild.id)]['KICK_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
-            await self.bot.on_mod_case(ctx=ctx, author=ctx.author, member=member, reason=str(reason))
+            await self.bot.on_mod_case(ctx, ctx.author, member, str(reason))
 
     @commands.command()
     @commands.guild_only()
@@ -142,7 +142,7 @@ class Administration:
             mod_logs[str(ctx.guild.id)]['BAN_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
-            await self.bot.on_mod_case(ctx=ctx, author=ctx.author, member=member, reason=str(reason))
+            await self.bot.on_mod_case(ctx, ctx.author, member, str(reason))
 
 def setup(bot):
     bot.add_cog(Administration(bot))

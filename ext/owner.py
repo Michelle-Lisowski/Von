@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import datetime
 import sys
@@ -46,7 +46,11 @@ class Owner:
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def load(self, ctx, *, ext: str):
+    async def load(self, ctx, *, ext: str = None):
+        if ext is None:
+            await ctx.send(':grey_exclamation: Please specify an extension to load.')
+            return
+        
         self.bot.load_extension(ext)
         success = discord.Embed()
         success.title = ':white_check_mark: Success!'
@@ -57,7 +61,11 @@ class Owner:
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def unload(self, ctx, *, ext: str):
+    async def unload(self, ctx, *, ext: str = None):
+        if ext is None:
+            await ctx.send(':grey_exclamation: Please specify an extension to unload.')
+            return
+
         self.bot.unload_extension(ext)
         success = discord.Embed()
         success.title = ':white_check_mark: Success!'
@@ -68,7 +76,11 @@ class Owner:
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def reload(self, ctx, *, ext: str):
+    async def reload(self, ctx, *, ext: str = None):
+        if ext is None:
+            await ctx.send(':grey_exclamation: Please specify an extension to reload.')
+            return
+
         self.bot.unload_extension(ext)
         self.bot.load_extension(ext)
         success = discord.Embed()

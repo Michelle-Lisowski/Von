@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import asyncio
 import json
@@ -189,6 +189,16 @@ class Random:
             guilds = json.load(fp)        
         p = guilds[str(ctx.guild.id)]['GUILD_PREFIX']
         await ctx.send(f':information_source: Current server prefix: **{p}**')
+
+    @commands.command()
+    async def say(self, ctx, *, message: str = None):
+        if message is None:
+            await ctx.send(':grey_exclamation: I\'d like to be saying something other than this message!')
+        else:
+            embed = discord.Embed()
+            embed.colour = 0x0099ff
+            embed.description = message
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Random(bot))

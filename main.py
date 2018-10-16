@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import aiohttp
 import datetime
@@ -278,6 +278,10 @@ class Jaffa(commands.Bot):
             # Process commands
             await self.process_commands(message)
 
+    # Logs that a command has been invoked
+    async def on_command(self, ctx):
+        print(f'Invocation - Command \'{ctx.command}\' from {str(ctx.author)}')
+
     # Processes commands in edited messages
     async def on_message_edit(self, before, after):
         # Open guilds.json in read mode
@@ -290,17 +294,49 @@ class Jaffa(commands.Bot):
         # Set context for use in below check
         ctx = commands.Context(command=before, message=before, bot=self, prefix=p)
 
-        # Check if original message was a command
+        # Check if the original message was a command
         if str(ctx.prefix) in before.content:
-            # If so, pass
-            pass
+            # If the original message was just the prefix, process commands
+            if before.content == str(ctx.prefix):
+                await self.process_commands(after)
+            
+            # If the original message was a full command, pass
+            else:
+                pass
+
         # Otherwise, process commands after message edit
         else:
             await self.process_commands(after)
 
-    # Logs that a command has been invoked
-    async def on_command(self, ctx):
-        print(f'Invocation - Command \'{ctx.command}\' from {str(ctx.author)}')
+    # Automatically recreate 'Muted', 'Staff' or 'Admin' role if deleted
+    async def on_guild_role_delete(self, role):
+        # Get a random role colour
+        role_colour = random.choice(DISCORD_COLOURS)
+
+        # Find all guild channels
+        guild_channels = [channel for channel in role.guild.channels]
+
+        if role.name == 'Muted':
+            # Create 'Muted' role
+            role = await role.guild.create_role(name='Muted', colour=role_colour, reason='Role for mute command functionality.')
+
+            # Set channel overwrites
+            for channels in guild_channels:
+                await channels.set_permissions(target=role, send_messages=False)
+        elif role.name == 'Staff':
+            # Create 'Staff' role
+            await role.guild.create_role(name='Staff', colour=role_colour, reason='Role used for moderation command checks.')
+        elif role.name == 'Admin':
+            # Create 'Admin' role and give role administrator permissions
+            await role.guild.create_role(name='Admin', permissions=discord.Permissions(permissions=8), colour=role_colour, reason='Role used for administration command checks.')
+
+    # Set overwrites for 'Muted' role for channels created after guild join
+    async def on_guild_channel_create(self, channel):
+        # Find 'Muted' role
+        role = utils.get(channel.guild.roles, name='Muted')
+
+        # Set overwrites for new channel
+        await channel.set_permissions(target=role, send_messages=False)        
 
     # Called whenever the bot has joined a guild;
     # Does things such as creating the 'Muted' role and updating the guild count
@@ -314,32 +350,33 @@ class Jaffa(commands.Bot):
         # Get a random role colour
         role_colour = random.choice(DISCORD_COLOURS)
 
+        # Find all guild channels
+        guild_channels = [channel for channel in guild.channels]
+
         # Find the 'Muted' role
         role = utils.get(guild.roles, name='Muted')
 
         # If the 'Muted' role is non-existent, create it
         if role is None:
-            role = await guild.create_role(name='Muted', reason='Role for mute command functionality.')
+            role = await guild.create_role(name='Muted', colour=role_colour, reason='Role for mute command functionality.')
+
+        # Set overwrites for 'Muted' role
+        for channels in guild_channels:
+            await channels.set_permissions(target=role, send_messages=False)
 
         # Find the 'Staff' role
         staff_role = utils.get(guild.roles, name='Staff')
 
         # If the 'Staff' role is non-existent, create it
         if staff_role is None:
-            staff_role = await guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
+            staff_role = await guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for moderation command checks.')
 
         # Find the 'Admin' role
         admin_role = utils.get(guild.roles, name='Admin')
 
         # If the 'Admin' role is non-existent, create it
         if admin_role is None:
-            admin_role = await guild.create_role(name='Admin', permissions=discord.Permissions(permissions=8), colour=role_colour, hoist=True, reason='Role for server moderators.')
-
-        # Find all guild channels
-        channels = utils.get(self.get_all_channels(), guild__name=guild.name)
-
-        # Deny the 'Send Messages' permission to the 'Muted' role in all guild channels
-        await channels.set_permissions(target=role, send_messages=False)
+            admin_role = await guild.create_role(name='Admin', permissions=discord.Permissions(permissions=8), colour=role_colour, hoist=True, reason='Role for server administrators.')
 
         # Open guilds.json in read mode
         with open('guilds.json', 'r') as fp:
@@ -409,6 +446,9 @@ class Jaffa(commands.Bot):
             # Find the 'Staff' role
             staff_role = utils.get(member.guild.roles, name='Staff')
 
+            # Find the 'Admin' role
+            admin_role = utils.get(member.guild.roles, name='Admin')
+
             # Get a random role colour
             role_colour = random.choice(DISCORD_COLOURS)
 
@@ -416,15 +456,20 @@ class Jaffa(commands.Bot):
             if staff_role is None:
                 staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
+            # If the 'Admin' role is non-existent, create it
+            if admin_role is None:
+                admin_role = await member.guild.create_role(name='Admin', colour=role_colour, hoist=True, permissions=discord.Permissions(permissions=8), reason='Role for server administrators.')
+
+            # Set channel overwrites for @everyone, the bot, the 'Staff' role, and the 'Admin' role
+            overwrites = {
+                member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
+                member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                staff_role: discord.PermissionOverwrite(send_messages=True),
+                admin_role: discord.PermissionOverwrite(send_messages=True)
+            }                
+
             # If the 'welcome' channel is non-existent, create it
             if channel is None:
-                # Set channel overwrites for @everyone, the bot, and the 'Staff' role
-                overwrites = {
-                    member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                    member.guild.me: discord.PermissionOverwrite(send_messages=True),
-                    staff_role: discord.PermissionOverwrite(send_messages=True)
-                }
-
                 # Create the 'Information' category and the 'welcome' channel
                 category = await member.guild.create_category_channel(name='Information', overwrites=overwrites, reason='Category for information-based channels.')
                 channel = await member.guild.create_text_channel(name='welcome', overwrites=overwrites, category=category, reason='Channel for welcome and leave messages.')
@@ -463,6 +508,9 @@ class Jaffa(commands.Bot):
             # Find the 'Staff' role
             staff_role = utils.get(member.guild.roles, name='Staff')
 
+            # Find the 'Admin' role
+            admin_role = utils.get(member.guild.roles, name='Admin')
+
             # Get a random role colour
             role_colour = random.choice(DISCORD_COLOURS)
 
@@ -470,15 +518,20 @@ class Jaffa(commands.Bot):
             if staff_role is None:
                 staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
+            # If the 'Admin' role is non-existent, create it
+            if admin_role is None:
+                admin_role = await member.guild.create_role(name='Admin', colour=role_colour, hoist=True, permissions=discord.Permissions(permissions=8), reason='Role for server administrators.')
+
+            # Set channel overwrites for @everyone, the bot, and the 'Staff' role
+            overwrites = {
+                member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
+                member.guild.me: discord.PermissionOverwrite(send_messages=True),
+                staff_role: discord.PermissionOverwrite(send_messages=True),
+                admin_role: discord.PermissionOverwrite(send_messages=True)
+            }
+
             # If the channel is non-existent, create it
             if channel is None:
-                # Set channel overwrites for @everyone, the bot, and the 'Staff' role
-                overwrites = {
-                    member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                    member.guild.me: discord.PermissionOverwrite(send_messages=True),
-                    staff_role: discord.PermissionOverwrite(send_messages=True)
-                }
-
                 # Create the 'Information' category and the 'welcome' channel
                 category = await member.guild.create_category(name='Information', overwrites=overwrites, reason='Category for information-based channels.')
                 channel = await member.guild.create_text_channel(name='welcome', overwrites=overwrites, category=category, reason='Channel for welcome and leave messages.')
@@ -499,6 +552,9 @@ class Jaffa(commands.Bot):
         # Find the 'Staff' role
         staff_role = utils.get(member.guild.roles, name='Staff')
 
+        # Find the 'Admin' role
+        admin_role = utils.get(member.guild.roles, name='Admin')
+
         # Get a random role colour
         role_colour = random.choice(DISCORD_COLOURS)
 
@@ -506,15 +562,20 @@ class Jaffa(commands.Bot):
         if staff_role is None:
             staff_role = await member.guild.create_role(name='Staff', colour=role_colour, hoist=True, reason='Role for server staff/moderators.')
 
+        # If the 'Admin' role doesn't exist, create it
+        if admin_role is None:
+            admin_role = await member.guild.create_role(name='Admin', colour=role_colour, hoist=True, permissions=discord.Permissions(permissions=8), reason='Role for server administrators.')
+
+        # Set permission overwrites for @everyone, Jaffa, and the 'Staff' role
+        overwrites = {
+            member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
+            member.guild.me: discord.PermissionOverwrite(send_messages=True),
+            staff_role: discord.PermissionOverwrite(send_messages=True),
+            admin_role: discord.PermissionOverwrite(send_messages=True)
+        }            
+
         # If the 'mod-logs' channel doesn't exist, create it as well as its category
         if channel is None:
-            # Set permission overwrites for @everyone, Jaffa, and the 'Staff' role
-            overwrites = {
-                member.guild.default_role: discord.PermissionOverwrite(send_messages=False),
-                member.guild.me: discord.PermissionOverwrite(send_messages=True),
-                staff_role: discord.PermissionOverwrite(send_messages=True)
-            }
-
             # Create the 'Logs' category and the 'mod-logs' channel
             category = await member.guild.create_category(name='Logs', overwrites=overwrites, reason='Category for log-based channels.')
             channel = await member.guild.create_text_channel(name='mod-logs', overwrites=overwrites, category=category, reason='Channel for moderation logs.')
@@ -575,8 +636,14 @@ class Jaffa(commands.Bot):
     # Global event error handler;
     # Called whenever an error is raised in an event
     async def on_error(self, event, *args, **kwargs):
-        print(f'Exception in event {event}:')
-        print(traceback.format_exc())
+        # Silence errors for 'on_message_edit' event
+        if str(event) == 'on_message_edit':
+            pass
+
+        # Normally, just print traceback
+        else:
+            print(f'Exception in event {event}:')
+            print(traceback.format_exc())
 
     # Login
     def initialise(self):
@@ -634,12 +701,13 @@ if __name__ == '__main__':
             # Load cog files
             bot.load_extension(ext_dir + '.' + ext)
         except (discord.ClientException, ModuleNotFoundError):
-            # Print an error if needed
+            # Print traceback in the case of an error
             print(f'ERROR: Failed to load {ext}')
             print(traceback.format_exc())
         else:
             # Log that the cog was successfully loaded
             print(f'Successfully loaded {ext}')
+
     # Run the bot
     try:
         bot.initialise()

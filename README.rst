@@ -25,22 +25,18 @@ Otherwise, you can clone the repository using Git:
 .. code:: sh
 
     $ git clone https://github.com/sirtezza451/Jaffa.git
-    $ cd Jaffa
 
 To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/sirtezza451/Jaffa.git
-    $ cd Jaffa
-    $ git checkout development
-    $ git pull
+    $ git clone -b development --single-branch https://github.com/sirtezza451/Jaffa.git
 
 Bot Initialisation
 ------------------
 
-Once you have installed Jaffa on your computer, you will need to create the JSON files required
-for specific functions. The following files must be created:
+Once you have installed Jaffa on your computer, you will need to create the JSON
+files required for specific functions. The following files must be created:
 
 .. code::
 
@@ -100,5 +96,9 @@ Requirements
 * `Python 3.6.x <https://www.python.org/search/?q=3.6&submit=>`_; voice functionality breaks with Python 3.7
 * ``discord`` library (`GitHub repository <https://github.com/Rapptz/discord.py/tree/rewrite>`_; **rewrite** branch required)
 * ``youtube_dl`` library (`GitHub repository <https://github.com/rg3/youtube-dl>`_)
+* `FFmpeg <https://ffmpeg.zeranoe.com/builds/>`_
 * Bot token from `Discord <https://discordapp.com/developers/applications/@me>`_
 * `Git <https://git-scm.com/>`_ (optional)
+
+The ``discord`` and ``youtube_dl`` libraries will be installed automatically
+if you use the interactive setup.

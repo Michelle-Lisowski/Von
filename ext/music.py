@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import asyncio
 import datetime
@@ -136,8 +136,13 @@ class MusicPlayer:
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
 
+        try:
+            self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
+        except KeyError:
+            guilds[str(self._guild.id)]['DEFAULT_VOLUME'] = 0.5
+            self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
+
         self.current = None
-        self.volume = guilds[str(self._guild.id)]['DEFAULT_VOLUME']
         self.bot.loop.create_task(self.player_loop())
 
     async def player_loop(self):
@@ -427,7 +432,7 @@ class Music:
         vc = ctx.voice_client
         player = self.get_player(ctx)
 
-        if not vc or vc.is_connected():
+        if not vc or not vc.is_connected():
             await ctx.send(':grey_exclamation: I\'m currently not connected to a voice channel.')
         if not vc.is_playing():
             await ctx.send(':grey_exclamation: No music is currently playing.')

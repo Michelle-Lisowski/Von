@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,9 +20,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import datetime
+import itertools
 import json
 import random
 import sys
@@ -31,6 +32,8 @@ import traceback
 import discord
 from discord import utils
 from discord.ext import commands
+
+from src.colours import DISCORD_COLOURS
 
 class MissingPermissions(commands.CommandError):
     pass
@@ -77,7 +80,7 @@ class Moderation:
         with open('mod_logs.json', 'r') as fp:
             mod_logs = json.load(fp)
 
-        if staff_role and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if staff_role not in ctx.author.roles and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to mute.')
@@ -90,13 +93,18 @@ class Moderation:
         elif member.top_role >= ctx.guild.me.top_role:
             raise Forbidden
         else:
+            if reason is None:
+                reason = 'No reason given.'
+
+            role_colour = random.choice(DISCORD_COLOURS)
             role = utils.get(ctx.guild.roles, name='Muted')
+
+            if role is None:
+                role = member.guild.create_role(name='Muted', colour=role_colour, reason='Role for mute command functionality.')
+
             if role in member.roles:
                 await ctx.send(f':x: **{member.name}** has already been muted.')
                 return
-
-            if reason is None:
-                reason = 'No reason given.'
 
             await member.add_roles(role)
             embed = discord.Embed()
@@ -112,7 +120,7 @@ class Moderation:
             mod_logs[str(ctx.guild.id)]['MUTE_COUNT'] += 1
             with open('mod_logs.json', 'w') as fp:
                 json.dump(mod_logs, fp, indent=4)
-            await self.bot.on_mod_case(ctx=ctx, author=ctx.author, member=member, reason=str(reason))
+            await self.bot.on_mod_case(ctx, ctx.author, member, str(reason))
 
     @commands.command()
     @commands.guild_only()
@@ -120,7 +128,7 @@ class Moderation:
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         admin_role = utils.get(ctx.guild.roles, name='Admin')
 
-        if staff_role and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if staff_role not in ctx.author.roles and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif member is None:
             await ctx.send(':grey_exclamation: Please mention a member to unmute.')
@@ -136,16 +144,17 @@ class Moderation:
             role = utils.get(ctx.guild.roles, name='Muted')
             if not role in member.roles:
                 await ctx.send(f':x: **{member.name}** was never muted.')
-            else:
-                await member.remove_roles(role)
-                embed = discord.Embed()
-                embed.title = ':open_mouth: Member Unmuted'
-                embed.colour = 0x0099ff
-                embed.add_field(name='Member Name', value=member.name, inline=False)
-                embed.add_field(name='Member ID', value=member.id, inline=False)
-                embed.add_field(name='Unmuted By', value=ctx.author.name, inline=False)
-                embed.set_footer(text=datetime.datetime.now())
-                await ctx.send(embed=embed)
+                return
+
+            await member.remove_roles(role)
+            embed = discord.Embed()
+            embed.title = ':open_mouth: Member Unmuted'
+            embed.colour = 0x0099ff
+            embed.add_field(name='Member Name', value=member.name, inline=False)
+            embed.add_field(name='Member ID', value=member.id, inline=False)
+            embed.add_field(name='Unmuted By', value=ctx.author.name, inline=False)
+            embed.set_footer(text=datetime.datetime.now())
+            await ctx.send(embed=embed)
 
     @commands.command(aliases=['prune'])
     @commands.guild_only()
@@ -153,7 +162,7 @@ class Moderation:
         staff_role = utils.get(ctx.guild.roles, name='Staff')
         admin_role = utils.get(ctx.guild.roles, name='Admin')
 
-        if staff_role and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
+        if staff_role not in ctx.author.roles and admin_role not in ctx.author.roles and ctx.author.id != ctx.guild.owner.id:
             raise MissingPermissions
         elif number is None:
             await ctx.send(':grey_exclamation: Please specify a number of messages to delete.')

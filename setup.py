@@ -1,4 +1,4 @@
-"""
+'''
 The MIT License (MIT)
 
 Copyright (c) 2018 sirtezza451
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 from __future__ import print_function
 import json
@@ -67,12 +67,11 @@ def main():
                     print('Requirements successfully installed. Running Jaffa...')
                     subprocess.call('python main.py')
     else:
-        print('Please choose an option below using the corresponding number:')
+        print('Please choose an option below by using its respective number.')
         print('1. Run Jaffa')
-        print('2. Pull code from master branch')
-        print('3. Pull code from development branch')
-        print('4. Update requirements')
-        print('5. Quit')
+        print('2. Update Jaffa (Git required)')
+        print('3. Update requirements')
+        print('4. Quit')
         choice = user_input()
         if choice == '1':
             try:
@@ -82,7 +81,6 @@ def main():
                 os.system('exit')
         elif choice == '2':
             try:
-                subprocess.call('git checkout master')
                 subprocess.call('git pull')
             except:
                 print('An error occurred while updating Jaffa. Make sure Git is'
@@ -106,30 +104,6 @@ def main():
                     subprocess.call('python main.py')
         elif choice == '3':
             try:
-                subprocess.call('git checkout development')
-                subprocess.call('git pull')
-            except:
-                print('An error occurred while updating Jaffa. Make sure Git is'
-                      'installed and available in the PATH environment '
-                      'variable. Aborting setup...')
-                os.system('exit')
-            else:
-                print('Jaffa has been successfully updated. Please enter your bot '
-                      'token from Discord. Jaffa will then be run automatically.')
-                token = user_input()
-
-                try:
-                    settings['DISCORD_TOKEN'] = str(token)
-                    with open('settings.json', 'w') as fp:
-                        json.dump(settings, fp, indent=4)
-                except:
-                    print('An error occurred. Aborting setup...')
-                    os.system('exit')
-                else:
-                    print('Your token has been successfully set. Running Jaffa...')
-                    subprocess.call('python main.py')
-        elif choice == '4':
-            try:
                 subprocess.call('pip install --upgrade -r requirements.txt')
             except:
                 print('An error occured while updating Jaffa\'s requirements.'
@@ -138,7 +112,7 @@ def main():
             else:
                 print('Requirements successfully updated. Running Jaffa...')
                 subprocess.call('python main.py')
-        elif choice == '5':
+        elif choice == '4':
             os.system('exit')
 
 if __name__ == '__main__':
