@@ -123,6 +123,9 @@ def main(bot):
         )
         sys.exit(1)
 
+    if settings["DISCORD_TOKEN"] and sys.argv[1]:
+        del settings["DISCORD_TOKEN"]
+
     try:
         token = settings["DISCORD_TOKEN"]
     except KeyError:
@@ -137,9 +140,6 @@ def main(bot):
         else:
             settings["DISCORD_TOKEN"] = token
 
-    with open("settings.json", "w") as fp:
-        json.dump(settings, fp, indent=4)
-
     for mod in [f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))]:
         try:
             bot.load_extension(f"mod.{mod}")
@@ -151,6 +151,9 @@ def main(bot):
     try:
         bot.run(settings["DISCORD_TOKEN"])
     except KeyboardInterrupt:
+        sys.exit(1)
+    except discord.ClientException:
+        print("Invalid Discord token. Please pass in a valid token and try again.")
         sys.exit(1)
 
 
