@@ -123,8 +123,9 @@ def main(bot):
         )
         sys.exit(1)
 
-    if settings["DISCORD_TOKEN"] and sys.argv[1]:
-        del settings["DISCORD_TOKEN"]
+    if len(sys.argv) > 1:
+        if settings["DISCORD_TOKEN"]:
+            del settings["DISCORD_TOKEN"]
 
     try:
         token = settings["DISCORD_TOKEN"]
