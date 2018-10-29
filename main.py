@@ -140,6 +140,9 @@ def main(bot):
         else:
             settings["DISCORD_TOKEN"] = token
 
+    with open("settings.json", "w") as fp:
+        json.dump(settings, fp, indent=4)
+
     for mod in [f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))]:
         try:
             bot.load_extension(f"mod.{mod}")
