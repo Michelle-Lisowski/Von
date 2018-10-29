@@ -133,6 +133,7 @@ def main(bot):
                 "Make sure to use the following format:\n"
                 "python [script] [token]"
             )
+            sys.exit(1)
         else:
             settings["DISCORD_TOKEN"] = token
 
