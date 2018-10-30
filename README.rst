@@ -21,5 +21,5 @@ wish to fork and pull. Contribution is not needed, but I certainly wouldn't
 decline it. Currently, only the basic framework has been completed; help and
 owner commands, and bot initialisation.
 
-General commands such as ``v!info``, ``v!ping``, ``v!profile`` and ``v!serverinfo``
-are going to be worked on next.
+General commands such as ``v!profile`` and ``v!serverinfo`` are going to be
+worked on next.

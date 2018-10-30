@@ -2,15 +2,13 @@
 # Copyright (c) 2018 sirtezza451
 # -*- coding: utf-8 -*-
 
-import os
-
 import discord
 from discord.ext import commands
 
 
 class Help:
     """
-    Command module for help-related commands
+    Command module for help-related commands.
     """
 
     def __init__(self, bot):
@@ -19,15 +17,14 @@ class Help:
     @commands.command()
     async def help(self, ctx):
         embed = discord.Embed()
-        embed.title = f"{self.bot.user.name}"
+        embed.title = self.bot.user.name
         embed.colour = 0x0099FF
-        embed.set_footer(text="Module names are case sensitive.")
 
         embed.description = (
             "`v!cmds [module]` returns a list of commands in the "
             "specified module.\n`v!modules` returns a list of available "
-            "modules.\n~~`v!help [command]` returns information about the "
-            "specified command.~~"
+            "command modules.\n~~`v!help [command]` returns information "
+            "about the specified command.~~"
         )
 
         await ctx.author.send(embed=embed)
@@ -75,7 +72,7 @@ class Help:
             cmds.append("v!" + str(cmd))
 
         cmds = "` `".join(cmds)
-        embed.description = f"`{cmds}`"
+        embed.description = f"**`{cmds}`**"
         await ctx.send(embed=embed)
 
 

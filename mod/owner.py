@@ -2,8 +2,6 @@
 # Copyright (c) 2018 sirtezza451
 # -*- coding: utf-8 -*-
 
-import os
-
 import discord
 from discord.ext import commands
 
@@ -13,7 +11,7 @@ class Owner:
     Command module for owner commands.
 
     These commands can only be used by the owner
-    of the bot.
+    of the bot, and allow for custom command modules.
     """
 
     def __init__(self, bot):
