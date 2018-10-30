@@ -57,7 +57,7 @@ class Von(commands.Bot):
         event.
         """
 
-        if message.content == self.user.mention:
+        if message.content == self.user.mention or "v!":
             embed = discord.Embed()
             embed.colour = 0x0099FF
             embed.description = "The prefix in this server is `v!`."
@@ -81,7 +81,7 @@ class Von(commands.Bot):
         elif hasattr(ctx.command, "on_error"):
             return
 
-        elif hasattr(ctx.cog, f"_{ctx.cog.__class.__name__}__error"):
+        elif hasattr(ctx.cog, f"_{ctx.cog.__class__.__name__}__error"):
             return
 
         else:

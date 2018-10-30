@@ -12,6 +12,13 @@ class Owner:
 
     These commands can only be used by the owner
     of the bot, and allow for custom command modules.
+
+    List of commands:
+    ```
+    v!load
+    v!unload
+    v!reload
+    ```
     """
 
     def __init__(self, bot):
