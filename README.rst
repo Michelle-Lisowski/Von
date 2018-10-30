@@ -13,13 +13,18 @@ Von V2
     :target: https://makeapullrequest.com
     :alt: Feel free to make a pull request!
 
-This is an in-progress rewrite of Von, with one of the main focuses being
-code efficiency.
+This is an in-progress rewrite of Von, with a couple of the main focuses
+being code efficiency and performance.
 
-I recommend avoiding this branch for running your own instance, unless you
-wish to fork and pull. Contribution is not needed, but I certainly wouldn't
-decline it. Currently, only the basic framework has been completed; help and
-owner commands, and bot initialisation.
+I recommend avoiding this branch for running your own instance of Von,
+unless you wish to contribute to development. If so, make sure to keep track
+of the development status shown below.
 
-General commands such as ``v!profile`` and ``v!serverinfo`` are going to be
-worked on next.
+You can contribute by forking this repository, pushing commits, and submitting
+a pull request.
+
+Development Status
+------------------
+
+Next focus: better detail in info-based commands, such as ``v!info``,
+``v!profile`` and ``v!serverinfo``.
