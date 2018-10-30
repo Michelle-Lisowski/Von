@@ -39,7 +39,7 @@ class Von(commands.Bot):
 
         await self.change_presence(
             activity=discord.Streaming(
-                name=f"live with {len(self.users)} viewers!",
+                name=f"with {len(self.users)} viewers!",
                 url="https://twitch.tv/kraken",
             )
         )
