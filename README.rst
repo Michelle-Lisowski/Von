@@ -16,9 +16,9 @@ Von V2
 This is an in-progress rewrite of Von, with a couple of the main focuses
 being code efficiency and performance.
 
-I recommend avoiding this branch for running your own instance of Von,
-unless you wish to contribute to development. If so, make sure to keep track
-of the development status shown below.
+Please go to either the `master <https://github.com/sirtezza451/Von>`_ or
+`development <https://github.com/sirtezza451/Von/tree/development`_ branches,
+unless you're going to contribute or you want an unfinished bot.
 
 You can contribute by forking this repository, pushing commits, and submitting
 a pull request.

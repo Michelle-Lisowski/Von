@@ -39,8 +39,7 @@ class Von(commands.Bot):
 
         await self.change_presence(
             activity=discord.Streaming(
-                name=f"with {len(self.users)} viewers!",
-                url="https://twitch.tv/kraken",
+                name=f"with {len(self.users)} viewers!", url="https://twitch.tv/kraken"
             )
         )
 
@@ -57,7 +56,7 @@ class Von(commands.Bot):
         event.
         """
 
-        if message.content == self.user.mention or "v!":
+        if message.content == self.user.mention:
             embed = discord.Embed()
             embed.colour = 0x0099FF
             embed.description = "The prefix in this server is `v!`."
@@ -86,6 +85,22 @@ class Von(commands.Bot):
 
         else:
             await ctx.send(f":x: An error occured!\n```{error}```")
+
+    async def on_member_join(self, member):
+        """
+        Auto-role feature
+
+        Finds the 'Member' role and creates it
+        if it doesn't exist, then gives it to
+        the member.
+        """
+
+        role = discord.utils.get(member.guild.roles, name="Member")
+
+        if role is None:
+            role = await member.guild.create_role(name="Member", hoist=True)
+
+        await member.add_roles(role)
 
 
 def main(bot):
