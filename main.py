@@ -27,6 +27,93 @@ class Von(commands.Bot):
     within the code of a command module.
     """
 
+    def region_clean(self, guild):
+        """
+        Returns a clean string of the voice
+        region of the guild argument passed.
+        """
+
+        s = str(guild.region)
+        if "-" in s:
+            sn = s.replace("-", " ")
+
+            if "vip" in sn:
+                sr = sn.replace("vip ", "")
+            if "eu" in sn:
+                sr = sn.replace("eu", "EU")
+            if "us" in sn:
+                sr = sn.replace("us", "US")
+
+            sl = sr.split(" ")
+
+            sf = f"{sl[0]} {sl[1].capitalize()}"
+        elif s == "hongkong":
+            sf = "Hong Kong"
+        elif s == "southafrica":
+            sf = "South Africa"
+        else:
+            sf = s.capitalize()
+        return sf
+
+    def status_cap(self, status):
+        """
+        Returns a capitalised string of the
+        status argument passed.
+
+        By default, the string of a member's
+        status would be `offline`, `dnd`, `idle`
+        or `online`.
+
+        Returns:
+            "Do Not Disturb"
+            str(status).capitalize()
+        """
+        if status == discord.Status.dnd:
+            s = "Do Not Disturb"
+        else:
+            s = str(status).capitalize()
+        return s
+
+    def level_cap(self, level):
+        """
+        Returns a capitalised string of the
+        verification level argument passed.
+
+        Returns:
+            "None"
+            "Low"
+            "Medium"
+            "High"
+            "Extreme"
+        """
+
+        return str(level).capitalize()
+
+    def atype_str(self, activity):
+        """
+        Returns a type string of the activity
+        argument passed.
+
+        By default, `discord.Member.activity.type`
+        returns an integer.
+
+        Returns:
+            "Playing"
+            "Streaming"
+            "Listening"
+            "Watching"
+        """
+
+        if activity.type == 0:
+            atype = "Playing"
+        elif activity.type == 1:
+            atype = "Streaming"
+        elif activity.type == 2:
+            atype = "Listening"
+        elif activity.type == 3:
+            atype = "Watching"
+        return atype
+
     async def on_ready(self):
         """
         Logs successful connection and sets

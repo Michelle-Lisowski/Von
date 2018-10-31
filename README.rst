@@ -26,5 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: better detail in info-based commands, such as ``v!info``,
-``v!profile`` and ``v!serverinfo``.
+Next focus: image commands?

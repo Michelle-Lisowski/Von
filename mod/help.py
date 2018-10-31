@@ -34,8 +34,9 @@ class Help:
             "about the specified command.~~"
         )
 
+        if ctx.guild:
+            await ctx.send(":mailbox_with_mail: Check your DMs")
         await ctx.author.send(embed=embed)
-        await ctx.send(":mailbox_with_mail: Check your DMs")
 
     @commands.command()
     async def modules(self, ctx):
