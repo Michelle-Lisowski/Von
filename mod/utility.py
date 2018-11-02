@@ -44,4 +44,4 @@ class Utility:
             await ctx.send(embed=embed)
 
 def setup(bot):
-    bot.add_cog(Urban(bot))
+    bot.add_cog(Utility(bot))
