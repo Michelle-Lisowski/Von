@@ -15,6 +15,7 @@ class Utility:
     List of commands:
     ```
     v!urban
+    v!calculator
     ```
     """
 
@@ -42,6 +43,16 @@ class Utility:
             embed.description = a["definition"]
             embed.set_footer(text=f"Author: {a['author']}")
             await ctx.send(embed=embed)
+
+    @commands.command(aliases=["calc"])
+    async def calculator(self, ctx, *, expression: str):
+        async with ctx.typing():
+            try:
+                result = eval(expression, None, locals())
+            except:
+                await ctx.send(f":grey_exclamation: `{expression}` contains invalid arguments.")
+            else:
+                await ctx.send(f"According to my calculations, the answer is **{result}**.")
 
 def setup(bot):
     bot.add_cog(Utility(bot))
