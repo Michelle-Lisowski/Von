@@ -2,9 +2,10 @@
 # Copyright (c) 2018 sirtezza451
 # -*- coding: utf-8 -*-
 
-import aiohttp
 import discord
 from discord.ext import commands
+
+import aiohttp
 
 
 class Image:
