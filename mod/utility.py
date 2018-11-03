@@ -47,12 +47,38 @@ class Utility:
     @commands.command(aliases=["calc"])
     async def calculator(self, ctx, *, expression: str):
         async with ctx.typing():
+            e = expression.lower().replace("x", "*")
+
             try:
-                result = eval(expression, None, locals())
+                result = eval(e, None, locals())
             except:
                 await ctx.send(f":grey_exclamation: `{expression}` contains invalid arguments.")
             else:
                 await ctx.send(f"According to my calculations, the answer is **{result}**.")
+
+    @commands.command()
+    async def weather(self, ctx, *, location: str):
+        async with ctx.typing():
+            embed = discord.Embed()
+            embed.colour = 0x0099FF
+
+            async with aiohttp.ClientSession() as cs:
+                mw = "https://metaweather.com/api"
+                async with cs.get(f"{mw}/location/search/?query={location}") as s:
+                    l = await s.json()
+                    async with cs.get(f"{mw}/location/{l['woeid']}") as r:
+                        f = await r.json()
+
+            embed.title = f["title"]
+            embed.add_field(name="Weather State", value=f["weather_state_name"])
+            embed.add_field(name="Current Temperature", value=f["the_temp"])
+            embed.add_field(name="Minimum Temperature", value=f["min_temp"])
+            embed.add_field(name="Maximum Temperature", value=f["max_temp"])
+            embed.add_field(name="Humidity", value=f["humidity"])
+            embed.add_field(name="Wind Direction", value=f["wind_direction"])
+            embed.set_footer(text="Source: https://metaweather.com")
+            await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Utility(bot))

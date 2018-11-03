@@ -26,4 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: more image commands?
+Next focus: number commands
