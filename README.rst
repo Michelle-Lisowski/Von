@@ -26,4 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: number commands
+Next focus: possibly audio commands
