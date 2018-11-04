@@ -26,4 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: possibly audio commands
+Next focus: administration and moderation commands

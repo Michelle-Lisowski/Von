@@ -30,7 +30,7 @@ class Von(commands.Bot):
     def region_clean(self, guild):
         """
         Returns a clean string of the voice
-        region of the guild argument passed.
+        region of the guild argument passed
         """
 
         s = str(guild.region)
@@ -58,7 +58,7 @@ class Von(commands.Bot):
     def status_cap(self, status):
         """
         Returns a capitalised string of the
-        status argument passed.
+        status argument passed
 
         By default, the string of a member's
         status would be `offline`, `dnd`, `idle`
@@ -77,7 +77,7 @@ class Von(commands.Bot):
     def level_cap(self, level):
         """
         Returns a capitalised string of the
-        verification level argument passed.
+        verification level argument passed
 
         Returns:
             "None"
@@ -92,7 +92,7 @@ class Von(commands.Bot):
     def atype_str(self, activity):
         """
         Returns a type string of the activity
-        argument passed.
+        argument passed
 
         By default, `discord.Member.activity.type`
         returns an integer.
@@ -189,6 +189,36 @@ class Von(commands.Bot):
 
         await member.add_roles(role)
 
+    async def on_member_ban(self, guild, user):
+        """
+        Send ban details to 'logs' channel
+
+        Finds the 'logs' channel and creates it if
+        it doesn't exist, then sends an embed
+        containing details of the ban case.
+
+        Returns:
+            The banned member (Name and ID)
+            The user responsible
+            The ban reason
+        """
+
+        audit_ban = discord.AuditLogAction.ban
+        channel = discord.utils.get(guild.text_channels, name="logs")
+
+        if channel is None:
+            channel = await guild.create_text_channel(name="logs")
+
+        async for ban in guild.audit_logs(limit=1, action=audit_ban):
+            embed = discord.Embed()
+            embed.title = "Ban"
+            embed.colour = 0x0099FF
+
+            embed.add_field(name="Member", value=str(ban.user), inline=False)
+            embed.add_field(name="Member ID", value=ban.user.id, inline=False)
+            embed.add_field(name="Banned By", value=ban.user, inline=False)
+            embed.add_field(name="Reason", value=ban.reason, inline=False)
+            await channel.send(embed=embed)
 
 def main(bot):
     """
