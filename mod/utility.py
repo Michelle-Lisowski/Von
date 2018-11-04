@@ -17,6 +17,7 @@ class Utility:
     v!urban
     v!calculator
     v!weather
+    v!eval
     ```
     """
 
@@ -93,6 +94,19 @@ class Utility:
             embed.add_field(name="Humidity", value=f"{round(w['humidity'])}%")
             embed.set_footer(text="Source: https://metaweather.com")
             await ctx.send(embed=embed)
+
+    @commands.command()
+    async def eval(self, ctx, *, code: str = None):
+        if code is None:
+            await ctx.send(":grey_exclamation: Please specify code to evaluate.")
+            return
+
+        try:
+            e = eval(code)
+        except:
+            await ctx.send(f":grey_exclamation: The code contains invalid syntax.")
+        else:
+            await ctx.send(f"```python\n{e}\n```")
 
 
 def setup(bot):
