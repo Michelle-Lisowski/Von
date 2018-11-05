@@ -4,10 +4,10 @@
 
 import asyncio
 import functools
+import random
 from functools import partial
 
 import discord
-import youtube_dl
 from discord.ext import commands
 from youtube_dl import YoutubeDL
 
@@ -85,6 +85,9 @@ class Playlist:
 
     async def clear(self):
         self.queue._queue.clear()
+
+    async def shuffle(self):
+        random.shuffle(self.queue._queue)
 
     async def loop(self):
         await self.bot.wait_until_ready()
@@ -179,6 +182,16 @@ class Audio:
         playlist = self.get_playlist(ctx)
         await playlist.clear()
         await ctx.send(":white_check_mark: Playlist cleared.")
+
+    @commands.command()
+    async def shuffle(self, ctx):
+        if not ctx.voice_client:
+            await ctx.send(":grey_exclamation: No music is currently playing.")
+            return
+        
+        playlist = self.get_playlist(ctx)
+        await playlist.shuffle()
+        await ctx.send(":information_source: Playlist shuffled.")
 
     @commands.command()
     async def stop(self, ctx):
