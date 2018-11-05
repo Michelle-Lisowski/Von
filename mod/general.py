@@ -9,19 +9,6 @@ from discord.ext import commands
 
 
 class General:
-    """
-    Command module for general commands.
-
-    List of commands:
-    ```
-    v!ping
-    v!avatar
-    v!info
-    v!profile
-    v!serverinfo
-    ```
-    """
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -60,7 +47,7 @@ class General:
         embed.add_field(name="Name", value=str(self.bot.user))
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-alpha23")
+        embed.add_field(name="Version", value="2.0.0-beta1")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)

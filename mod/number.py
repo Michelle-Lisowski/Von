@@ -8,17 +8,6 @@ import discord
 from discord.ext import commands
 
 class Number:
-    """
-    Command module for number-based commands
-    (other than `v!calculator`)
-
-    List of commands:
-    ```
-    v!gay
-    v!roll
-    ```
-    """
-
     def __init__(self, bot):
         self.bot = bot
 

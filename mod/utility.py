@@ -9,18 +9,6 @@ import aiohttp
 
 
 class Utility:
-    """
-    Command module for utility commands
-
-    List of commands:
-    ```
-    v!urban
-    v!calculator
-    v!weather
-    v!eval
-    ```
-    """
-
     def __init__(self, bot):
         self.bot = bot
 

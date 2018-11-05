@@ -7,17 +7,6 @@ from discord.ext import commands
 
 
 class Help:
-    """
-    Command module for help-related commands.
-
-    List of commands:
-    ```
-    v!help
-    v!modules
-    v!cmds
-    ```
-    """
-
     def __init__(self, bot):
         self.bot = bot
 

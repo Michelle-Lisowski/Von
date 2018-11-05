@@ -103,10 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# JSON database files
-guilds.json
-mod_logs.json
-xp.json
+# JSON
+prefixes.json
 
-# API Keys
-settings.json
+# Configuration
+config.json

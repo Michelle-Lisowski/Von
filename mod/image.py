@@ -9,16 +9,6 @@ import aiohttp
 
 
 class Image:
-    """
-    Command module for image commands.
-
-    List of commands:
-    ```
-    v!cat
-    v!dog
-    ```
-    """
-
     def __init__(self, bot):
         self.bot = bot
 

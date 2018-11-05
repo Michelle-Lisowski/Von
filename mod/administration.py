@@ -6,15 +6,6 @@ import discord
 from discord.ext import commands
 
 class Administration:
-    """
-    Command module for administration commands
-
-    List of commands:
-    ```
-    v!ban
-    ```
-    """
-
     def __init__(self, bot):
         self.bot = bot
 
