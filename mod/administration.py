@@ -28,7 +28,7 @@ class Administration:
             logs = discord.utils.get(ctx.guild.text_channels, name="logs")
             await ctx.guild.ban(member)
             await ctx.send(
-                f":white_check_mark: Successfully banned `{str(member)}`.\n"
+                f":white_check_mark: Successfully banned `{member}`.\n"
                 f"Ban details are in <#{logs.id}>."
             )
 

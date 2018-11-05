@@ -36,7 +36,7 @@ class Help:
         mods = []
 
         for mod in self.bot.cogs:
-            if str(mod) == "Owner":
+            if mod == "Owner":
                 continue
             else:
                 mods.append(mod)
@@ -51,7 +51,7 @@ class Help:
             await ctx.invoke(self.modules)
             return
 
-        if str(module) == "Owner":
+        if module == "Owner":
             await ctx.invoke(self.modules)
             return
 
@@ -66,7 +66,7 @@ class Help:
         cmds = []
 
         for cmd in self.bot.get_cog_commands(module):
-            cmds.append("v!" + str(cmd))
+            cmds.append("v!" + cmd)
 
         cmds = "` `".join(cmds)
         embed.description = f"**`{cmds}`**"

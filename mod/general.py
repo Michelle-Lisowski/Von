@@ -44,10 +44,10 @@ class General:
         dpyver = "{0.major}.{0.minor}.{0.micro}".format(discord.version_info)
         gitrepo = "https://github.com/sirtezza451/Von"
 
-        embed.add_field(name="Name", value=str(self.bot.user))
+        embed.add_field(name="Name", value=self.bot.user)
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-beta2")
+        embed.add_field(name="Version", value="2.0.0-beta3")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)
@@ -63,7 +63,7 @@ class General:
         embed.colour = 0x0099FF
         embed.set_thumbnail(url=member.avatar_url)
 
-        embed.add_field(name="Name", value=str(member))
+        embed.add_field(name="Name", value=member)
         embed.add_field(name="ID", value=member.id)
         embed.add_field(name="Role", value=member.top_role)
         embed.add_field(name="Nickname", value=member.nick)
@@ -84,9 +84,9 @@ class General:
         level = ctx.guild.verification_level
         create = ctx.guild.created_at
 
-        embed.add_field(name="Owner", value=str(ctx.guild.owner))
+        embed.add_field(name="Owner", value=ctx.guild.owner)
         embed.add_field(name="ID", value=ctx.guild.id)
-        embed.add_field(name="Verification Level", value=)
+        embed.add_field(name="Verification Level", value=level)
         embed.add_field(name="Owner ID", value=ctx.guild.owner.id)
         embed.add_field(name="Member Count", value=len(ctx.guild.members))
         embed.add_field(name="Text Channel Count", value=textchnls)

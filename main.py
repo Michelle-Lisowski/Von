@@ -50,11 +50,16 @@ class Von(commands.Bot):
 
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name="Member")
+        channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
         if role is None:
             role = await member.guild.create_role(name="Member", hoist=True)
 
+        if channel is None:
+            channel = await member.guild.create_text_channel(name="welcome")
+
         await member.add_roles(role)
+        await channel.send(f"Welcome to **{member.guild}**, {member.mention}! :wave:")
 
     async def on_member_ban(self, guild, user):
         audit_ban = discord.AuditLogAction.ban
@@ -68,7 +73,7 @@ class Von(commands.Bot):
             embed.title = "Ban"
             embed.colour = 0x0099FF
 
-            embed.add_field(name="Member", value=str(ban.user))
+            embed.add_field(name="Member", value=ban.user)
             embed.add_field(name="Member ID", value=ban.user.id)
             embed.add_field(name="Reason", value=ban.reason)
             embed.add_field(name="Responsible Moderator", value=ban.user)
@@ -86,7 +91,6 @@ class Von(commands.Bot):
             await ctx.send("This command can't be used in private messages.")
         elif isinstance(error, commands.DisabledCommand):
             await ctx.send("Sorry. This command is disabled and can't be used.")
-
         else:
             print(f"In {ctx.command.qualified_name}:", file=sys.stderr)
             traceback.print_tb(error.original.__traceback__)
