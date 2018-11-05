@@ -16,12 +16,16 @@ def user_input():
     return input(">>> ")
 
 def get_token():
-    with open("config.json") as f:
-        try:
-            config = json.load(f)
-        except FileNotFoundError:
-            print("Configuration file doesn't exist. Exiting.")
-            sys.exit(1)
+    try:
+        with open("config.json") as f:
+            try:
+                config = json.load(f)
+            except:
+                print("Configuration file doesn't contain a dictionary. Exiting.")
+                sys.exit(1)
+    except FileNotFoundError:
+        print("Configuration file doesn't exist. Exiting.")
+        sys.exit(1)
 
     try:
         token = config["token"]
