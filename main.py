@@ -39,7 +39,6 @@ class Von(commands.Bot):
         
         with open("prefixes.json") as f:
             self.prefixes = json.load(f)
-
         self.session = aiohttp.ClientSession(loop=self.loop)
 
         for mod in [f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))]:

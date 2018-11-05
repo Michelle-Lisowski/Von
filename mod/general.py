@@ -47,7 +47,7 @@ class General:
         embed.add_field(name="Name", value=str(self.bot.user))
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-beta1")
+        embed.add_field(name="Version", value="2.0.0-beta2")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)
@@ -63,20 +63,11 @@ class General:
         embed.colour = 0x0099FF
         embed.set_thumbnail(url=member.avatar_url)
 
-        if member.activity is not None:
-            atype = self.bot.atype_str(member.activity)
-            activity = f"{atype} **{member.activity}**"
-        else:
-            activity = None
-
-        status = self.bot.status_cap(member.status)
-
         embed.add_field(name="Name", value=str(member))
         embed.add_field(name="ID", value=member.id)
         embed.add_field(name="Role", value=member.top_role)
         embed.add_field(name="Nickname", value=member.nick)
-        embed.add_field(name="Status", value=status)
-        embed.add_field(name="Activity", value=activity)
+        embed.add_field(name="Status", value=member.status)
         embed.add_field(name="Account Creation", value=member.created_at)
         embed.add_field(name="Joined At", value=member.joined_at)
         await ctx.send(embed=embed)
@@ -90,20 +81,19 @@ class General:
 
         textchnls = len(ctx.guild.text_channels)
         vcechnls = len(ctx.guild.voice_channels)
-        level = self.bot.level_cap(ctx.guild.verification_level)
-        region = self.bot.region_clean(ctx.guild)
+        level = ctx.guild.verification_level
         create = ctx.guild.created_at
 
         embed.add_field(name="Owner", value=str(ctx.guild.owner))
         embed.add_field(name="ID", value=ctx.guild.id)
-        embed.add_field(name="Verification Level", value=level)
+        embed.add_field(name="Verification Level", value=)
         embed.add_field(name="Owner ID", value=ctx.guild.owner.id)
         embed.add_field(name="Member Count", value=len(ctx.guild.members))
         embed.add_field(name="Text Channel Count", value=textchnls)
         embed.add_field(name="Role Count", value=len(ctx.guild.roles))
         embed.add_field(name="Voice Channel Count", value=vcechnls)
         embed.add_field(name="Server Creation", value=create)
-        embed.add_field(name="Voice Region", value=region)
+        embed.add_field(name="Voice Region", value=ctx.guild.region)
         await ctx.send(embed=embed)
 
 
