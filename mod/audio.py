@@ -65,6 +65,7 @@ class Playlist:
         self.bot = ctx.bot
         self.guild = ctx.guild
         self.channel = ctx.channel
+        self.command = ctx.command
 
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
@@ -115,8 +116,9 @@ class Playlist:
 
             if self.current is None:
                 if len(self.queue._queue) < 1:
-                    await self.guild.voice_client.disconnect()
-                    await self.channel.send(":information_source: End of the playlist.")
+                    if self.command.qualified_name != "stop":
+                        await self.guild.voice_client.disconnect()
+                        await self.channel.send(":information_source: End of the playlist.")
 
 
 class Audio:
