@@ -59,7 +59,9 @@ class Von(commands.Bot):
             channel = await member.guild.create_text_channel(name="welcome")
 
         await member.add_roles(role)
-        await channel.send(f"Welcome to **{member.guild}**, {member.mention}! :wave:")
+        await channel.send(
+            f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
+        )
 
     async def on_member_ban(self, guild, user):
         audit_ban = discord.AuditLogAction.ban
