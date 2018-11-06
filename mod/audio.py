@@ -54,8 +54,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         if playlist.current:
             await ctx.send(
-                f":information_source: **{data['uploader']}** - **"
-                f"{data['title']}** has been added to the playlist."
+                f"**{data['uploader']}** - **{data['title']}**"
+                f"has been added to the playlist."
             )
         return cls(discord.FFmpegPCMAudio(data['url'], **ffmpegopts), data=data, requester=ctx.author)
 
@@ -118,7 +118,7 @@ class Playlist:
                 if len(self.queue._queue) < 1:
                     if self.command.qualified_name != "stop":
                         await self.guild.voice_client.disconnect()
-                        await self.channel.send(":information_source: End of the playlist.")
+                        await self.channel.send("End of the playlist.")
 
 
 class Audio:
@@ -137,12 +137,12 @@ class Audio:
     @commands.command()
     async def play(self, ctx, *, search: str = None):
         if search is None:
-            await ctx.send(":grey_exclamation: Please specify a search query.")
+            await ctx.send("Please specify a search query.")
             return
 
         if not ctx.voice_client:
             if not ctx.author.voice:
-                await ctx.send(":grey_exclamation: Please join a voice channel.")
+                await ctx.send("Please join a voice channel first.")
             else:
                 await ctx.author.voice.channel.connect()
         
@@ -154,12 +154,12 @@ class Audio:
     @commands.command()
     async def playfirst(self, ctx, *, search: str = None):
         if search is None:
-            await ctx.send(":grey_exclamation: Please specify a search query.")
+            await ctx.send("Please specify a search query.")
             return
 
         if not ctx.voice_client:
             if not ctx.author.voice:
-                await ctx.send(":grey_exclamation: Please join a voice channel.")
+                await ctx.send("Please join a voice channel first.")
             else:
                 await ctx.author.voice.channel.connect()
 
@@ -171,14 +171,14 @@ class Audio:
     @commands.command()
     async def skip(self, ctx):
         if not ctx.voice_client:
-            await ctx.send(":grey_exclamation: No music is currently playing.")
+            await ctx.send("No music is currently playing.")
             return
         ctx.voice_client.stop()
 
     @commands.command()
     async def clear(self, ctx):
         if not ctx.voice_client:
-            await ctx.send(":grey_exclamation: No music is currently playing.")
+            await ctx.send("No music is currently playing.")
             return
 
         playlist = self.get_playlist(ctx)
@@ -188,24 +188,24 @@ class Audio:
     @commands.command()
     async def shuffle(self, ctx):
         if not ctx.voice_client:
-            await ctx.send(":grey_exclamation: No music is currently playing.")
+            await ctx.send("No music is currently playing.")
             return
         
         playlist = self.get_playlist(ctx)
         await playlist.shuffle()
-        await ctx.send(":information_source: Playlist shuffled.")
+        await ctx.send("Playlist shuffled.")
 
     @commands.command()
     async def stop(self, ctx):
         if not ctx.voice_client:
-            await ctx.send(":grey_exclamation: No music is currently playing.")
+            await ctx.send("No music is currently playing.")
             return
 
         playlist = self.get_playlist(ctx)
         playlist.player.cancel()
 
         await ctx.voice_client.disconnect()
-        await ctx.send(f":information_source: Music stopped by **{ctx.author.name}**.")
+        await ctx.send(f"Music stopped by **{ctx.author.name}**.")
 
 
 def setup(bot):

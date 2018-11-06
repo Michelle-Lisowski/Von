@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import time
 
 import discord
 from discord.ext import commands
@@ -37,17 +38,26 @@ class General:
     async def info(self, ctx):
         embed = discord.Embed()
         embed.title = self.bot.user.name
-        embed.description = "**Von by sirtezza451#9856**"
+        embed.description = "**Von by sirtezza451#9856 - made using discord.py rewrite.**"
         embed.colour = 0x0099FF
 
         pyver = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
         dpyver = "{0.major}.{0.minor}.{0.micro}".format(discord.version_info)
         gitrepo = "https://github.com/sirtezza451/Von"
 
+        seconds = time.time() - self.bot.uptime
+        minutes, seconds = divmod(seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
+        uptime = "{0} days, {1} hours, {2} minutes and {3} seconds".format(
+            round(days), round(hours), round(minutes), round(seconds)
+        )
+
+        embed.add_field(name="Uptime", value=f"Von has been awake for {uptime}.")
         embed.add_field(name="Name", value=self.bot.user)
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-beta10")
+        embed.add_field(name="Version", value="2.0.0-beta11")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)

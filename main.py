@@ -2,10 +2,10 @@
 # Copyright (c) 2018 sirtezza451
 # -*- coding: utf-8 -*-
 
-import datetime
 import json
 import os
 import sys
+import time
 import traceback
 from os import listdir
 from os.path import isfile, join
@@ -104,7 +104,7 @@ class Von(commands.Bot):
 
     async def on_ready(self):
         if not hasattr(self, "uptime"):
-            self.uptime = datetime.datetime.utcnow()
+            self.uptime = time.time()
 
         print(f"Ready: {self.user} (ID: {self.user.id})")
 
