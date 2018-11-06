@@ -32,7 +32,7 @@ class Help:
     @commands.command()
     async def modules(self, ctx):
         embed = discord.Embed()
-        embed.title = "Available Command Modules"
+        embed.title = "Command Modules"
         embed.colour = 0x0099FF
         mods = []
 

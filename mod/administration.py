@@ -5,6 +5,7 @@
 import discord
 from discord.ext import commands
 
+
 class Admin:
     def __init__(self, bot):
         self.bot = bot
@@ -27,7 +28,7 @@ class Admin:
             logs = discord.utils.get(ctx.guild.text_channels, name="logs")
             await ctx.guild.ban(member)
             await ctx.send(
-                f"Successfully banned `{member}`.\n"
+                f":white_check_mark: Successfully banned `{member}`.\n"
                 f"Ban details are in <#{logs.id}>."
             )
 

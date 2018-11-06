@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 from youtube_dl import YoutubeDL
 
+
 ytdlopts = {
     "format": "bestaudio/best",
     "outtmpl": "downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s",
@@ -54,8 +55,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         if playlist.current:
             await ctx.send(
-                f"**{data['uploader']}** - **{data['title']}**"
-                f"has been added to the playlist."
+                f":musical_note: **{data['uploader']}** - **"
+                f"{data['title']}** has been added to the playlist."
             )
         return cls(discord.FFmpegPCMAudio(data['url'], **ffmpegopts), data=data, requester=ctx.author)
 
@@ -193,7 +194,7 @@ class Audio:
         
         playlist = self.get_playlist(ctx)
         await playlist.shuffle()
-        await ctx.send("Playlist shuffled.")
+        await ctx.send(":white_check_mark: Playlist shuffled.")
 
     @commands.command()
     async def stop(self, ctx):

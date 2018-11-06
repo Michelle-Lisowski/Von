@@ -32,7 +32,7 @@ class Owner:
             return
 
         try:
-            self.bot.load_extension(mod)
+            self.bot.unload_extension(mod)
         except:
             await ctx.send(f":x: An error occured while unloading `{mod}`.")
         else:
