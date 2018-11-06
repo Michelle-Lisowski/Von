@@ -49,7 +49,7 @@ class General:
         minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
         days, hours = divmod(hours, 24)
-        uptime = "{0} days, {1} hours, {2} minutes and {3} seconds".format(
+        uptime = "{} days, {} hours, {} minutes and {} seconds".format(
             round(days), round(hours), round(minutes), round(seconds)
         )
 
@@ -57,7 +57,7 @@ class General:
         embed.add_field(name="Name", value=self.bot.user)
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-beta13")
+        embed.add_field(name="Version", value="2.0.0-beta14")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)
