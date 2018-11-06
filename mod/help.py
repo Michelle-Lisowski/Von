@@ -5,6 +5,8 @@
 import discord
 from discord.ext import commands
 
+from .settings import Settings
+
 
 class Help:
     def __init__(self, bot):
@@ -32,7 +34,6 @@ class Help:
         embed = discord.Embed()
         embed.title = "Available Command Modules"
         embed.colour = 0x0099FF
-        embed.set_footer(text="Module names are case sensitive.")
         mods = []
 
         for mod in self.bot.cogs:
@@ -51,22 +52,27 @@ class Help:
             await ctx.invoke(self.modules)
             return
 
-        if module == "Owner":
+        if module.lower() == "owner":
             await ctx.invoke(self.modules)
             return
 
-        mod = self.bot.get_cog(module)
+        if module.lower() == "settings":
+            subcmds = Settings(self.bot).settings
+            await ctx.invoke(subcmds)
+            return
+
+        mod = self.bot.get_cog(module.capitalize())
         if mod is None:
             await ctx.invoke(self.modules)
             return
 
         embed = discord.Embed()
-        embed.title = f"{module} Commands"
+        embed.title = f"{module.capitalize()} Commands"
         embed.colour = 0x0099FF
         cmds = []
 
-        for cmd in self.bot.get_cog_commands(module):
-            cmds.append("v!" + cmd)
+        for cmd in self.bot.get_cog_commands(module.capitalize()):
+            cmds.append("v!" + cmd.qualified_name)
 
         cmds = "` `".join(cmds)
         embed.description = f"**`{cmds}`**"

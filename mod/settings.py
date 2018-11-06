@@ -15,7 +15,7 @@ class Settings:
     async def settings(self, ctx):
         if ctx.invoked_subcommand is None:
             embed = discord.Embed()
-            embed.title = "Setting Commands"
+            embed.title = "Server Settings"
             embed.colour = 0x0099FF
 
             prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]

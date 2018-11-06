@@ -5,7 +5,7 @@
 import discord
 from discord.ext import commands
 
-class Administration:
+class Admin:
     def __init__(self, bot):
         self.bot = bot
 
@@ -33,4 +33,4 @@ class Administration:
 
 
 def setup(bot):
-    bot.add_cog(Administration(bot))
+    bot.add_cog(Admin(bot))
