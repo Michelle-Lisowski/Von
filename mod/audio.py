@@ -67,6 +67,7 @@ class Playlist:
         self.guild = ctx.guild
         self.channel = ctx.channel
         self.command = ctx.command
+        self.cog = ctx.cog
 
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
@@ -120,6 +121,7 @@ class Playlist:
                     if self.command.qualified_name != "stop":
                         await self.guild.voice_client.disconnect()
                         await self.channel.send("End of the playlist.")
+                        del self.cog.players[str(self.guild.id)]
 
 
 class Audio:
@@ -204,6 +206,7 @@ class Audio:
 
         playlist = self.get_playlist(ctx)
         playlist.player.cancel()
+        del self.players[str(ctx.guild.id)]
 
         await ctx.voice_client.disconnect()
         await ctx.send(f"Music stopped by **{ctx.author.name}**.")
