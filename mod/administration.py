@@ -12,23 +12,22 @@ class Administration:
     @commands.command()
     async def ban(self, ctx, member: discord.Member = None):
         if member is None:
-            await ctx.send(":grey_exclamation: Please specify a member.")
+            await ctx.send("Please specify a member.")
         elif member.id == ctx.author.id:
             await ctx.send(
-                ":grey_exclamation: Why would you want to ban yourself?"
+                "Why would you want to ban yourself?"
             )
         elif member.id == self.bot.user.id:
-            await ctx.send(":grey_exclamation: Why would you want to ban me?")
+            await ctx.send("Why would you want to ban me?")
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(
-                ":no_entry_sign: Maybe try banning someone with a role lower "
-                "than yours."
+                "Maybe try banning someone with a role lower than yours."
             )
         else:
             logs = discord.utils.get(ctx.guild.text_channels, name="logs")
             await ctx.guild.ban(member)
             await ctx.send(
-                f":white_check_mark: Successfully banned `{member}`.\n"
+                f"Successfully banned `{member}`.\n"
                 f"Ban details are in <#{logs.id}>."
             )
 

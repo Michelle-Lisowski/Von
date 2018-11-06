@@ -15,7 +15,7 @@ class Utility:
     @commands.command()
     async def urban(self, ctx, *, search: str = None):
         if search is None:
-            await ctx.send(":grey_exclamation: Please specify a search term.")
+            await ctx.send("Please specify a search term.")
             return
 
         async with ctx.typing():
@@ -37,23 +37,23 @@ class Utility:
     @commands.command(aliases=["calc"])
     async def calculator(self, ctx, *, expression: str = None):
         if expression is None:
-            await ctx.send(":grey_exclamation: Please specify an expression.")
+            await ctx.send("Please specify an expression.")
             return
 
         async with ctx.typing():
-            e = expression.lower().replace("x", "*")
+            e = expression.lower().replace("x", "*").replace("^", "**")
 
             try:
                 result = eval(e, None, locals())
             except:
-                await ctx.send(f":grey_exclamation: `{expression}` contains invalid arguments.")
+                await ctx.send(f"`{expression}` contains invalid arguments.")
             else:
                 await ctx.send(f"According to my calculations, the answer is **{result}**.")
 
     @commands.command()
     async def weather(self, ctx, *, location: str = None):
         if location is None:
-            await ctx.send(":grey_exclamation: Please specify a location.")
+            await ctx.send("Please specify a location.")
             return
 
         async with ctx.typing():
@@ -86,13 +86,13 @@ class Utility:
     @commands.command()
     async def eval(self, ctx, *, code: str = None):
         if code is None:
-            await ctx.send(":grey_exclamation: Please specify code to evaluate.")
+            await ctx.send("Please specify code to evaluate.")
             return
 
         try:
-            e = eval(code)
+            e = eval(code, None, locals())
         except:
-            await ctx.send(f":grey_exclamation: The code contains invalid syntax.")
+            await ctx.send(f"The code contains invalid syntax.")
         else:
             await ctx.send(f"```python\n{e}\n```")
 

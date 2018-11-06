@@ -14,7 +14,7 @@ class Owner:
     @commands.is_owner()
     async def load(self, ctx, mod: str = None):
         if mod is None:
-            await ctx.send(":grey_exclamation: Please specify a module.")
+            await ctx.send("Please specify a module.")
             return
 
         try:
@@ -28,7 +28,7 @@ class Owner:
     @commands.is_owner()
     async def unload(self, ctx, mod: str = None):
         if mod is None:
-            await ctx.send(":grey_exclamation: Please specify a module.")
+            await ctx.send("Please specify a module.")
             return
 
         try:
@@ -42,7 +42,7 @@ class Owner:
     @commands.is_owner()
     async def reload(self, ctx, mod: str = None):
         if mod is None:
-            await ctx.send(":grey_exclamation: Please specify a module.")
+            await ctx.send("Please specify a module.")
             return
 
         try:

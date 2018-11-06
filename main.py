@@ -48,6 +48,10 @@ class Von(commands.Bot):
                 print(f"Failed to load extension {mod}.", file=sys.stderr)
                 traceback.print_exc()
 
+    async def on_command(self, ctx):
+        with open("prefixes.json") as f:
+            self.prefixes = json.load(f)    
+
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name="Member")
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
@@ -116,4 +120,15 @@ class Von(commands.Bot):
     async def on_message(self, message):
         if message.author.bot:
             return
+
+        with open("prefixes.json") as f:
+            self.prefixes = json.load(f)
+
+        if message.content.startswith("v!prefix"):
+            embed = discord.Embed()
+            embed.colour = 0x0099FF
+
+            prefix = self.prefixes[str(message.guild.id)]["prefix"]
+            embed.description = f"The prefix in this server is `{prefix}`"
+            await message.channel.send(embed=embed)
         await self.process_commands(message)
