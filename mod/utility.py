@@ -24,13 +24,13 @@ class Utility:
 
             ud = "http://api.urbandictionary.com/v0"
 
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get(f"{ud}/define?term={search}") as r:
-                    f = await r.json()
-                    a = f["list"][0]
+            async with self.bot.session.get(f"{ud}/define?term={search}") as r:
+                f = await r.json()
+                a = f["list"][0]
 
+            d = a["definition"].replace("[", "").replace("]", "")
             embed.title = a["word"]
-            embed.description = a["definition"]
+            embed.description = d
             embed.set_footer(text=f"Author: {a['author']}")
             await ctx.send(embed=embed)
 
@@ -60,17 +60,18 @@ class Utility:
             embed = discord.Embed()
             embed.colour = 0x0099FF
 
-            async with aiohttp.ClientSession() as cs:
-                mw = "https://metaweather.com/api"
-                async with cs.get(f"{mw}/location/search/?query={location}", ssl=False) as s:
-                    l = await s.json()
-                    try:
-                        async with cs.get(f"{mw}/location/{l[0]['woeid']}", ssl=False) as r:
-                            f = await r.json()
-                            w = f["consolidated_weather"][0]
-                    except IndexError:
-                        await ctx.send(f":mag: No results found for `{location}`.")
-                        return
+            mw = "https://metaweather.com/api"
+
+            async with self.bot.session.get(f"{mw}/location/search/?query={location}", ssl=False) as s:
+                l = await s.json()
+
+            try:
+                async with self.bot.session.get(f"{mw}/location/{l[0]['woeid']}", ssl=False) as r:
+                    f = await r.json()
+                    w = f["consolidated_weather"][0]
+            except IndexError:
+                await ctx.send(f":mag: No results found for `{location}`.")
+                return
 
             embed.title = l[0]["title"]
             embed.add_field(name="Weather State", value=w["weather_state_name"])

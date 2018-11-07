@@ -19,10 +19,9 @@ class Image:
             embed.title = ":cat: Meow"
             embed.colour = 0x0099FF
 
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get("http://aws.random.cat/meow") as r:
-                    f = await r.json()
-                    embed.set_image(url=f["file"])
+            async with self.bot.session.get("http://aws.random.cat/meow") as r:
+                f = await r.json()
+                embed.set_image(url=f["file"])
             await ctx.send(embed=embed)
 
     @commands.command()
@@ -32,10 +31,9 @@ class Image:
             embed.title = ":dog: Woof"
             embed.colour = 0x0099FF
 
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get("https://dog.ceo/api/breeds/image/random") as r:
-                    f = await r.json()
-                    embed.set_image(url=f["message"])
+            async with self.bot.session.get("https://dog.ceo/api/breeds/image/random") as r:
+                f = await r.json()
+                embed.set_image(url=f["message"])
             await ctx.send(embed=embed)
 
 
