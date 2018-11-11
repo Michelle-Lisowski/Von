@@ -2,7 +2,6 @@
 # Copyright (c) 2018 sirtezza451
 # -*- coding: utf-8 -*-
 
-import asyncio
 import json
 import sys
 
@@ -14,6 +13,7 @@ from main import Von
 
 def user_input():
     return input(">>> ")
+
 
 def get_token():
     try:
@@ -38,12 +38,10 @@ def get_token():
         json.dump(config, f, indent=4)
     return token
 
+
 def main(token):
-    loop = asyncio.get_event_loop()
-    bot = Von()
-    
     try:
-        bot.run(token)
+        Von().run(token)
     except:
         print("Could not run Von. Exiting.")
         sys.exit(1)

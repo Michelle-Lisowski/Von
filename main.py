@@ -36,12 +36,14 @@ class Von(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=prefix_callable)
         self.remove_command("help")
-        
+
         with open("prefixes.json") as f:
             self.prefixes = json.load(f)
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-        for mod in [f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))]:
+        for mod in [
+            f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))
+        ]:
             try:
                 self.load_extension(f"mod.{mod}")
             except:
@@ -50,7 +52,7 @@ class Von(commands.Bot):
 
     async def on_command(self, ctx):
         with open("prefixes.json") as f:
-            self.prefixes = json.load(f)    
+            self.prefixes = json.load(f)
 
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name="Member")
@@ -79,12 +81,12 @@ class Von(commands.Bot):
             embed.title = "Ban"
             embed.colour = 0x0099FF
 
-            embed.add_field(name="Member", value=ban.user)
-            embed.add_field(name="Member ID", value=ban.user.id)
-            embed.add_field(name="Reason", value=ban.reason)
+            embed.add_field(name="Member", value=ban.target)
+            embed.add_field(name="Member ID", value=ban.target.id)
             embed.add_field(name="Responsible Moderator", value=ban.user)
             embed.add_field(name="Time", value=ban.created_at)
-            await channel.send(embed=embed)               
+            embed.add_field(name="Reason", value=ban.reason)
+            await channel.send(embed=embed)
 
     async def on_command_error(self, ctx, error):
         if hasattr(ctx.command, "on_error"):
@@ -97,10 +99,15 @@ class Von(commands.Bot):
             await ctx.send("This command can't be used in private messages.")
         elif isinstance(error, commands.DisabledCommand):
             await ctx.send("Sorry. This command is disabled and can't be used.")
+        elif isinstance(error, commands.CommandInvokeError):
+            print(f"In command {ctx.command.qualified_name}:", file=sys.stderr)
+            traceback.print_tb(error.original.__traceback__, file=sys.stderr)
+            print(
+                f"{error.original.__class__.__name__}: {error.original}",
+                file=sys.stderr,
+            )
         else:
-            print(f"In {ctx.command.qualified_name}:", file=sys.stderr)
-            traceback.print_tb(error.original.__traceback__)
-            print(f"{error.original.__class__.__name__}: {error.original}", file=sys.stderr)                
+            traceback.print_exc()
 
     async def on_ready(self):
         if not hasattr(self, "uptime"):
