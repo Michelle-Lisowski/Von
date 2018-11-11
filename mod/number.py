@@ -39,7 +39,7 @@ class Number:
 
         cache = await ctx.get_message(msg.id)
         await cache.edit(content=f":game_die: The die rolls: **{result}**!")
-        
+
 
 def setup(bot):
     bot.add_cog(Number(bot))

@@ -42,10 +42,8 @@ class Settings:
         with open("prefixes.json", "w") as f:
             json.dump(self.bot.prefixes, f, indent=4)
 
-        await ctx.send(
-            f":white_check_mark: Server prefix set to `{prefix}`"
-        )
+        await ctx.send(f":white_check_mark: Server prefix set to `{prefix}`")
 
-    
+
 def setup(bot):
     bot.add_cog(Settings(bot))

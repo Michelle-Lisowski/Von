@@ -31,7 +31,9 @@ class Image:
             embed.title = ":dog: Woof"
             embed.colour = 0x0099FF
 
-            async with self.bot.session.get("https://dog.ceo/api/breeds/image/random") as r:
+            async with self.bot.session.get(
+                "https://dog.ceo/api/breeds/image/random"
+            ) as r:
                 f = await r.json()
                 embed.set_image(url=f["message"])
             await ctx.send(embed=embed)

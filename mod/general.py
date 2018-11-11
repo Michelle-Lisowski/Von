@@ -38,7 +38,9 @@ class General:
     async def info(self, ctx):
         embed = discord.Embed()
         embed.title = self.bot.user.name
-        embed.description = "**Von by sirtezza451#9856 - made using discord.py rewrite.**"
+        embed.description = (
+            "**Von by sirtezza451#9856 - made using discord.py rewrite.**"
+        )
         embed.colour = 0x0099FF
 
         pyver = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
@@ -57,7 +59,7 @@ class General:
         embed.add_field(name="Name", value=self.bot.user)
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-beta15")
+        embed.add_field(name="Version", value="2.0.0-beta16")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)

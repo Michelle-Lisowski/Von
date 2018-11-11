@@ -23,13 +23,10 @@ ytdlopts = {
     "quiet": True,
     "no_warnings": True,
     "default_search": "auto",
-    "source_address": "0.0.0.0"
+    "source_address": "0.0.0.0",
 }
 
-ffmpegopts = {
-    "before_options": "-nostdin",
-    "options": "-vn"
-}
+ffmpegopts = {"before_options": "-nostdin", "options": "-vn"}
 
 ytdl = YoutubeDL(ytdlopts)
 
@@ -58,7 +55,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 f":musical_note: **{data['uploader']}** - **"
                 f"{data['title']}** has been added to the playlist."
             )
-        return cls(discord.FFmpegPCMAudio(data['url'], **ffmpegopts), data=data, requester=ctx.author)
+        return cls(
+            discord.FFmpegPCMAudio(data["url"], **ffmpegopts),
+            data=data,
+            requester=ctx.author,
+        )
 
 
 class Playlist:
@@ -74,7 +75,7 @@ class Playlist:
 
         self.current = None
         self.volume = 0.5
-        
+
         self.player = self.bot.loop.create_task(self.loop())
 
     async def add(self, source):
@@ -106,7 +107,12 @@ class Playlist:
 
             if self.guild.voice_client:
                 if not self.guild.voice_client.is_playing():
-                    self.guild.voice_client.play(self.current, after=lambda n: self.bot.loop.call_soon_threadsafe(self.next.set))
+                    self.guild.voice_client.play(
+                        self.current,
+                        after=lambda n: self.bot.loop.call_soon_threadsafe(
+                            self.next.set
+                        ),
+                    )
                     await self.channel.send(
                         f":musical_note: Now playing: **{self.current.uploader}"
                         f"** - **{self.current.title}**"
@@ -148,7 +154,7 @@ class Audio:
                 await ctx.send("Please join a voice channel first.")
             else:
                 await ctx.author.voice.channel.connect()
-        
+
         async with ctx.typing():
             playlist = self.get_playlist(ctx)
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
@@ -193,7 +199,7 @@ class Audio:
         if not ctx.voice_client:
             await ctx.send("No music is currently playing.")
             return
-        
+
         playlist = self.get_playlist(ctx)
         await playlist.shuffle()
         await ctx.send(":white_check_mark: Playlist shuffled.")

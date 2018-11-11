@@ -48,7 +48,9 @@ class Utility:
             except:
                 await ctx.send(f"`{expression}` contains invalid arguments.")
             else:
-                await ctx.send(f"According to my calculations, the answer is **{result}**.")
+                await ctx.send(
+                    f"According to my calculations, the answer is **{result}**."
+                )
 
     @commands.command()
     async def weather(self, ctx, *, location: str = None):
@@ -62,11 +64,15 @@ class Utility:
 
             mw = "https://metaweather.com/api"
 
-            async with self.bot.session.get(f"{mw}/location/search/?query={location}", ssl=False) as s:
+            async with self.bot.session.get(
+                f"{mw}/location/search/?query={location}", ssl=False
+            ) as s:
                 l = await s.json()
 
             try:
-                async with self.bot.session.get(f"{mw}/location/{l[0]['woeid']}", ssl=False) as r:
+                async with self.bot.session.get(
+                    f"{mw}/location/{l[0]['woeid']}", ssl=False
+                ) as r:
                     f = await r.json()
                     w = f["consolidated_weather"][0]
             except IndexError:
@@ -75,9 +81,15 @@ class Utility:
 
             embed.title = l[0]["title"]
             embed.add_field(name="Weather State", value=w["weather_state_name"])
-            embed.add_field(name="Current Temperature", value=f"{round(w['the_temp'])}°C")
-            embed.add_field(name="Minimum Temperature", value=f"{round(w['min_temp'])}°C")
-            embed.add_field(name="Maximum Temperature", value=f"{round(w['max_temp'])}°C")
+            embed.add_field(
+                name="Current Temperature", value=f"{round(w['the_temp'])}°C"
+            )
+            embed.add_field(
+                name="Minimum Temperature", value=f"{round(w['min_temp'])}°C"
+            )
+            embed.add_field(
+                name="Maximum Temperature", value=f"{round(w['max_temp'])}°C"
+            )
             embed.add_field(name="Wind Direction", value=w["wind_direction_compass"])
             embed.add_field(name="Wind Speed", value=f"{round(w['wind_speed'])} mph")
             embed.add_field(name="Humidity", value=f"{round(w['humidity'])}%")
