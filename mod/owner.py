@@ -1,9 +1,14 @@
 # Von V2
 # Copyright (c) 2018 sirtezza451
+
 # -*- coding: utf-8 -*-
 
 import discord
 from discord.ext import commands
+
+import os
+import sys
+import subprocess
 
 
 class Owner:
@@ -52,6 +57,13 @@ class Owner:
             await ctx.send(f":x: An error occured while reloading `{mod}`.")
         else:
             await ctx.send(f":white_check_mark: `{mod}` reloaded.")
+
+    @commands.command()
+    @commands.is_owner()
+    async def restart(self, ctx):
+        subprocess.call(
+            [sys.executable, os.path.join(sys.path[0], sys.argv[0])] + sys.argv[1:]
+        )
 
     @commands.command()
     @commands.is_owner()
