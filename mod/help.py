@@ -69,10 +69,12 @@ class Help:
         embed = discord.Embed()
         embed.title = f"{module.capitalize()} Commands"
         embed.colour = 0x0099FF
+
+        prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
         cmds = []
 
         for cmd in self.bot.get_cog_commands(module.capitalize()):
-            cmds.append("v!" + cmd.qualified_name)
+            cmds.append(prefix + cmd.qualified_name)
 
         cmds = "` `".join(cmds)
         embed.description = f"**`{cmds}`**"
