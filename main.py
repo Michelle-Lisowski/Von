@@ -86,7 +86,7 @@ class Von(commands.Bot):
             channel = await member.guild.create_text_channel(name="welcome")
 
         await channel.send(
-            f"We're sad to see you leave, **{member.name}**... :frowning2:"
+            f"We're sad to see you leave, **<@{member.id}>**... :frowning2:"
         )
 
     async def on_member_ban(self, guild, user):
