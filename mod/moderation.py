@@ -19,8 +19,17 @@ class Moderation:
         elif member.id == self.bot.user.id:
             await ctx.send("Why would you want to ban me?")
         elif member.top_role >= ctx.author.top_role:
-            await ctx.send("Maybe try kicking someone with a lower role than yours.")
+            await ctx.send("Maybe try muting someone with a lower role than yours.")
         else:
+            role = discord.utils.get(ctx.guild.roles, name="Muted")
+
+            if role is None:
+                role = await ctx.guild.create_role(name="Muted")
+
+            if role in member.roles:
+                await ctx.send(f"<@{member.id}> has already been muted.")
+                return
+
             embed = discord.Embed()
             embed.title = "Mute"
             embed.colour = 0x0099FF
@@ -29,6 +38,36 @@ class Moderation:
             embed.add_field(name="Member", value=str(member))
             embed.add_field(name="Member ID", value=member.id)
             embed.add_field(name="Muted By", value=str(ctx.author))
+            await ctx.send(embed=embed)
+
+    @commands.command()
+    async def unmute(self, ctx, member: discord.Member = None):
+        if member is None:
+            await ctx.send("Please specify a member.")
+        elif member.id == ctx.author.id:
+            await ctx.send("You're using this command, so you were never muted in the first place!")
+        elif member.id == self.bot.user.id:
+            await ctx.send("I'm reponding to this command, so I was never muted in the first place!")
+        elif member.top_role >= ctx.author.top_role:
+            await ctx.send("Maybe try unmuting someone with a lower role than yorus.")
+        else:
+            role = discord.utils.get(ctx.guild.roles, name="Muted")
+
+            if role is None:
+                role = await ctx.guild.create_role(name="Muted")
+
+            if not role in member.roles:
+                await ctx.send(f"<@{member.id}> was never muted.")
+                return
+
+            embed = discord.Embed()
+            embed.title = "Unmute"
+            embed.colour = 0x0099FF
+
+            await member.remove_roles(role)
+            embed.add_field(name="Member", value=str(member))
+            embed.add_field(name="Member ID", value=member.id)
+            embed.add_field(name="Unmuted By", value=str(ctx.author))
             await ctx.send(embed=embed)
 
 
