@@ -144,6 +144,44 @@ class Audio:
         return playlist
 
     @commands.command()
+    async def play(self, ctx, *, search: str = None):
+        if search is None:
+            await ctx.send("Please specify a search query.")
+            return
+
+        current = self.get_playlist(ctx).current
+
+        if current is None:
+            if not ctx.author.voice:
+                await ctx.send("Please join a voice channel first.")
+            else:
+                await ctx.author.voice.channel.connect()
+
+        async with ctx.typing():
+            playlist = self.get_playlist(ctx)
+            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
+            await playlist.add(source)
+
+    @commands.command()
+    async def playfirst(self, ctx, *, search: str = None):
+        if search is None:
+            await ctx.send("Please specify a search query.")
+            return
+
+        current = self.get_playlist(ctx).current
+
+        if current is None:
+            if not ctx.author.voice:
+                await ctx.send("Please join a voice channel first.")
+            else:
+                await ctx.author.voice.channel.connect()
+
+        async with ctx.typing():
+            playlist = self.get_playlist(ctx)
+            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
+            await playlist.add_first(source)
+
+    @commands.command()
     async def volume(self, ctx, volume: int = None):
         current = self.get_playlist(ctx).current
 
@@ -173,49 +211,19 @@ class Audio:
             await asyncio.sleep(0.01)
 
     @commands.command()
-    async def play(self, ctx, *, search: str = None):
-        if search is None:
-            await ctx.send("Please specify a search query.")
-            return
-
-        if not ctx.voice_client:
-            if not ctx.author.voice:
-                await ctx.send("Please join a voice channel first.")
-            else:
-                await ctx.author.voice.channel.connect()
-
-        async with ctx.typing():
-            playlist = self.get_playlist(ctx)
-            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
-            await playlist.add(source)
-
-    @commands.command()
-    async def playfirst(self, ctx, *, search: str = None):
-        if search is None:
-            await ctx.send("Please specify a search query.")
-            return
-
-        if not ctx.voice_client:
-            if not ctx.author.voice:
-                await ctx.send("Please join a voice channel first.")
-            else:
-                await ctx.author.voice.channel.connect()
-
-        async with ctx.typing():
-            playlist = self.get_playlist(ctx)
-            source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
-            await playlist.add_first(source)
-
-    @commands.command()
     async def skip(self, ctx):
-        if not ctx.voice_client:
+        current = self.get_playlist(ctx).current
+
+        if current is None:
             await ctx.send("No music is currently playing.")
             return
         ctx.voice_client.stop()
 
     @commands.command()
     async def clear(self, ctx):
-        if not ctx.voice_client:
+        current = self.get_playlist(ctx).current
+
+        if current is None:
             await ctx.send("No music is currently playing.")
             return
 
@@ -225,7 +233,9 @@ class Audio:
 
     @commands.command()
     async def shuffle(self, ctx):
-        if not ctx.voice_client:
+        current = self.get_playlist(ctx).current
+
+        if current is None:
             await ctx.send("No music is currently playing.")
             return
 
@@ -235,7 +245,9 @@ class Audio:
 
     @commands.command()
     async def stop(self, ctx):
-        if not ctx.voice_client:
+        current = self.get_playlist(ctx).current
+
+        if current is None:
             await ctx.send("No music is currently playing.")
             return
 
