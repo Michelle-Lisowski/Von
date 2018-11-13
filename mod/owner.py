@@ -1,14 +1,13 @@
 # Von V2
 # Copyright (c) 2018 sirtezza451
-
 # -*- coding: utf-8 -*-
+
+import os
+import subprocess
+import sys
 
 import discord
 from discord.ext import commands
-
-import os
-import sys
-import subprocess
 
 
 class Owner:
@@ -73,4 +72,3 @@ class Owner:
 
 def setup(bot):
     bot.add_cog(Owner(bot))
-
