@@ -50,6 +50,16 @@ class Von(commands.Bot):
                 print(f"Failed to load extension {mod}.", file=sys.stderr)
                 traceback.print_exc()
 
+    async def mute(self, member):
+        role = discord.utils.get(member.guild.roles, name="Muted")
+
+        if role is None:
+            role = await member.guild.create_role(name="Muted")
+
+        for channel in member.guild.channels:
+            await channel.set_permissions(role, connect=False, send_messages=False)
+        await member.add_roles(role)
+
     async def on_command(self, ctx):
         with open("prefixes.json") as f:
             self.prefixes = json.load(f)
