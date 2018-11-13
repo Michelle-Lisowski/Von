@@ -144,6 +144,35 @@ class Audio:
         return playlist
 
     @commands.command()
+    async def volume(self, ctx, volume: int = None):
+        current = self.get_playlist(ctx).current
+
+        if current is None:
+            await ctx.send("No music is currently playing.")
+            return
+        elif volume is None:
+            vol = round(current.volume * 100)
+            await ctx.send(f":sound: Current volume level: **{vol}%**.")
+            return
+        elif not 0 < volume < 101:
+            await ctx.send("Please specify a number between 1 and 100.")
+            return
+
+        if volume == 100:
+            new = 0.0100
+        else:
+            new = float(f"0.00{volume}")
+
+        await ctx.send(f":sound: Volume level set to **{volume}%**.")
+
+        for _ in range(volume):
+            if volume >= current.volume * 100:
+                current.volume += new
+            else:
+                current.volume -= new * 4
+            await asyncio.sleep(0.01)
+
+    @commands.command()
     async def play(self, ctx, *, search: str = None):
         if search is None:
             await ctx.send("Please specify a search query.")
