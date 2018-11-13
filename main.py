@@ -69,6 +69,16 @@ class Von(commands.Bot):
             f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
         )
 
+    async def on_member_remove(self, member):
+        channel = discord.utils.get(member.guild.text_channels, name="welcome")
+
+        if channel is None:
+            channel = await member.guild.create_text_channel(name="welcome")
+
+        await channel.send(
+            f"We're sad to see you leave, **{member.name}**... :frowning2:"
+        )
+
     async def on_member_ban(self, guild, user):
         audit_ban = discord.AuditLogAction.ban
         channel = discord.utils.get(guild.text_channels, name="logs")
