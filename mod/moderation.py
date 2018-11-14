@@ -45,9 +45,13 @@ class Moderation:
         if member is None:
             await ctx.send("Please specify a member.")
         elif member.id == ctx.author.id:
-            await ctx.send("You're using this command, so you were never muted in the first place!")
+            await ctx.send(
+                "You're using this command, so you were never muted in the first place!"
+            )
         elif member.id == self.bot.user.id:
-            await ctx.send("I'm reponding to this command, so I was never muted in the first place!")
+            await ctx.send(
+                "I'm reponding to this command, so I was never muted in the first place!"
+            )
         elif member.top_role >= ctx.author.top_role:
             await ctx.send("Maybe try unmuting someone with a lower role than yorus.")
         else:

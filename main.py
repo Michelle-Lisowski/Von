@@ -10,10 +10,9 @@ import traceback
 from os import listdir
 from os.path import isfile, join
 
+import aiohttp
 import discord
 from discord.ext import commands
-
-import aiohttp
 
 
 def prefix_callable(bot, message):
