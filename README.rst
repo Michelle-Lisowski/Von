@@ -26,4 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: administration and moderation commands
+Next focus: Mainly error handling, but also commands like 'purge' and 'repeat'

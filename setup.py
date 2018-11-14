@@ -98,7 +98,6 @@ def main():
         install_dependencies()
     except:
         print("Dependency installation failed.")
-        sys.exit(1)
 
     print("Setup complete.")
     sys.exit(0)
