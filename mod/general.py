@@ -59,7 +59,7 @@ class General:
         embed.add_field(name="Name", value=self.bot.user)
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-beta27")
+        embed.add_field(name="Version", value="2.0.0-beta28")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)

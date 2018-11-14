@@ -119,8 +119,8 @@ class Playlist:
                     )
                     await self.next.wait()
 
-            source.cleanup()
-            self.current = None
+                source.cleanup()
+                self.current = None
 
             if self.current is None:
                 if len(self.queue._queue) < 1:
@@ -155,7 +155,10 @@ class Audio:
             if not ctx.author.voice:
                 await ctx.send("Please join a voice channel first.")
             else:
-                await ctx.author.voice.channel.connect()
+                try:
+                    await ctx.author.voice.channel.connect()
+                except:
+                    pass
 
         async with ctx.typing():
             playlist = self.get_playlist(ctx)
@@ -180,6 +183,30 @@ class Audio:
             playlist = self.get_playlist(ctx)
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
             await playlist.add_first(source)
+
+    @commands.command()
+    async def pause(self, ctx):
+        current = self.get_playlist(ctx).current
+
+        if current is None:
+            await ctx.send("No music is currently playing.")
+        elif ctx.voice_client.is_paused():
+            await ctx.send("The current song has already been paused.")
+        else:
+            ctx.voice_client.pause()
+            await ctx.send(":pause_button: Song paused.")
+
+    @commands.command()
+    async def resume(self, ctx):
+        current = self.get_playlist(ctx).current
+
+        if current is None:
+            await ctx.send("No music is currently playing.")
+        elif ctx.voice_client.is_playing():
+            await ctx.send("The current song was never paused.")
+        else:
+            ctx.voice_client.resume()
+            await ctx.send(":musical_note: Song resumed.")
 
     @commands.command()
     async def volume(self, ctx, volume: int = None):
