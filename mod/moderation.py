@@ -74,6 +74,20 @@ class Moderation:
             embed.add_field(name="Unmuted By", value=str(ctx.author))
             await ctx.send(embed=embed)
 
+    @commands.command()
+    async def purge(self, ctx, number: int = None):
+        if number is None:
+            await ctx.send("Please specify a number of messages.")
+            return
+
+        counter = 0
+
+        async for message in ctx.channel.history(limit=number):
+            await message.delete()
+            counter += 1
+
+        await ctx.send(f":white_check_mark: Deleted {counter} messages.")
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
