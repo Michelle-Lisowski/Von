@@ -10,7 +10,21 @@ class Admin:
     def __init__(self, bot):
         self.bot = bot
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.CheckFailure):
+            if str(ctx.command) == "kick":
+                await ctx.send(
+                    "You require the **Kick Members** permission to run this command."
+                )
+            elif str(ctx.command) == "ban":
+                await ctx.send(
+                    "You require the **Ban Members** permission to run this command."
+                )
+
     @commands.command()
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None):
         if member is None:
             await ctx.send("Please specify a member.")
@@ -25,6 +39,7 @@ class Admin:
             await ctx.send(f":white_check_mark: Successfully kicked <@{member.id}>.")
 
     @commands.command()
+    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member = None):
         if member is None:
             await ctx.send("Please specify a member.")
@@ -44,6 +59,7 @@ class Admin:
             )
 
     @commands.command()
+    @commands.has_permissions(manage_guild=True)
     async def unban(self, ctx, user: discord.User = None):
         if user is None:
             await ctx.send("Please specify a user.")
