@@ -13,6 +13,12 @@ class General:
     def __init__(self, bot):
         self.bot = bot
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Member not found.")
+
     @commands.command()
     async def ping(self, ctx):
         latency = round(self.bot.latency * 1000)
@@ -85,7 +91,7 @@ class General:
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def serverinfo(self, ctx, guild: discord.Guild = None):
+    async def serverinfo(self, ctx):
         embed = discord.Embed()
         embed.title = ctx.guild.name
         embed.colour = 0x0099FF
