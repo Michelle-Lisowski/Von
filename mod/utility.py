@@ -25,7 +25,12 @@ class Utility:
 
             async with self.bot.session.get(f"{ud}/define?term={search}") as r:
                 f = await r.json()
-                a = f["list"][0]
+
+                try:
+                    a = f["list"][0]
+                except:
+                    await ctx.send(":mag: No results found.")
+                    return
 
             d = a["definition"].replace("[", "").replace("]", "")
             embed.title = a["word"]
