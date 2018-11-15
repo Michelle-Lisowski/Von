@@ -31,6 +31,14 @@ def write_config():
     return open("config.json", "w")
 
 
+def read_prefixes():
+    return open("prefixes.json")
+
+
+def write_prefixes():
+    return open("prefixes.json", "w")
+
+
 def check_config():
     try:
         print("Reading config.json...")
@@ -51,6 +59,26 @@ def check_config():
                 f.write("{}")
             config = json.load(f)
         return config
+
+
+def check_prefixes():
+    try:
+        print("Reading prefixes.json...")
+        read_prefixes()
+    except FileNotFoundError:
+        print("prefixes.json doesn't exist, creating...")
+        write_prefixes()
+
+    with read_prefixes() as f:
+        try:
+            print("Loading prefixes.json dictionary...")
+            json.load(f)
+        except JSONDecodeError:
+            print("prefixes.json doesn't contain a dictionary, creating...")
+
+            with write_prefixes() as f:
+                print("Writing to prefixes.json...")
+                f.write("{}")
 
 
 def install_dependencies():
@@ -92,6 +120,9 @@ def main():
             print("Writing to config.json...")
             config["token"] = token
             json.dump(config, f, indent=4)
+
+    print("Checking guild prefixes...")
+    check_prefixes()
 
     try:
         print("Installing dependencies...")

@@ -10,7 +10,16 @@ class Moderation:
     def __init__(self, bot):
         self.bot = bot
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.CheckFailure):
+            await ctx.send(
+                "You require the **Manage Messages** permission to run this command."
+            )
+
     @commands.command()
+    @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member = None):
         if member is None:
             await ctx.send("Please specify a member.")
@@ -41,6 +50,7 @@ class Moderation:
             await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.has_permissions(manage_messages=True)
     async def unmute(self, ctx, member: discord.Member = None):
         if member is None:
             await ctx.send("Please specify a member.")
@@ -75,6 +85,7 @@ class Moderation:
             await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, number: int = None):
         if number is None:
             await ctx.send("Please specify a number of messages.")
