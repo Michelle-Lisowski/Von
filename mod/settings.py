@@ -30,13 +30,13 @@ class Settings:
             await ctx.send(embed=embed)
 
     @settings.command()
-    async def prefix(self, ctx, pfix: str = None):
-        if pfix is None:
+    async def prefix(self, ctx, prefix: str = None):
+        if prefix is None:
             await ctx.send("Please specify a new prefix.")
             return
 
         del self.bot.prefixes[str(ctx.guild.id)]["prefix"]
-        self.bot.prefixes[str(ctx.guild.id)]["prefix"] = pfix
+        self.bot.prefixes[str(ctx.guild.id)]["prefix"] = prefix
 
         prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
         with open("prefixes.json", "w") as f:
