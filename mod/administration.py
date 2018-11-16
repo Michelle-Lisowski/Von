@@ -23,6 +23,9 @@ class Admin:
                     "You require the **Ban Members** permission to run this command."
                 )
 
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Member not found.")
+
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None):
@@ -35,7 +38,12 @@ class Admin:
         elif member.top_role >= ctx.author.top_role:
             await ctx.send("Maybe try kicking someone with a role lower than yours.")
         else:
-            await ctx.guild.kick(member)
+            try:
+                await ctx.guild.kick(member)
+            except discord.Forbidden:
+                await ctx.send(
+                    f"I don't have the required permissions to kick <@{member.id}>."
+                )
             await ctx.send(f":white_check_mark: Successfully kicked <@{member.id}>.")
 
     @commands.command()
@@ -52,7 +60,12 @@ class Admin:
         else:
             logs = discord.utils.get(ctx.guild.text_channels, name="logs")
 
-            await ctx.guild.ban(member)
+            try:
+                await ctx.guild.ban(member)
+            except discord.Forbidden:
+                await ctx.send(
+                    f"I don't have the required permissions to ban <@{member.id}>."
+                )
             await ctx.send(
                 f":white_check_mark: Successfully banned <@{member.id}>.\n"
                 f"Ban details are in <#{logs.id}>."
@@ -74,14 +87,19 @@ class Admin:
                 "banned in the first place!"
             )
         else:
-            try:
-                await ctx.guild.unban(user)
-            except discord.NotFound:
-                await ctx.send(f"**{user}** was never banned.")
+            if not user in ctx.guild.members:
+                try:
+                    await ctx.guild.unban(user)
+                except discord.Forbidden:
+                    await ctx.send(
+                        f"I don't have the required permissions to unban <@{user.id}>."
+                    )
+                else:
+                    await ctx.send(
+                        f":white_check_mark: Successfully unbanned <@{user.id}>."
+                    )
             else:
-                await ctx.send(
-                    f":white_check_mark: Successfully unbanned <@{user.id}>."
-                )
+                await ctx.send(f"<@{user.id}> was never banned.")
 
 
 def setup(bot):
