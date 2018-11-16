@@ -44,7 +44,8 @@ class Admin:
                 await ctx.send(
                     f"I don't have the required permissions to kick <@{member.id}>."
                 )
-            await ctx.send(f":white_check_mark: Successfully kicked <@{member.id}>.")
+            else:
+                await ctx.send(f":white_check_mark: Successfully kicked <@{member.id}>.")
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
