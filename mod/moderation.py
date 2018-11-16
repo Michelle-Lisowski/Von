@@ -100,6 +100,7 @@ class Moderation:
             await ctx.send("Please specify a number of messages.")
             return
 
+        await ctx.send("This may take a while. Please be patient.")
         counter = 0
 
         async for message in ctx.channel.history(limit=number):
