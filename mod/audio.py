@@ -208,6 +208,21 @@ class Audio:
             await ctx.send(":musical_note: Song resumed.")
 
     @commands.command()
+    async def peek(self, ctx):
+        playlist = self.get_playlist(ctx)
+
+        if playlist.current is None:
+            await ctx.send("No music is currently playing.")
+        elif len(playlist.queue._queue) < 1:
+            await ctx.send("No songs are currently queued.")
+        else:
+            await ctx.send(
+                "Next in queue: **{0.uploader}** - **{0.title}**".format(
+                    list(playlist.queue._queue)[0]
+                )
+            )
+
+    @commands.command()
     async def volume(self, ctx, volume: int = None):
         current = self.get_playlist(ctx).current
 
