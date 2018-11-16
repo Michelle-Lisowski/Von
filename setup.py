@@ -44,8 +44,11 @@ def check_config():
         print("Reading config.json...")
         read_config()
     except FileNotFoundError:
-        print("config.json doesn't exist, creating...")
+        print("config.json doesn't exist;")
+        print("Creating config.json...", end="\r")
+
         write_config()
+        print("Creating config.json... done")
 
     with read_config() as f:
         try:
@@ -55,9 +58,15 @@ def check_config():
             print("config.json doesn't contain a dictionary, creating...")
 
             with write_config() as f:
-                print("Writing to config.json...")
+                print("Writing to config.json...", end="\r")
                 f.write("{}")
-            config = json.load(f)
+
+                print("Writing to config.json... done")
+
+            with read_config() as f:
+                config = json.load(f)
+
+        print("config.json loaded")
         return config
 
 
@@ -66,8 +75,11 @@ def check_prefixes():
         print("Reading prefixes.json...")
         read_prefixes()
     except FileNotFoundError:
-        print("prefixes.json doesn't exist, creating...")
+        print("prefixes.json doesn't exist;")
+        print("Creating prefixes.json...", end="\r")
+
         write_prefixes()
+        print("Creating prefixes.json... done")
 
     with read_prefixes() as f:
         try:
@@ -77,9 +89,12 @@ def check_prefixes():
             print("prefixes.json doesn't contain a dictionary, creating...")
 
             with write_prefixes() as f:
-                print("Writing to prefixes.json...")
+                print("Writing to prefixes.json...", end="\r")
                 f.write("{}")
 
+                print("Writing to prefixes.json... done")
+        print("prefixes.json loaded")
+        
 
 def install_dependencies():
     if args.upgrade:
