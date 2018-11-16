@@ -49,51 +49,73 @@ class Von(commands.Bot):
                 print(f"Failed to load extension {mod}.", file=sys.stderr)
                 traceback.print_exc()
 
-    async def mute(self, member):
+    async def mute(self, ctx, member):
         role = discord.utils.get(member.guild.roles, name="Muted")
 
         if role is None:
-            role = await member.guild.create_role(name="Muted")
+            try:
+                role = await member.guild.create_role(name="Muted")
+            except discord.Forbidden:
+                return
 
         for channel in member.guild.channels:
-            await channel.set_permissions(role, connect=False, send_messages=False)
-        await member.add_roles(role)
+            if role is not None:
+                await channel.set_permissions(role, connect=False, send_messages=False)
 
-    async def on_command(self, ctx):
-        with open("prefixes.json") as f:
-            self.prefixes = json.load(f)
+        try:
+            await member.add_roles(role)
+        except discord.Forbidden:
+            pass
 
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name="Member")
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
         if role is None:
-            role = await member.guild.create_role(name="Member", hoist=True)
+            try:
+                role = await member.guild.create_role(name="Member", hoist=True)
+            except discord.Forbidden:
+                return
 
         if channel is None:
-            channel = await member.guild.create_text_channel(name="welcome")
+            try:
+                channel = await member.guild.create_text_channel(name="welcome")
+            except discord.Forbidden:
+                return
 
-        await member.add_roles(role)
-        await channel.send(
-            f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
-        )
+        try:
+            await member.add_roles(role)
+            await channel.send(
+                f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
+            )
+        except discord.Forbidden:
+            pass
 
     async def on_member_remove(self, member):
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
         if channel is None:
-            channel = await member.guild.create_text_channel(name="welcome")
+            try:
+                channel = await member.guild.create_text_channel(name="welcome")
+            except discord.Forbidden:
+                return
 
-        await channel.send(
-            f"We're sad to see you leave, **<@{member.id}>**... :frowning2:"
-        )
+        try:
+            await channel.send(
+                f"We're sad to see you leave, **<@{member.id}>**... :frowning2:"
+            )
+        except discord.Forbidden:
+            pass
 
     async def on_member_ban(self, guild, user):
         audit_ban = discord.AuditLogAction.ban
         channel = discord.utils.get(guild.text_channels, name="logs")
 
         if channel is None:
-            channel = await guild.create_text_channel(name="logs")
+            try:
+                channel = await guild.create_text_channel(name="logs")
+            except discord.Forbidden:
+                return
 
         async for ban in guild.audit_logs(limit=1, action=audit_ban):
             embed = discord.Embed()
