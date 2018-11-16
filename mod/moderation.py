@@ -33,7 +33,13 @@ class Moderation:
             role = discord.utils.get(ctx.guild.roles, name="Muted")
 
             if role is None:
-                role = await ctx.guild.create_role(name="Muted")
+                try:
+                    role = await ctx.guild.create_role(name="Muted")
+                except discord.Forbidden:
+                    await ctx.send(
+                        f"I don't have the required permissions to mute <@{member.id}>"
+                    )
+                    return
 
             if role in member.roles:
                 await ctx.send(f"<@{member.id}> has already been muted.")
@@ -68,9 +74,12 @@ class Moderation:
             role = discord.utils.get(ctx.guild.roles, name="Muted")
 
             if role is None:
-                role = await ctx.guild.create_role(name="Muted")
+                try:
+                    role = await ctx.guild.create_role(name="Muted")
+                except discord.Forbidden:
+                    pass
 
-            if not role in member.roles:
+            if not role in member.roles or role is None:
                 await ctx.send(f"<@{member.id}> was never muted.")
                 return
 
