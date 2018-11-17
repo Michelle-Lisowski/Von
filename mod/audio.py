@@ -40,7 +40,9 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.url = data.get("webpage_url")
 
     @classmethod
-    async def create_source(cls, ctx, search: str, *, loop=None, download=False):
+    async def create_source(
+        cls, ctx, search: str, *, loop=None, download=False, repeat=False
+    ):
         loop = loop or asyncio.get_event_loop()
         to_run = partial(ytdl.extract_info, url=search, download=download)
         data = await loop.run_in_executor(None, to_run)
@@ -50,10 +52,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
             data = data["entries"][0]
 
         if playlist.current:
-            await ctx.send(
-                f":musical_note: **{data['uploader']}** - **"
-                f"{data['title']}** has been added to the playlist."
-            )
+            if not repeat:
+                await ctx.send(
+                    f":musical_note: **{data['uploader']}** - **"
+                    f"{data['title']}** has been added to the playlist."
+                )
         return cls(
             discord.FFmpegPCMAudio(data["url"], **ffmpegopts),
             data=data,
@@ -75,6 +78,7 @@ class Playlist:
         self.current = None
         self.volume = 0.5
 
+        self.repeat = False
         self.player = self.bot.loop.create_task(self.loop())
 
     async def add(self, source):
@@ -113,15 +117,16 @@ class Playlist:
                         ),
                     )
                     await self.channel.send(
-                        f":musical_note: Now playing: **{self.current.uploader}"
-                        f"** - **{self.current.title}**"
+                        ":musical_note: Now playing: **{0.uploader}** - **{0.title}**".format(
+                            self.current
+                        )
                     )
                     await self.next.wait()
 
                 source.cleanup()
                 self.current = None
 
-            if self.current is None:
+            if self.current is None and self.cog.task is None:
                 if len(self.queue._queue) < 1:
                     if self.command.qualified_name != "stop":
                         await self.guild.voice_client.disconnect()
@@ -133,6 +138,7 @@ class Audio:
     def __init__(self, bot):
         self.bot = bot
         self.players = {}
+        self.task = None
 
     def get_playlist(self, ctx):
         try:
@@ -142,15 +148,24 @@ class Audio:
             self.players[str(ctx.guild.id)] = playlist
         return playlist
 
+    async def repeat_song(self, ctx):
+        playlist = self.get_playlist(ctx)
+        search = str(playlist.current.title)
+        playlist.repeat = True
+
+        while playlist.repeat is True:
+            source = await YTDLSource.create_source(
+                ctx, search, loop=self.bot.loop, download=False, repeat=True
+            )
+            await playlist.add_first(source)
+
     @commands.command()
     async def play(self, ctx, *, search: str = None):
         if search is None:
             await ctx.send("Please specify a search query.")
             return
 
-        current = self.get_playlist(ctx).current
-
-        if current is None:
+        if not ctx.voice_client:
             if not ctx.author.voice:
                 await ctx.send("Please join a voice channel first.")
             else:
@@ -170,9 +185,7 @@ class Audio:
             await ctx.send("Please specify a search query.")
             return
 
-        current = self.get_playlist(ctx).current
-
-        if current is None:
+        if not ctx.voice_client:
             if not ctx.author.voice:
                 await ctx.send("Please join a voice channel first.")
             else:
@@ -185,9 +198,9 @@ class Audio:
 
     @commands.command()
     async def pause(self, ctx):
-        current = self.get_playlist(ctx).current
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
         elif ctx.voice_client.is_paused():
             await ctx.send("The current song has already been paused.")
@@ -197,15 +210,28 @@ class Audio:
 
     @commands.command()
     async def resume(self, ctx):
-        current = self.get_playlist(ctx).current
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
         elif ctx.voice_client.is_playing():
             await ctx.send("The current song was never paused.")
         else:
             ctx.voice_client.resume()
             await ctx.send(":musical_note: Song resumed.")
+
+    @commands.command()
+    async def current(self, ctx):
+        playlist = self.get_playlist(ctx)
+
+        if playlist.current is None:
+            await ctx.send("No music is currently playing.")
+        else:
+            await ctx.send(
+                ":musical_note: Currently playing: **{0.uploader}** - **{0.title}**".format(
+                    playlist.current
+                )
+            )
 
     @commands.command()
     async def peek(self, ctx):
@@ -217,82 +243,100 @@ class Audio:
             await ctx.send("No songs are currently queued.")
         else:
             await ctx.send(
-                "Next in queue: **{0.uploader}** - **{0.title}**".format(
+                ":musical_note: Next song: **{0.uploader}** - **{0.title}**".format(
                     list(playlist.queue._queue)[0]
                 )
             )
 
     @commands.command()
     async def volume(self, ctx, volume: int = None):
-        current = self.get_playlist(ctx).current
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
-            return
         elif volume is None:
-            vol = round(current.volume * 100)
-            await ctx.send(f":sound: Current volume level: **{vol}%**.")
-            return
+            volume = round(playlist.current.volume * 100)
+            await ctx.send(f":sound: Current volume level: **{volume}%**.")
         elif not 0 < volume < 101:
             await ctx.send("Please specify a number between 1 and 100.")
-            return
-
-        if volume == 100:
-            new = 0.0100
         else:
-            new = float(f"0.00{volume}")
-
-        await ctx.send(f":sound: Volume level set to **{volume}%**.")
-
-        for _ in range(volume):
-            if volume >= current.volume * 100:
-                current.volume += new
+            if volume == 100:
+                volume = 1.0
+            elif volume < 10:
+                volume = float(f"0.0{volume}")
             else:
-                current.volume -= new * 4
-            await asyncio.sleep(0.01)
+                volume = float(f"0.{volume}")
+
+            async with ctx.typing():
+                while playlist.current.volume < volume:
+                    playlist.current.volume += 0.01
+                    await asyncio.sleep(0.05)
+
+                while playlist.current.volume > volume:
+                    playlist.current.volume -= 0.01
+                    await asyncio.sleep(0.05)
+                await ctx.send(
+                    f":sound: Volume level set to **{round(volume * 100)}%**."
+                )
 
     @commands.command()
     async def skip(self, ctx):
-        current = self.get_playlist(ctx).current
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
             return
         ctx.voice_client.stop()
 
     @commands.command()
     async def clear(self, ctx):
-        current = self.get_playlist(ctx).current
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
             return
 
-        playlist = self.get_playlist(ctx)
         await playlist.clear()
         await ctx.send(":white_check_mark: Playlist cleared.")
 
     @commands.command()
-    async def shuffle(self, ctx):
-        current = self.get_playlist(ctx).current
+    async def repeat(self, ctx):
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
             return
 
+        if self.task is not None:
+            self.task.cancel()
+            self.task = None
+
+            playlist.repeat = False
+            playlist.queue._queue.clear()
+            await ctx.send(":repeat_one: Repetition disabled.")
+        else:
+            self.task = self.bot.loop.create_task(self.repeat_song(ctx))
+            await ctx.send(":repeat_one: Repetition enabled.")
+
+    @commands.command()
+    async def shuffle(self, ctx):
         playlist = self.get_playlist(ctx)
-        await playlist.shuffle()
+
+        if playlist.current is None:
+            await ctx.send("No music is currently playing.")
+            return
+
+        random.shuffle(playlist.queue._queue)
         await ctx.send(":white_check_mark: Playlist shuffled.")
 
     @commands.command()
     async def stop(self, ctx):
-        current = self.get_playlist(ctx).current
+        playlist = self.get_playlist(ctx)
 
-        if current is None:
+        if playlist.current is None:
             await ctx.send("No music is currently playing.")
             return
 
-        playlist = self.get_playlist(ctx)
         playlist.player.cancel()
         del self.players[str(ctx.guild.id)]
 

@@ -26,4 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: permission checks, error handling, and a few more commands such as 'purge' and 'repeat'
+Next focus: more checks, more error handling and a 'playlist' command
