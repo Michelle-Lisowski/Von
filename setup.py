@@ -41,12 +41,10 @@ def write_prefixes():
 
 def check_config():
     try:
-        print("Reading config.json...")
+        print("Loading config.json...")
         read_config()
     except FileNotFoundError:
-        print("config.json doesn't exist;")
         print("Creating config.json...", end="\r")
-
         write_config()
         print("Creating config.json... done")
 
@@ -55,29 +53,24 @@ def check_config():
             print("Loading config.json dictionary...")
             config = json.load(f)
         except JSONDecodeError:
-            print("config.json doesn't contain a dictionary, creating...")
-
             with write_config() as f:
-                print("Writing to config.json...", end="\r")
+                print("Creating config.json dictionary...", end="\r")
                 f.write("{}")
-
-                print("Writing to config.json... done")
+                print("Creating config.json dictionary... done")
 
             with read_config() as f:
                 config = json.load(f)
 
-        print("config.json loaded")
+        print("Loaded config.json")
         return config
 
 
 def check_prefixes():
     try:
-        print("Reading prefixes.json...")
+        print("Loading prefixes.json...")
         read_prefixes()
     except FileNotFoundError:
-        print("prefixes.json doesn't exist;")
         print("Creating prefixes.json...", end="\r")
-
         write_prefixes()
         print("Creating prefixes.json... done")
 
@@ -86,15 +79,12 @@ def check_prefixes():
             print("Loading prefixes.json dictionary...")
             json.load(f)
         except JSONDecodeError:
-            print("prefixes.json doesn't contain a dictionary, creating...")
-
             with write_prefixes() as f:
-                print("Writing to prefixes.json...", end="\r")
+                print("Creating prefixes.json dictionary...", end="\r")
                 f.write("{}")
+                print("Creating prefixes.json dictionary... done")
+        print("Loaded prefixes.json")
 
-                print("Writing to prefixes.json... done")
-        print("prefixes.json loaded")
-        
 
 def install_dependencies():
     if args.upgrade:
