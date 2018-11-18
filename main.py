@@ -62,6 +62,9 @@ class Von(commands.Bot):
             except (discord.Forbidden, discord.HTTPException):
                 raise commands.CommandError(f"Muting <@{member.id}> failed.")
 
+        if role in member.roles:
+            raise commands.CommandError(f"<@{member.id}> has already been muted.")
+
         try:
             await member.add_roles(role)
         except (discord.Forbidden, discord.HTTPException):
