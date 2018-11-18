@@ -26,4 +26,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: audio command checks, 'playlist' command and documentation
+Next focus: levelling, customisable behaviour and documentation
