@@ -184,6 +184,20 @@ class Von(commands.Bot):
             await message.channel.send(embed=embed)
         await self.process_commands(message)
 
+    async def on_message_edit(self, before, after):
+        if not before.guild:
+            return
+            
+        prefix = self.prefixes[str(before.guild.id)]["prefix"]
+
+        if prefix in before.content:
+            if before.content == prefix:
+                await self.process_commands(after)
+            else:
+                pass
+        else:
+            await self.process_commands(after)
+
     async def on_command_error(self, ctx, error):
         if hasattr(ctx.command, "on_error"):
             return
