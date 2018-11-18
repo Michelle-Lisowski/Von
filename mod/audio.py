@@ -310,10 +310,17 @@ class Audio:
         if self.task is not None:
             self.task.cancel()
             self.task = None
-            playlist.repeat = False
 
-            for playlist.current in list(playlist.queue._queue):
-                playlist.queue._queue.remove(playlist.current)
+            playlist.repeat = False
+            repeats = [
+                entry
+                for entry in list(playlist.queue._queue)
+                if entry.title == playlist.current.title
+                and entry.uploader == playlist.current.uploader
+            ]
+
+            for entry in repeats:
+                playlist.queue._queue.remove(entry)
             await ctx.send(":repeat_one: Repetition disabled.")
         else:
             self.task = self.bot.loop.create_task(self.repeat_song(ctx))
