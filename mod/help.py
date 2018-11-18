@@ -70,7 +70,10 @@ class Help:
         embed.title = f"{module.capitalize()} Commands"
         embed.colour = 0x0099FF
 
-        prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+        try:
+            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+        except:
+            prefix = "v!"
         cmds = []
 
         for cmd in self.bot.get_cog_commands(module.capitalize()):

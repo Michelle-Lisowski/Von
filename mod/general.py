@@ -16,7 +16,10 @@ class General:
     async def __error(self, ctx, error):
         error = getattr(error, "original", error)
 
-        if isinstance(error, commands.BadArgument):
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send("This command can't be used in private messages.")
+
+        elif isinstance(error, commands.BadArgument):
             await ctx.send("Member not found.")
 
     @commands.command()
@@ -65,7 +68,7 @@ class General:
         embed.add_field(name="Name", value=self.bot.user)
         embed.add_field(name="ID", value=self.bot.user.id)
         embed.add_field(name="Server Count", value=len(self.bot.guilds))
-        embed.add_field(name="Version", value="2.0.0-rc4")
+        embed.add_field(name="Version", value="2.0.0-rc5")
         embed.add_field(name="Python Version", value=pyver)
         embed.add_field(name="Wrapper Version", value=dpyver)
         embed.add_field(name="Source Code", value=gitrepo)
@@ -91,6 +94,7 @@ class General:
         await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.guild_only()
     async def serverinfo(self, ctx):
         embed = discord.Embed()
         embed.title = ctx.guild.name

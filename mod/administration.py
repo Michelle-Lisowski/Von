@@ -13,7 +13,10 @@ class Admin:
     async def __error(self, ctx, error):
         error = getattr(error, "original", error)
 
-        if isinstance(error, commands.CheckFailure):
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send("This command can't be used in private messages.")
+
+        elif isinstance(error, commands.CheckFailure):
             if str(ctx.command) == "kick":
                 await ctx.send(
                     "You require the **Kick Members** permission to run this command."
@@ -27,6 +30,7 @@ class Admin:
             await ctx.send("Member not found.")
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None):
         if member is None:
@@ -45,9 +49,12 @@ class Admin:
                     f"I don't have the required permissions to kick <@{member.id}>."
                 )
             else:
-                await ctx.send(f":white_check_mark: Successfully kicked <@{member.id}>.")
+                await ctx.send(
+                    f":white_check_mark: Successfully kicked <@{member.id}>."
+                )
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member = None):
         if member is None:
@@ -73,6 +80,7 @@ class Admin:
             )
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def unban(self, ctx, user: discord.User = None):
         if user is None:

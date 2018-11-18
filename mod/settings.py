@@ -19,7 +19,10 @@ class Settings:
             embed.title = "Server Settings"
             embed.colour = 0x0099FF
 
-            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+            try:
+                prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+            except:
+                raise commands.NoPrivateMessage
             cmds = []
 
             for cmd in self.settings.commands:
@@ -30,6 +33,7 @@ class Settings:
             await ctx.send(embed=embed)
 
     @settings.command()
+    @commands.guild_only()
     async def prefix(self, ctx, prefix: str = None):
         if prefix is None:
             await ctx.send("Please specify a new prefix.")

@@ -109,7 +109,7 @@ class Utility:
         try:
             e = eval(code, None, locals())
         except:
-            await ctx.send(f"The code contains invalid syntax.")
+            await ctx.send("An error occurred while evaluating this code.")
         else:
             await ctx.send(f"```python\n{e}\n```")
 

@@ -13,12 +13,19 @@ class Moderation:
     async def __error(self, ctx, error):
         error = getattr(error, "original", error)
 
-        if isinstance(error, commands.CheckFailure):
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send("This command can't be used in private messages.")
+
+        elif isinstance(error, commands.CheckFailure):
             await ctx.send(
                 "You require the **Manage Messages** permission to run this command."
             )
 
+        elif isinstance(error, commands.CommandError):
+            await ctx.send(error)
+
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member = None):
         if member is None:
@@ -30,21 +37,6 @@ class Moderation:
         elif member.top_role >= ctx.author.top_role:
             await ctx.send("Maybe try muting someone with a lower role than yours.")
         else:
-            role = discord.utils.get(ctx.guild.roles, name="Muted")
-
-            if role is None:
-                try:
-                    role = await ctx.guild.create_role(name="Muted")
-                except discord.Forbidden:
-                    await ctx.send(
-                        f"I don't have the required permissions to mute <@{member.id}>"
-                    )
-                    return
-
-            if role in member.roles:
-                await ctx.send(f"<@{member.id}> has already been muted.")
-                return
-
             embed = discord.Embed()
             embed.title = "Mute"
             embed.colour = 0x0099FF
@@ -56,6 +48,7 @@ class Moderation:
             await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def unmute(self, ctx, member: discord.Member = None):
         if member is None:
@@ -73,12 +66,6 @@ class Moderation:
         else:
             role = discord.utils.get(ctx.guild.roles, name="Muted")
 
-            if role is None:
-                try:
-                    role = await ctx.guild.create_role(name="Muted")
-                except discord.Forbidden:
-                    pass
-
             if not role in member.roles or role is None:
                 await ctx.send(f"<@{member.id}> was never muted.")
                 return
@@ -94,6 +81,7 @@ class Moderation:
             await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, number: int = None):
         if number is None:

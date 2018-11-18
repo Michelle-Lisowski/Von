@@ -160,6 +160,7 @@ class Audio:
             await playlist.add_first(source)
 
     @commands.command()
+    @commands.guild_only()
     async def play(self, ctx, *, search: str = None):
         if search is None:
             await ctx.send("Please specify a search query.")
@@ -180,6 +181,7 @@ class Audio:
             await playlist.add(source)
 
     @commands.command()
+    @commands.guild_only()
     async def playfirst(self, ctx, *, search: str = None):
         if search is None:
             await ctx.send("Please specify a search query.")
@@ -197,6 +199,7 @@ class Audio:
             await playlist.add_first(source)
 
     @commands.command()
+    @commands.guild_only()
     async def pause(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -209,6 +212,7 @@ class Audio:
             await ctx.send(":pause_button: Song paused.")
 
     @commands.command()
+    @commands.guild_only()
     async def resume(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -221,6 +225,7 @@ class Audio:
             await ctx.send(":musical_note: Song resumed.")
 
     @commands.command()
+    @commands.guild_only()
     async def current(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -234,6 +239,7 @@ class Audio:
             )
 
     @commands.command()
+    @commands.guild_only()
     async def peek(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -249,6 +255,7 @@ class Audio:
             )
 
     @commands.command()
+    @commands.guild_only()
     async def volume(self, ctx, volume: int = None):
         playlist = self.get_playlist(ctx)
 
@@ -280,6 +287,7 @@ class Audio:
                 )
 
     @commands.command()
+    @commands.guild_only()
     async def skip(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -289,6 +297,7 @@ class Audio:
         ctx.voice_client.stop()
 
     @commands.command()
+    @commands.guild_only()
     async def clear(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -300,6 +309,7 @@ class Audio:
         await ctx.send(":white_check_mark: Playlist cleared.")
 
     @commands.command()
+    @commands.guild_only()
     async def repeat(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -327,6 +337,7 @@ class Audio:
             await ctx.send(":repeat_one: Repetition enabled.")
 
     @commands.command()
+    @commands.guild_only()
     async def shuffle(self, ctx):
         playlist = self.get_playlist(ctx)
 
@@ -338,6 +349,7 @@ class Audio:
         await ctx.send(":white_check_mark: Playlist shuffled.")
 
     @commands.command()
+    @commands.guild_only()
     async def stop(self, ctx):
         playlist = self.get_playlist(ctx)
 

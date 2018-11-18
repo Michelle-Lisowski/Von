@@ -4,6 +4,7 @@
 
 import json
 import os
+import random
 import sys
 import time
 import traceback
@@ -49,62 +50,78 @@ class Von(commands.Bot):
                 print(f"Failed to load extension {mod}.", file=sys.stderr)
                 traceback.print_exc()
 
-    async def mute(self, ctx, member):
+    async def mute(self, member):
         role = discord.utils.get(member.guild.roles, name="Muted")
 
         if role is None:
-            try:
-                role = await member.guild.create_role(name="Muted")
-            except discord.Forbidden:
-                return
+            raise commands.CommandError(f"Muting <@{member.id}> failed.")
 
         for channel in member.guild.channels:
-            if role is not None:
+            try:
                 await channel.set_permissions(role, connect=False, send_messages=False)
+            except (discord.Forbidden, discord.HTTPException):
+                raise commands.CommandError(f"Muting <@{member.id}> failed.")
 
         try:
             await member.add_roles(role)
-        except discord.Forbidden:
-            pass
+        except (discord.Forbidden, discord.HTTPException):
+            raise commands.CommandError(f"Muting <@{member.id}> failed.")
+
+    async def on_guild_channel_delete(self, channel):
+        if channel.name == "welcome":
+            try:
+                await channel.guild.create_text_channel(name="welcome")
+            except (discord.Forbidden, discord.HTTPException):
+                pass
+
+        elif channel.name == "logs":
+            try:
+                await channel.guild.create_role(name="logs")
+            except (discord.Forbidden, discord.HTTPException):
+                pass
+
+    async def on_guild_role_delete(self, role):
+        if role.name == "Muted":
+            try:
+                await role.guild.create_role(name="Muted")
+            except (discord.Forbidden, discord.HTTPException):
+                pass
+
+        elif role.name == "Member":
+            try:
+                colour = random.randint(0x000000, 0xFFFFFF)
+                await role.guild.create_role(name="Member", colour=colour)
+            except (discord.Forbidden, discord.HTTPException):
+                pass
 
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name="Member")
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
         if role is None:
-            try:
-                role = await member.guild.create_role(name="Member", hoist=True)
-            except discord.Forbidden:
-                return
-
-        if channel is None:
-            try:
-                channel = await member.guild.create_text_channel(name="welcome")
-            except discord.Forbidden:
-                return
+            return
+        elif channel is None:
+            return
 
         try:
             await member.add_roles(role)
             await channel.send(
                 f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
             )
-        except discord.Forbidden:
+        except (discord.Forbidden, discord.HTTPException):
             pass
 
     async def on_member_remove(self, member):
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
         if channel is None:
-            try:
-                channel = await member.guild.create_text_channel(name="welcome")
-            except discord.Forbidden:
-                return
+            return
 
         try:
             await channel.send(
                 f"We're sad to see you leave, **<@{member.id}>**... :frowning2:"
             )
-        except discord.Forbidden:
+        except (discord.Forbidden, discord.HTTPException):
             pass
 
     async def on_member_ban(self, guild, user):
@@ -112,43 +129,26 @@ class Von(commands.Bot):
         channel = discord.utils.get(guild.text_channels, name="logs")
 
         if channel is None:
-            try:
-                channel = await guild.create_text_channel(name="logs")
-            except discord.Forbidden:
-                return
-
-        async for ban in guild.audit_logs(limit=1, action=audit_ban):
-            embed = discord.Embed()
-            embed.title = "Ban"
-            embed.colour = 0x0099FF
-
-            embed.add_field(name="Member", value=ban.target)
-            embed.add_field(name="Member ID", value=ban.target.id)
-            embed.add_field(name="Responsible Moderator", value=ban.user)
-            embed.add_field(name="Time", value=ban.created_at)
-            embed.add_field(name="Reason", value=ban.reason)
-            await channel.send(embed=embed)
-
-    async def on_command_error(self, ctx, error):
-        if hasattr(ctx.command, "on_error"):
             return
-        elif hasattr(ctx.cog, f"_{ctx.cog.__class__.__name__}__error"):
-            return
-        elif isinstance(error, commands.CommandNotFound):
-            return
-        elif isinstance(error, commands.NoPrivateMessage):
-            await ctx.send("This command can't be used in private messages.")
-        elif isinstance(error, commands.DisabledCommand):
-            await ctx.send("Sorry. This command is disabled and can't be used.")
-        elif isinstance(error, commands.CommandInvokeError):
-            print(f"In command {ctx.command.qualified_name}:", file=sys.stderr)
-            traceback.print_tb(error.original.__traceback__, file=sys.stderr)
-            print(
-                f"{error.original.__class__.__name__}: {error.original}",
-                file=sys.stderr,
-            )
-        else:
-            traceback.print_exc()
+
+        try:
+            async for ban in guild.audit_logs(limit=1, action=audit_ban):
+                embed = discord.Embed()
+                embed.title = "Ban"
+                embed.colour = 0x0099FF
+
+                embed.add_field(name="Member", value=ban.target)
+                embed.add_field(name="Member ID", value=ban.target.id)
+                embed.add_field(name="Responsible Moderator", value=ban.user)
+                embed.add_field(name="Time", value=ban.created_at)
+                embed.add_field(name="Reason", value=ban.reason)
+
+                try:
+                    await channel.send(embed=embed)
+                except (discord.Forbidden, discord.HTTPException):
+                    pass
+        except (discord.Forbidden, discord.HTTPException):
+            pass
 
     async def on_ready(self):
         if not hasattr(self, "uptime"):
@@ -180,3 +180,24 @@ class Von(commands.Bot):
             embed.description = f"The prefix in this server is `{prefix}`"
             await message.channel.send(embed=embed)
         await self.process_commands(message)
+
+    async def on_command_error(self, ctx, error):
+        if hasattr(ctx.command, "on_error"):
+            return
+        elif hasattr(ctx.cog, f"_{ctx.cog.__class__.__name__}__error"):
+            return
+        elif isinstance(error, commands.CommandNotFound):
+            return
+        elif isinstance(error, commands.NoPrivateMessage):
+            await ctx.send("This command can't be used in private messages.")
+        elif isinstance(error, commands.DisabledCommand):
+            await ctx.send("Sorry. This command is disabled and can't be used.")
+        elif isinstance(error, commands.CommandInvokeError):
+            print(f"In command {ctx.command.qualified_name}:", file=sys.stderr)
+            traceback.print_tb(error.original.__traceback__, file=sys.stderr)
+            print(
+                f"{error.original.__class__.__name__}: {error.original}",
+                file=sys.stderr,
+            )
+        else:
+            traceback.print_exc()
