@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 try:
-    from json import JSONDecodeError
+    from json.decoder import JSONDecodeError
     from main import Von
 except ImportError:
     pass
@@ -23,86 +23,58 @@ def token_input():
     return input(">>> ")
 
 
-def read_config():
-    return open("config.json")
-
-
-def write_config():
-    return open("config.json", "w")
-
-
-def read_prefixes():
-    return open("prefixes.json")
-
-
-def write_prefixes():
-    return open("prefixes.json", "w")
-
-
-def check_config():
+def load_config():
+    print("Loading config.json...")
     try:
-        print("Loading config.json...")
-        read_config()
+        f = open("config.json")
     except FileNotFoundError:
         print("Creating config.json...", end="\r")
-        write_config()
+        open("config.json", "w")
         print("Creating config.json... done")
+        f = open("config.json")
 
-    with read_config() as f:
-        try:
-            print("Loading config.json dictionary...")
-            config = json.load(f)
-        except JSONDecodeError:
-            with write_config() as f:
-                print("Creating config.json dictionary...", end="\r")
-                f.write("{}")
-                print("Creating config.json dictionary... done")
-
-            with read_config() as f:
-                config = json.load(f)
-
-        print("Loaded config.json")
-        return config
-
-
-def check_prefixes():
+    print("Loading config.json dictionary...")
     try:
-        print("Loading prefixes.json...")
-        read_prefixes()
+        json.load(f)
+    except JSONDecodeError:
+        print("Creating config.json dictionary...", end="\r")
+        with open("config.json", "w") as f:
+            f.write("{}")
+            print("Creating config.json dictionary... done")
+
+    with open("config.json") as f:
+        config = json.load(f)
+
+    print("Loaded config.json")
+    return config
+
+
+def check_db():
+    print("Loading prefixes.json...")
+    try:
+        f = open("prefixes.json")
     except FileNotFoundError:
         print("Creating prefixes.json...", end="\r")
-        write_prefixes()
+        open("prefixes.json", "w")
         print("Creating prefixes.json... done")
+        f = open("prefixes.json")
 
-    with read_prefixes() as f:
-        try:
-            print("Loading prefixes.json dictionary...")
-            json.load(f)
-        except JSONDecodeError:
-            with write_prefixes() as f:
-                print("Creating prefixes.json dictionary...", end="\r")
-                f.write("{}")
-                print("Creating prefixes.json dictionary... done")
-        print("Loaded prefixes.json")
+    print("Loading prefixes.json dictionary...")
+    try:
+        json.load(f)
+    except JSONDecodeError:
+        print("Creating prefixes.json dictionary...", end="\r")
+        with open("prefixes.json", "w") as f:
+            f.write("{}")
+            print("Creating prefixes.json dictionary... done")
+    print("Loaded prefixes.json")
 
 
 def install_dependencies():
+    arguments = [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
     if args.upgrade:
-        subprocess.call(
-            [
-                sys.executable,
-                "-m",
-                "pip",
-                "install",
-                "--upgrade",
-                "-r",
-                "requirements.txt",
-            ]
-        )
-    else:
-        subprocess.call(
-            [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
-        )
+        arguments.insert(4, "--upgrade")
+    subprocess.call(arguments)
 
 
 def main():
@@ -112,28 +84,29 @@ def main():
         print("Python 3.6.2 or above is required. Please update Python and try again.")
         sys.exit(1)
 
-    print("Checking configuration...")
-    config = check_config()
-
+    config = load_config()
     try:
         token = config["token"]
     except KeyError:
-        print("Token doesn't exist. Please enter a token below.")
+        print("Token not set. Please enter a token below.")
         token = token_input()
 
-        with write_config() as f:
-            print("Writing to config.json...")
+        with open("config.json", "w") as f:
+            print("Writing token to config.json...", end="\r")
             config["token"] = token
+
             json.dump(config, f, indent=4)
+            print("Writing token to config.json... done")
 
-    print("Checking guild prefixes...")
-    check_prefixes()
+    print("Checking existence of database files...")
+    check_db()
 
+    print("Installing dependencies...")
     try:
-        print("Installing dependencies...")
         install_dependencies()
     except:
         print("Dependency installation failed.")
+        sys.exit(1)
 
     print("Setup complete.")
     sys.exit(0)
