@@ -159,22 +159,18 @@ class Audio:
             )
             await playlist.add_first(source)
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send("This command can't be used in private messages.")
+
+        elif isinstance(error, commands.CommandError):
+            await ctx.send(error)
+
     @commands.command()
     @commands.guild_only()
     async def play(self, ctx, *, search: str = None):
-        if search is None:
-            await ctx.send("Please specify a search query.")
-            return
-
-        if not ctx.voice_client:
-            if not ctx.author.voice:
-                await ctx.send("Please join a voice channel first.")
-            else:
-                try:
-                    await ctx.author.voice.channel.connect()
-                except:
-                    pass
-
         async with ctx.typing():
             playlist = self.get_playlist(ctx)
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
@@ -183,16 +179,6 @@ class Audio:
     @commands.command()
     @commands.guild_only()
     async def playfirst(self, ctx, *, search: str = None):
-        if search is None:
-            await ctx.send("Please specify a search query.")
-            return
-
-        if not ctx.voice_client:
-            if not ctx.author.voice:
-                await ctx.send("Please join a voice channel first.")
-            else:
-                await ctx.author.voice.channel.connect()
-
         async with ctx.typing():
             playlist = self.get_playlist(ctx)
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
@@ -362,6 +348,25 @@ class Audio:
 
         await ctx.voice_client.disconnect()
         await ctx.send(f"Music stopped by **{ctx.author.name}**.")
+
+    @play.before_invoke
+    @playfirst.before_invoke
+    @shuffle.before_invoke
+    @repeat.before_invoke
+    @pause.before_invoke
+    @resume.before_invoke
+    @volume.before_invoke
+    async def voice_check(self, ctx):
+        if not ctx.voice_client:
+            if ctx.author.voice:
+                await ctx.author.voice.channel.connect()
+            else:
+                raise commands.CommandError("Please join a voice channel first.")
+        elif not ctx.author.voice:
+            raise commands.CommandError("Please join a voice channel first.")
+        elif ctx.author.voice.channel != ctx.voice_client.channel:
+            channel = ctx.voice_client.channel
+            raise commands.CommandError(f"Please join me in the voice channel **{channel}**.")
 
 
 def setup(bot):
