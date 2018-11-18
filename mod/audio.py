@@ -242,6 +242,47 @@ class Audio:
 
     @commands.command()
     @commands.guild_only()
+    async def playlist(self, ctx):
+        playlist = self.get_playlist(ctx)
+
+        if playlist.current is None:
+            await ctx.send("No music is currently playing.")
+        elif len(playlist.queue._queue) < 1:
+            await ctx.send("No songs are currently queued.")
+        else:
+            if playlist.repeat is True:
+                await ctx.send(
+                    ":repeat_one: Repetition is enabled for: **{0.uploader}** - **{0.title}**".format(
+                        playlist.current
+                    )
+                )
+            else:
+                embed = discord.Embed()
+                embed.colour = 0x0099FF
+
+                songs = []
+                position = 0
+
+                for entry in list(playlist.queue._queue):
+                    position += 1
+                    songs.append(
+                        "**{0}:** **{1.uploader}** - **{1.title}**".format(
+                            position, entry
+                        )
+                    )
+
+                if len(playlist.queue._queue) == 1:
+                    title = "Current Playlist - 1 Song"
+                else:
+                    title = f"Current playlist - {len(playlist.queue._queue)} Songs"
+                description = "\n".join(songs)
+
+                embed.title = title
+                embed.description = description
+                await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.guild_only()
     async def volume(self, ctx, volume: int = None):
         playlist = self.get_playlist(ctx)
 
@@ -366,7 +407,9 @@ class Audio:
             raise commands.CommandError("Please join a voice channel first.")
         elif ctx.author.voice.channel != ctx.voice_client.channel:
             channel = ctx.voice_client.channel
-            raise commands.CommandError(f"Please join me in the voice channel **{channel}**.")
+            raise commands.CommandError(
+                f"Please join me in the voice channel **{channel}**."
+            )
 
 
 def setup(bot):
