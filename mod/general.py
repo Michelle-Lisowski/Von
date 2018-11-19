@@ -133,8 +133,12 @@ class General:
             )
             return
 
-        experience = self.bot.experience[str(member.id)]["experience"]
-        level = self.bot.experience[str(member.id)]["level"]
+        try:
+            experience = self.bot.experience[str(member.id)]["experience"]
+            level = self.bot.experience[str(member.id)]["level"]
+        except KeyError:
+            await ctx.send(f"<@{member.id}> currently has no experience.")
+            return
 
         embed = discord.Embed()
         embed.colour = 0x0099FF
