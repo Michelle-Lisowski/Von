@@ -9,7 +9,8 @@ from main import Von
 def get_token():
     with open("config.json") as f:
         config = json.load(f)
-        token = config["token"]
+
+    token = config["token"]
     return token
 
 

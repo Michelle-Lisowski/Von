@@ -7,11 +7,14 @@ import json
 import subprocess
 import sys
 
-try:
-    from json.decoder import JSONDecodeError
-    from main import Von
-except ImportError:
-    pass
+print("Checking Python version...")
+
+if not sys.version_info >= (3, 6, 2):
+    print("Python 3.6.2 or above is required. Please update Python and try again.")
+    sys.exit(1)
+
+from json.decoder import JSONDecodeError
+from main import Von
 
 
 parser = argparse.ArgumentParser()
@@ -81,12 +84,6 @@ def install_dependencies():
 
 
 def main():
-    print("Checking Python version...")
-
-    if not sys.version_info >= (3, 6, 2):
-        print("Python 3.6.2 or above is required. Please update Python and try again.")
-        sys.exit(1)
-
     config = load_config()
     try:
         token = config["token"]
