@@ -50,24 +50,27 @@ def load_config():
 
 
 def check_db():
-    print("Loading prefixes.json...")
-    try:
-        f = open("prefixes.json")
-    except FileNotFoundError:
-        print("Creating prefixes.json...", end="\r")
-        open("prefixes.json", "w")
-        print("Creating prefixes.json... done")
-        f = open("prefixes.json")
+    files = ["prefixes.json", "experience.json"]
 
-    print("Loading prefixes.json dictionary...")
-    try:
-        json.load(f)
-    except JSONDecodeError:
-        print("Creating prefixes.json dictionary...", end="\r")
-        with open("prefixes.json", "w") as f:
-            f.write("{}")
-            print("Creating prefixes.json dictionary... done")
-    print("Loaded prefixes.json")
+    for file in files:
+        print(f"Loading {file}...")
+        try:
+            f = open(file)
+        except FileNotFoundError:
+            print(f"Creating {file}...", end="\r")
+            open(file, "w")
+            print(f"Creating {file}... done")
+            f = open(file)
+
+        print(f"Loading {file} dictionary...")
+        try:
+            json.load(f)
+        except JSONDecodeError:
+            print(f"Creating {file} dictionary...", end="\r")
+            with open(file, "w") as f:
+                f.write("{}")
+                print(f"Creating {file} dictionary... done")
+        print(f"Loaded {file}")
 
 
 def install_dependencies():
