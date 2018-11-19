@@ -118,6 +118,32 @@ class General:
         embed.add_field(name="Voice Region", value=ctx.guild.region)
         await ctx.send(embed=embed)
 
+    @commands.command()
+    @commands.guild_only()
+    async def xp(self, ctx, member: discord.Member = None):
+        if member is None:
+            member = ctx.author
+
+        if member.id == self.bot.user.id:
+            await ctx.send("My level is over 10000... why are you even questioning it?")
+            return
+        elif member.bot:
+            await ctx.send(
+                f"<@{member.id}> is a bot! Bots aren't invited to the super fancy XP party."
+            )
+            return
+
+        experience = self.bot.experience[str(member.id)]["experience"]
+        level = self.bot.experience[str(member.id)]["level"]
+
+        embed = discord.Embed()
+        embed.colour = 0x0099FF
+        embed.title = member.name
+
+        embed.add_field(name="Experience", value=f"{experience} XP")
+        embed.add_field(name="Level", value=level)
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(General(bot))

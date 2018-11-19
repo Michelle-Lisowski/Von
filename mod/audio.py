@@ -233,6 +233,12 @@ class Audio:
             await ctx.send("No music is currently playing.")
         elif len(playlist.queue._queue) < 1:
             await ctx.send("No songs are currently queued.")
+        elif playlist.repeat is True:
+            await ctx.send(
+                ":repeat_one: Repetition is currently enabled for: **{0.uploader}** - **{0.title}**".format(
+                    playlist.current
+                )
+            )
         else:
             await ctx.send(
                 ":musical_note: Next song: **{0.uploader}** - **{0.title}**".format(
@@ -249,37 +255,33 @@ class Audio:
             await ctx.send("No music is currently playing.")
         elif len(playlist.queue._queue) < 1:
             await ctx.send("No songs are currently queued.")
-        else:
-            if playlist.repeat is True:
-                await ctx.send(
-                    ":repeat_one: Repetition is enabled for: **{0.uploader}** - **{0.title}**".format(
-                        playlist.current
-                    )
+        elif playlist.repeat is True:
+            await ctx.send(
+                ":repeat_one: Repetition is currently enabled for: **{0.uploader}** - **{0.title}**".format(
+                    playlist.current
                 )
+            )
+        else:
+            embed = discord.Embed()
+            embed.colour = 0x0099FF
+
+            songs = []
+            position = 0
+
+            for entry in list(playlist.queue._queue):
+                position += 1
+                songs.append(
+                    "**{0}:** **{1.uploader}** - **{1.title}**".format(position, entry)
+                )
+            if len(playlist.queue._queue) == 1:
+                title = "Current Playlist - 1 Song"
             else:
-                embed = discord.Embed()
-                embed.colour = 0x0099FF
+                title = f"Current playlist - {len(playlist.queue._queue)} Songs"
+            description = "\n".join(songs)
 
-                songs = []
-                position = 0
-
-                for entry in list(playlist.queue._queue):
-                    position += 1
-                    songs.append(
-                        "**{0}:** **{1.uploader}** - **{1.title}**".format(
-                            position, entry
-                        )
-                    )
-
-                if len(playlist.queue._queue) == 1:
-                    title = "Current Playlist - 1 Song"
-                else:
-                    title = f"Current playlist - {len(playlist.queue._queue)} Songs"
-                description = "\n".join(songs)
-
-                embed.title = title
-                embed.description = description
-                await ctx.send(embed=embed)
+            embed.title = title
+            embed.description = description
+            await ctx.send(embed=embed)
 
     @commands.command()
     @commands.guild_only()

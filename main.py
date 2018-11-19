@@ -36,10 +36,13 @@ class Von(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=prefix_callable)
         self.remove_command("help")
+        self.session = aiohttp.ClientSession(loop=self.loop)
 
         with open("prefixes.json") as f:
             self.prefixes = json.load(f)
-        self.session = aiohttp.ClientSession(loop=self.loop)
+
+        with open("experience.json") as f:
+            self.experience = json.load(f)
 
         for mod in [
             f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))
@@ -49,26 +52,6 @@ class Von(commands.Bot):
             except:
                 print(f"Failed to load extension {mod}.", file=sys.stderr)
                 traceback.print_exc()
-
-    async def mute(self, member):
-        role = discord.utils.get(member.guild.roles, name="Muted")
-
-        if role is None:
-            raise commands.CommandError(f"Muting <@{member.id}> failed.")
-
-        for channel in member.guild.channels:
-            try:
-                await channel.set_permissions(role, connect=False, send_messages=False)
-            except (discord.Forbidden, discord.HTTPException):
-                raise commands.CommandError(f"Muting <@{member.id}> failed.")
-
-        if role in member.roles:
-            raise commands.CommandError(f"<@{member.id}> has already been muted.")
-
-        try:
-            await member.add_roles(role)
-        except (discord.Forbidden, discord.HTTPException):
-            raise commands.CommandError(f"Muting <@{member.id}> failed.")
 
     async def on_guild_channel_delete(self, channel):
         if channel.name == "welcome":
@@ -172,22 +155,30 @@ class Von(commands.Bot):
         if message.author.bot:
             return
 
-        with open("prefixes.json") as f:
-            self.prefixes = json.load(f)
-
         if message.content.startswith("v!prefix"):
+            if not message.guild:
+                await message.channel.send("This command can't be used in private messages.")
+                return
+
             embed = discord.Embed()
             embed.colour = 0x0099FF
+            embed.title = self.user.name
 
             prefix = self.prefixes[str(message.guild.id)]["prefix"]
-            embed.description = f"The prefix in this server is `{prefix}`"
+            embed.description = f"The prefix in this server is `{prefix}`."
             await message.channel.send(embed=embed)
+
+        await self.add_experience(message.author)
+        await self.level_up(message.author, message.channel)
         await self.process_commands(message)
+
+        with open("experience.json", "w") as f:
+            json.dump(self.experience, f, indent=4)
 
     async def on_message_edit(self, before, after):
         if not before.guild:
             return
-            
+
         prefix = self.prefixes[str(before.guild.id)]["prefix"]
 
         if prefix in before.content:
@@ -218,3 +209,53 @@ class Von(commands.Bot):
             )
         else:
             traceback.print_exc()
+
+    async def mute(self, member):
+        role = discord.utils.get(member.guild.roles, name="Muted")
+
+        if role is None:
+            raise commands.CommandError(f"Muting <@{member.id}> failed.")
+
+        for channel in member.guild.channels:
+            try:
+                await channel.set_permissions(role, connect=False, send_messages=False)
+            except (discord.Forbidden, discord.HTTPException):
+                raise commands.CommandError(f"Muting <@{member.id}> failed.")
+
+        if role in member.roles:
+            raise commands.CommandError(f"<@{member.id}> has already been muted.")
+
+        try:
+            await member.add_roles(role)
+        except (discord.Forbidden, discord.HTTPException):
+            raise commands.CommandError(f"Muting <@{member.id}> failed.")
+
+    async def add_experience(self, member):
+        if member.bot:
+            return
+
+        try:
+            self.experience[str(member.id)]["experience"] += 2
+        except KeyError:
+            self.experience[str(member.id)] = {}
+            self.experience[str(member.id)]["experience"] = 2
+            self.experience[str(member.id)]["level"] = 1
+
+    async def level_up(self, member, channel):
+        if member.bot:
+            return
+
+        experience = self.experience[str(member.id)]["experience"]
+        before = self.experience[str(member.id)]["level"]
+        after = int(experience ** (1 / 4))
+
+        if before < after:
+            embed = discord.Embed()
+            embed.colour = 0x0099FF
+            embed.title = f"{member.name} has levelled up!"
+
+            embed.add_field(name="Experience", value=f"{experience} XP")
+            embed.add_field(name="Level", value=after)
+
+            self.experience[str(member.id)]["level"] = after
+            await channel.send(embed=embed)
