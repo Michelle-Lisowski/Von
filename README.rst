@@ -1,5 +1,6 @@
-Von V2
-======
+.. image:: https://i.imgur.com/BvWeZoX.png
+    :alt: Von
+==========================================
 
 .. image:: https://img.shields.io/badge/discord-py-blue.svg
     :target: https://github.com/Rapptz/discord.py/tree/rewrite
@@ -26,4 +27,6 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: levelling, customisable behaviour and documentation
+Next focus: Voting in 'skip' and 'clear' commands, customisable behaviour and documentation.
+*Customisable behaviour* means the ability to enable/disable specific features of Von, and
+the ability to change the default volume of music.
