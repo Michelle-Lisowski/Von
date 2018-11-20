@@ -106,9 +106,13 @@ venv.bak/
 # VS Code
 .vscode/
 
-# JSON Database
-prefixes.json
+# JSON Databases
 experience.json
+prefixes.json
+volumes.json
 
 # Configuration
 config.json
+
+# Logging
+von.log
