@@ -38,11 +38,14 @@ class Von(commands.Bot):
         self.remove_command("help")
         self.session = aiohttp.ClientSession(loop=self.loop)
 
+        with open("experience.json") as f:
+            self.experience = json.load(f)
+
         with open("prefixes.json") as f:
             self.prefixes = json.load(f)
 
-        with open("experience.json") as f:
-            self.experience = json.load(f)
+        with open("volumes.json") as f:
+            self.volumes = json.load(f)
 
         for mod in [
             f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))
@@ -140,7 +143,7 @@ class Von(commands.Bot):
         if not hasattr(self, "uptime"):
             self.uptime = time.time()
 
-        print(f"Ready: {self.user} (ID: {self.user.id})")
+        print("Ready: {0} (ID: {0.id})".format(self.user))
 
         await self.change_presence(
             activity=discord.Streaming(

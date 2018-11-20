@@ -75,9 +75,13 @@ class Playlist:
         self.queue = asyncio.Queue()
         self.next = asyncio.Event()
 
-        self.current = None
-        self.volume = 0.5
+        try:
+            self.volume = self.bot.volumes[str(ctx.guild.id)]["volume"]
+        except KeyError:
+            self.bot.volumes[str(ctx.guild.id)]["volume"] = 0.5
+            self.volume = self.bot.volumes[str(ctx.guild.id)]["volume"]
 
+        self.current = None
         self.repeat = False
         self.player = self.bot.loop.create_task(self.loop())
 

@@ -21,7 +21,7 @@ class Settings:
 
             try:
                 prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
-            except:
+            except AttributeError:
                 raise commands.NoPrivateMessage
             cmds = []
 
@@ -42,11 +42,28 @@ class Settings:
         del self.bot.prefixes[str(ctx.guild.id)]["prefix"]
         self.bot.prefixes[str(ctx.guild.id)]["prefix"] = prefix
 
-        prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
         with open("prefixes.json", "w") as f:
             json.dump(self.bot.prefixes, f, indent=4)
 
-        await ctx.send(f":white_check_mark: Server prefix set to `{prefix}`")
+        await ctx.send(f":white_check_mark: Server prefix set to `{prefix}`.")
+
+    @settings.command()
+    @commands.guild_only()
+    async def default_volume(self, ctx, volume: int = None):
+        if volume is None:
+            await ctx.send("Please specify a new default volume.")
+            return
+
+        try:
+            del self.bot.volumes[str(ctx.guild.id)]["volume"]
+        except KeyError:
+            self.bot.volumes[str(ctx.guild.id)] = {}
+        self.bot.volumes[str(ctx.guild.id)]["volume"] = volume / 100
+
+        with open("volumes.json", "w") as f:
+            json.dump(self.bot.volumes, f, indent=4)
+
+        await ctx.send(f":white_check_mark: Default volume set to `{volume}`.")
 
 
 def setup(bot):

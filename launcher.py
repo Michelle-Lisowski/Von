@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 from main import Von
 
 
@@ -14,10 +15,26 @@ def get_token():
     return token
 
 
+def setup_logging():
+    logger = logging.getLogger("discord")
+    logger.setLevel(logging.DEBUG)
+
+    handler = logging.FileHandler("discord.log", encoding="utf-8", mode="w")
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+    )
+
+    logger.addHandler(handler)
+    return logger
+
+
 def main():
+    print("Setting up logging...", end="\r")
+    setup_logging()
+    print("Setting up logging... done")
+
     token = get_token()
-    bot = Von()
-    bot.run(token)
+    Von().run(token)
 
 
 if __name__ == "__main__":
