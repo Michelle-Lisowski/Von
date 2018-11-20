@@ -44,6 +44,9 @@ class Von(commands.Bot):
         with open("prefixes.json") as f:
             self.prefixes = json.load(f)
 
+        with open("settings.json") as f:
+            self.settings = json.load(f)
+
         with open("volumes.json") as f:
             self.volumes = json.load(f)
 

@@ -65,6 +65,27 @@ class Settings:
 
         await ctx.send(f":white_check_mark: Default volume set to `{volume}`.")
 
+    @settings.command()
+    @commands.guild_only()
+    async def purge_success(self, ctx, setting: bool = None):
+        if setting is None:
+            await ctx.send("Please specify either `True` or `False`.")
+            return
+
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["purge_success"]
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+        self.bot.settings[str(ctx.guild.id)]["purge_success"] = setting
+
+        with open("settings.json", "w") as f:
+            json.dump(self.bot.settings, f, indent=4)
+
+        if setting is True:
+            await ctx.send(":white_check_mark: Purge success message enabled.")
+        else:
+            await ctx.send(":white_check_mark: Purge success message disabled.")
+
 
 def setup(bot):
     bot.add_cog(Settings(bot))

@@ -91,11 +91,20 @@ class Moderation:
         await ctx.send("This may take a while. Please be patient.")
         counter = 0
 
-        async for message in ctx.channel.history(limit=number):
+        async for message in ctx.channel.history(limit=number + 1):
             await message.delete()
             counter += 1
 
-        await ctx.send(f":white_check_mark: Deleted {counter} messages.")
+        try:
+            purge_success = self.bot.settings[str(ctx.guild.id)]["purge_success"]
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+            purge_success = self.bot.settings[str(ctx.guild.id)]["purge_success"]
+
+        if purge_success is True:
+            await ctx.send(f":white_check_mark: Deleted {counter} messages.")
+        else:
+            pass
 
 
 def setup(bot):
