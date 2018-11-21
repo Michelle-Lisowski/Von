@@ -5,14 +5,17 @@
 .. image:: https://img.shields.io/badge/discord-py-blue.svg
     :target: https://github.com/Rapptz/discord.py/tree/rewrite
     :alt: discord.py rewrite
+    :align: right
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/ambv/black
     :alt: Code Style: Black
+    :align: right
 
 .. image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
     :target: https://makeapullrequest.com
     :alt: Feel free to make a pull request!
+    :align: right
 
 This is an in-progress rewrite of Von, with a couple of the main focuses
 being code efficiency and performance.
@@ -27,6 +30,4 @@ a pull request.
 Development Status
 ------------------
 
-Next focus: Voting in 'skip' and 'clear' commands, customisable behaviour and documentation.
-*Customisable behaviour* means the ability to enable/disable specific features of Von, and
-the ability to change the default volume of music.
+Next focus: Permission checks, voting in 'skip' and 'clear' commands, and documentation.
