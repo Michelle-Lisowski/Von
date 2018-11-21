@@ -4,6 +4,7 @@
 
 import asyncio
 import functools
+import json
 import random
 from functools import partial
 
@@ -76,10 +77,13 @@ class Playlist:
         self.next = asyncio.Event()
 
         try:
-            self.volume = self.bot.volumes[str(ctx.guild.id)]["volume"]
+            self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
         except KeyError:
-            self.bot.volumes[str(ctx.guild.id)]["volume"] = 0.5
-            self.volume = self.bot.volumes[str(ctx.guild.id)]["volume"]
+            self.bot.settings[str(ctx.guild.id)]["default_volume"] = 0.5
+            self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
+
+            with open("settings.json", "w") as f:
+                json.dump(self.bot.settings, f, indent=4)
 
         self.current = None
         self.repeat = False

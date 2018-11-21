@@ -55,13 +55,13 @@ class Settings:
             return
 
         try:
-            del self.bot.volumes[str(ctx.guild.id)]["volume"]
+            del self.bot.settings[str(ctx.guild.id)]["default_volume"]
         except KeyError:
-            self.bot.volumes[str(ctx.guild.id)] = {}
-        self.bot.volumes[str(ctx.guild.id)]["volume"] = volume / 100
+            pass
+        self.bot.settings[str(ctx.guild.id)]["default_volume"] = volume / 100
 
-        with open("volumes.json", "w") as f:
-            json.dump(self.bot.volumes, f, indent=4)
+        with open("settings.json", "w") as f:
+            json.dump(self.bot.settings, f, indent=4)
 
         await ctx.send(f":white_check_mark: Default volume set to `{volume}`.")
 
@@ -75,7 +75,7 @@ class Settings:
         try:
             del self.bot.settings[str(ctx.guild.id)]["purge_success"]
         except KeyError:
-            self.bot.settings[str(ctx.guild.id)] = {}
+            pass
         self.bot.settings[str(ctx.guild.id)]["purge_success"] = setting
 
         with open("settings.json", "w") as f:
@@ -85,6 +85,48 @@ class Settings:
             await ctx.send(":white_check_mark: Purge success message enabled.")
         else:
             await ctx.send(":white_check_mark: Purge success message disabled.")
+
+    @settings.command()
+    @commands.guild_only()
+    async def auto_message(self, ctx, setting: bool = None):
+        if setting is None:
+            await ctx.send("Please specify either `True` or `False`.")
+            return
+
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["auto_message"]
+        except KeyError:
+            pass
+        self.bot.settings[str(ctx.guild.id)]["auto_message"] = setting
+
+        with open("settings.json", "w") as f:
+            json.dump(self.bot.settings, f, indent=4)
+
+        if setting is True:
+            await ctx.send(":white_check_mark: Member join/leave messages enabled.")
+        else:
+            await ctx.send(":white_check_mark: Member join/leave messages disabled.")
+
+    @settings.command()
+    @commands.guild_only()
+    async def auto_role(self, ctx, setting: bool = None):
+        if setting is None:
+            await ctx.send("Please specify either `True` or `False`.")
+            return
+
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["auto_role"]
+        except KeyError:
+            pass
+        self.bot.settings[str(ctx.guild.id)]["auto_role"] = setting
+
+        with open("settings.json", "w") as f:
+            json.dump(self.bot.settings, f, indent=4)
+
+        if setting is True:
+            await ctx.send(":white_check_mark: Auto-role feature enabled.")
+        else:
+            await ctx.send(":white_check_mark: Auto-role feature disabled.")
 
 
 def setup(bot):

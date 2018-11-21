@@ -53,7 +53,7 @@ def load_config():
 
 
 def check_db():
-    files = ["experience.json", "prefixes.json", "settings.json", "volumes.json"]
+    files = ["experience.json", "prefixes.json", "settings.json"]
 
     for file in files:
         print(f"Loading {file}...")

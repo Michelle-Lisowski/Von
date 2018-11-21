@@ -110,7 +110,6 @@ venv.bak/
 experience.json
 prefixes.json
 settings.json
-volumes.json
 
 # Configuration
 config.json

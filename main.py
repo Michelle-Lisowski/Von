@@ -23,7 +23,6 @@ def prefix_callable(bot, message):
         try:
             prefix = bot.prefixes[str(message.guild.id)]["prefix"]
         except KeyError:
-            bot.prefixes[str(message.guild.id)] = {}
             bot.prefixes[str(message.guild.id)]["prefix"] = "v!"
             prefix = bot.prefixes[str(message.guild.id)]["prefix"]
 
@@ -46,9 +45,6 @@ class Von(commands.Bot):
 
         with open("settings.json") as f:
             self.settings = json.load(f)
-
-        with open("volumes.json") as f:
-            self.volumes = json.load(f)
 
         for mod in [
             f.replace(".py", "") for f in listdir("mod") if isfile(join("mod", f))
@@ -90,29 +86,52 @@ class Von(commands.Bot):
         role = discord.utils.get(member.guild.roles, name="Member")
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
-        if role is None:
+        try:
+            send_message = self.settings[str(member.guild.id)]["auto_message"]
+            add_role = self.settings[str(member.guild.id)]["auto_role"]
+        except KeyError:
+            self.settings[str(member.guild.id)]["auto_message"] = True
+            self.settings[str(member.guild.id)]["auto_role"] = True
+
+            send_message = self.settings[str(member.guild.id)]["auto_message"]
+            add_role = self.settings[str(member.guild.id)]["auto_role"]
+
+            with open("settings.json", "w") as f:
+                json.dump(self.settings, f, indent=4)
+
+        if add_role is True and role is None:
             return
         elif channel is None:
             return
 
         try:
-            await member.add_roles(role)
-            await channel.send(
-                f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
-            )
+            if add_role is True:
+                await member.add_roles(role)
+
+            if send_message is True:
+                await channel.send(
+                    f"Welcome to **{member.guild}**, {member.mention}! :tada::hugging:"
+                )
         except (discord.Forbidden, discord.HTTPException):
             pass
 
     async def on_member_remove(self, member):
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
+        try:
+            send_message = self.settings[str(member.guild.id)]["auto_message"]
+        except KeyError:
+            self.settings[str(member.guild.id)]["auto_message"] = True
+            send_message = self.settings[str(member.guild.id)]["auto_message"]
+
         if channel is None:
             return
 
         try:
-            await channel.send(
-                f"We're sad to see you leave, **<@{member.id}>**... :frowning2:"
-            )
+            if send_message is True:
+                await channel.send(
+                    f"We're sad to see you leave, **<@{member.id}>**... :frowning2:"
+                )
         except (discord.Forbidden, discord.HTTPException):
             pass
 
@@ -185,7 +204,11 @@ class Von(commands.Bot):
         if not before.guild:
             return
 
-        prefix = self.prefixes[str(before.guild.id)]["prefix"]
+        try:
+            prefix = self.prefixes[str(before.guild.id)]["prefix"]
+        except KeyError:
+            self.prefixes[str(before.guild.id)]["prefix"] = "v!"
+            prefix = self.prefixes[str(before.guild.id)]["prefix"]
 
         if prefix in before.content:
             if before.content == prefix:
@@ -243,7 +266,6 @@ class Von(commands.Bot):
         try:
             self.experience[str(member.id)]["experience"] += 2
         except KeyError:
-            self.experience[str(member.id)] = {}
             self.experience[str(member.id)]["experience"] = 2
             self.experience[str(member.id)]["level"] = 1
 
@@ -262,6 +284,9 @@ class Von(commands.Bot):
 
             embed.add_field(name="Experience", value=f"{experience} XP")
             embed.add_field(name="Level", value=after)
-
             self.experience[str(member.id)]["level"] = after
-            await channel.send(embed=embed)
+
+            try:
+                await channel.send(embed=embed)
+            except (discord.Forbidden, discord.HTTPException):
+                pass

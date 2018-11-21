@@ -2,6 +2,8 @@
 # Copyright (c) 2018 sirtezza451
 # -*- coding: utf-8 -*-
 
+import json
+
 import discord
 from discord.ext import commands
 
@@ -98,11 +100,14 @@ class Moderation:
         try:
             purge_success = self.bot.settings[str(ctx.guild.id)]["purge_success"]
         except KeyError:
-            self.bot.settings[str(ctx.guild.id)] = {}
+            self.bot.settings[str(ctx.guild.id)]["purge_success"] = True
             purge_success = self.bot.settings[str(ctx.guild.id)]["purge_success"]
 
+            with open("settings.json", "w") as f:
+                json.dump(self.bot.settings, f, indent=4)
+
         if purge_success is True:
-            await ctx.send(f":white_check_mark: Deleted {counter} messages.")
+            await ctx.send(f":white_check_mark: Deleted {counter - 1} messages.")
         else:
             pass
 
