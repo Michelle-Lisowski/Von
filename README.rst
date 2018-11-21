@@ -1,21 +1,15 @@
 .. image:: https://i.imgur.com/BvWeZoX.png
-    :alt: Von
+   :align: center
 ==========================================
 
 .. image:: https://img.shields.io/badge/discord-py-blue.svg
-    :target: https://github.com/Rapptz/discord.py/tree/rewrite
-    :align: right
-    :title: discord.py rewrite
+   :target: https://github.com/Rapptz/discord.py/tree/rewrite
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://github.com/ambv/black
-    :align: right
-    :title: Black Code Formatter
+   :target: https://github.com/ambv/black
 
 .. image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-    :target: https://makeapullrequest.com
-    :align: right
-    :title: Pull requests welcome!
+   :target: http://makeapullrequest.com
 
 This is an in-progress rewrite of Von, with a couple of the main focuses
 being code efficiency and performance.
