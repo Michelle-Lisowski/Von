@@ -218,27 +218,6 @@ class Von(commands.Bot):
         else:
             await self.process_commands(after)
 
-    async def on_command_error(self, ctx, error):
-        if hasattr(ctx.command, "on_error"):
-            return
-        elif hasattr(ctx.cog, f"_{ctx.cog.__class__.__name__}__error"):
-            return
-        elif isinstance(error, commands.CommandNotFound):
-            return
-        elif isinstance(error, commands.NoPrivateMessage):
-            await ctx.send("This command can't be used in private messages.")
-        elif isinstance(error, commands.DisabledCommand):
-            await ctx.send("Sorry. This command is disabled and can't be used.")
-        elif isinstance(error, commands.CommandInvokeError):
-            print(f"In command {ctx.command.qualified_name}:", file=sys.stderr)
-            traceback.print_tb(error.original.__traceback__, file=sys.stderr)
-            print(
-                f"{error.original.__class__.__name__}: {error.original}",
-                file=sys.stderr,
-            )
-        else:
-            traceback.print_exc()
-
     async def mute(self, member):
         role = discord.utils.get(member.guild.roles, name="Muted")
 

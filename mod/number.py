@@ -12,6 +12,12 @@ class Number:
     def __init__(self, bot):
         self.bot = bot
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Member not found.")
+
     @commands.command()
     async def gay(self, ctx, member: discord.Member = None):
         if member is None:

@@ -382,7 +382,7 @@ class Audio:
             await ctx.send("No music is currently playing.")
             return
 
-        random.shuffle(playlist.queue._queue)
+        await playlist.shuffle()
         await ctx.send(":white_check_mark: Playlist shuffled.")
 
     @commands.command()

@@ -44,7 +44,7 @@ class Admin:
         else:
             try:
                 await ctx.guild.kick(member)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 await ctx.send(
                     f"I don't have the required permissions to kick <@{member.id}>."
                 )
@@ -70,7 +70,7 @@ class Admin:
 
             try:
                 await ctx.guild.ban(member)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 await ctx.send(
                     f"I don't have the required permissions to ban <@{member.id}>."
                 )
@@ -99,7 +99,7 @@ class Admin:
             if not user in ctx.guild.members:
                 try:
                     await ctx.guild.unban(user)
-                except discord.Forbidden:
+                except (discord.Forbidden, discord.HTTPException):
                     await ctx.send(
                         f"I don't have the required permissions to unban <@{user.id}>."
                     )

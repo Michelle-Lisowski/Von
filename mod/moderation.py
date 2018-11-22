@@ -23,6 +23,9 @@ class Moderation:
                 "You require the **Manage Messages** permission to run this command."
             )
 
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Member not found.")
+
         elif isinstance(error, commands.CommandError):
             await ctx.send(error)
 
@@ -76,7 +79,12 @@ class Moderation:
             embed.title = "Unmute"
             embed.colour = 0x0099FF
 
-            await member.remove_roles(role)
+            try:
+                await member.remove_roles(role)
+            except (discord.Forbidden, discord.HTTPException):
+                await ctx.send(f"Muting <@{member.id}> failed.")
+                return
+
             embed.add_field(name="Member", value=str(member))
             embed.add_field(name="Member ID", value=member.id)
             embed.add_field(name="Unmuted By", value=str(ctx.author))

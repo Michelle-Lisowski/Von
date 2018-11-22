@@ -14,6 +14,12 @@ class Owner:
     def __init__(self, bot):
         self.bot = bot
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.NotOwner):
+            await ctx.send("You need to be the owner of me to run this command.")
+
     @commands.command()
     @commands.is_owner()
     async def load(self, ctx, mod: str = None):

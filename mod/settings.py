@@ -12,17 +12,29 @@ class Settings:
     def __init__(self, bot):
         self.bot = bot
 
+    async def __error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.NoPrivateMessage):
+            await ctx.send("This command can't be used in private messages.")
+
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send(
+                "You require the **Manage Server** permission to use this command."
+            )
+
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Please specify either `True` or `False`.")
+
     @commands.group()
+    @commands.guild_only()
     async def settings(self, ctx):
         if ctx.invoked_subcommand is None:
             embed = discord.Embed()
             embed.title = "Server Settings"
             embed.colour = 0x0099FF
 
-            try:
-                prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
-            except AttributeError:
-                raise commands.NoPrivateMessage
+            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
             cmds = []
 
             for cmd in self.settings.commands:
@@ -34,6 +46,7 @@ class Settings:
 
     @settings.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
     async def prefix(self, ctx, prefix: str = None):
         if prefix is None:
             await ctx.send("Please specify a new prefix.")
@@ -49,9 +62,13 @@ class Settings:
 
     @settings.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
     async def default_volume(self, ctx, volume: int = None):
         if volume is None:
             await ctx.send("Please specify a new default volume.")
+            return
+        elif not 0 < volume < 76:
+            await ctx.send("Please specify a number between `1` and `75`.")
             return
 
         try:
@@ -67,6 +84,7 @@ class Settings:
 
     @settings.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
     async def purge_success(self, ctx, setting: bool = None):
         if setting is None:
             await ctx.send("Please specify either `True` or `False`.")
@@ -88,6 +106,7 @@ class Settings:
 
     @settings.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
     async def auto_message(self, ctx, setting: bool = None):
         if setting is None:
             await ctx.send("Please specify either `True` or `False`.")
@@ -109,6 +128,7 @@ class Settings:
 
     @settings.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
     async def auto_role(self, ctx, setting: bool = None):
         if setting is None:
             await ctx.send("Please specify either `True` or `False`.")
