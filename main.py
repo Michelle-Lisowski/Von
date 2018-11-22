@@ -23,6 +23,7 @@ def prefix_callable(bot, message):
         try:
             prefix = bot.prefixes[str(message.guild.id)]["prefix"]
         except KeyError:
+            bot.prefixes[str(message.guild.id)] = {}
             bot.prefixes[str(message.guild.id)]["prefix"] = "v!"
             prefix = bot.prefixes[str(message.guild.id)]["prefix"]
 
