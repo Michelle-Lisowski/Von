@@ -90,6 +90,7 @@ class Von(commands.Bot):
             send_message = self.settings[str(member.guild.id)]["auto_message"]
             add_role = self.settings[str(member.guild.id)]["auto_role"]
         except KeyError:
+            self.settings[str(member.guild.id)] = {}
             self.settings[str(member.guild.id)]["auto_message"] = True
             self.settings[str(member.guild.id)]["auto_role"] = True
 
@@ -121,6 +122,7 @@ class Von(commands.Bot):
         try:
             send_message = self.settings[str(member.guild.id)]["auto_message"]
         except KeyError:
+            self.settings[str(member.guild.id)] = {}
             self.settings[str(member.guild.id)]["auto_message"] = True
             send_message = self.settings[str(member.guild.id)]["auto_message"]
 
@@ -161,6 +163,12 @@ class Von(commands.Bot):
         except (discord.Forbidden, discord.HTTPException):
             pass
 
+    async def on_command_error(self, ctx, error):
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.CommandNotFound):
+            return
+
     async def on_ready(self):
         if not hasattr(self, "uptime"):
             self.uptime = time.time()
@@ -189,7 +197,16 @@ class Von(commands.Bot):
             embed.colour = 0x0099FF
             embed.title = self.user.name
 
-            prefix = self.prefixes[str(message.guild.id)]["prefix"]
+            try:
+                prefix = self.prefixes[str(message.guild.id)]["prefix"]
+            except KeyError:
+                self.prefixes[str(message.guild.id)] = {}
+                self.prefixes[str(message.guild.id)]["prefix"] = "v!"
+                prefix = self.prefixes[str(message.guild.id)]["prefix"]
+
+                with open("prefixes.json", "w") as f:
+                    json.dump(self.prefixes, f, indent=4)
+
             embed.description = f"The prefix in this server is `{prefix}`."
             await message.channel.send(embed=embed)
 
@@ -207,8 +224,12 @@ class Von(commands.Bot):
         try:
             prefix = self.prefixes[str(before.guild.id)]["prefix"]
         except KeyError:
+            self.prefixes[str(before.guild.id)] = {}
             self.prefixes[str(before.guild.id)]["prefix"] = "v!"
             prefix = self.prefixes[str(before.guild.id)]["prefix"]
+
+            with open("prefixes.json", "w") as f:
+                json.dump(self.prefixes, f, indent=4)
 
         if prefix in before.content:
             if before.content == prefix:
@@ -220,11 +241,12 @@ class Von(commands.Bot):
 
     async def mute(self, member):
         role = discord.utils.get(member.guild.roles, name="Muted")
+        channels = [channel for channel in member.guild.channels]
 
         if role is None:
             raise commands.CommandError(f"Muting <@{member.id}> failed.")
 
-        for channel in member.guild.channels:
+        for channel in channels:
             try:
                 await channel.set_permissions(role, connect=False, send_messages=False)
             except (discord.Forbidden, discord.HTTPException):
@@ -245,6 +267,7 @@ class Von(commands.Bot):
         try:
             self.experience[str(member.id)]["experience"] += 2
         except KeyError:
+            self.experience[str(member.id)] = {}
             self.experience[str(member.id)]["experience"] = 2
             self.experience[str(member.id)]["level"] = 1
 
@@ -264,6 +287,9 @@ class Von(commands.Bot):
             embed.add_field(name="Experience", value=f"{experience} XP")
             embed.add_field(name="Level", value=after)
             self.experience[str(member.id)]["level"] = after
+            
+            with open("experience.json", "w") as f:
+                json.dump(self.experience, f, indent=4)
 
             try:
                 await channel.send(embed=embed)
