@@ -1,9 +1,8 @@
 ![Image](https://i.imgur.com/BvWeZoX.png "Von")
 ===============================================
 
-[![discord.py rewrite](https://img.shields.io/badge/discord-py-blue.svg)](https://github.com/Rapptz/discord.py/tree/rewrite)
-
-[![Code Formatter: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Image](https://img.shields.io/badge/discord-py-blue.svg "discord.py rewrite")](https://github.com/Rapptz/discord.py/tree/rewrite)
+[![Image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This is a rewrite of Von, with a couple of the main focuses
 being code efficiency and performance.
