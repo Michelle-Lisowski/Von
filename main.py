@@ -196,7 +196,6 @@ class Von(commands.Bot):
 
             embed = discord.Embed()
             embed.colour = 0x0099FF
-            embed.title = self.user.name
 
             try:
                 prefix = self.prefixes[str(message.guild.id)]["prefix"]
@@ -206,10 +205,15 @@ class Von(commands.Bot):
                 prefix = self.prefixes[str(message.guild.id)]["prefix"]
 
                 with open("prefixes.json", "w") as f:
-                    json.dump(self.prefixes, f, indent=4)
+                    json.dump(self.prefixes, f, indent=4)            
 
+            embed.title = self.user.name
             embed.description = f"The prefix in this server is `{prefix}`."
-            await message.channel.send(embed=embed)
+
+            try:
+                await message.channel.send(embed=embed)
+            except (discord.Forbidden, discord.HTTPException):
+                pass
 
         await self.add_experience(message.author)
         await self.level_up(message.author, message.channel)

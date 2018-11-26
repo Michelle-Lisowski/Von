@@ -79,6 +79,7 @@ class Playlist:
         try:
             self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
         except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
             self.bot.settings[str(ctx.guild.id)]["default_volume"] = 0.5
             self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
 
