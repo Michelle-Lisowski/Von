@@ -34,7 +34,10 @@ class Settings:
             embed.title = "Server Settings"
             embed.colour = 0x0099FF
 
-            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+            try:
+                prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+            except KeyError:
+                prefix = "v!"
             cmds = []
 
             for cmd in self.settings.commands:
@@ -52,7 +55,7 @@ class Settings:
             await ctx.send("Please specify a new prefix.")
             return
 
-        del self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+        self.bot.prefixes[str(ctx.guild.id)] = {}
         self.bot.prefixes[str(ctx.guild.id)]["prefix"] = prefix
 
         with open("prefixes.json", "w") as f:
@@ -71,10 +74,7 @@ class Settings:
             await ctx.send("Please specify a number between `1` and `75`.")
             return
 
-        try:
-            del self.bot.settings[str(ctx.guild.id)]["default_volume"]
-        except KeyError:
-            pass
+        self.bot.settings[str(ctx.guild.id)] = {}
         self.bot.settings[str(ctx.guild.id)]["default_volume"] = volume / 100
 
         with open("settings.json", "w") as f:
@@ -90,10 +90,7 @@ class Settings:
             await ctx.send("Please specify either `True` or `False`.")
             return
 
-        try:
-            del self.bot.settings[str(ctx.guild.id)]["purge_success"]
-        except KeyError:
-            pass
+        self.bot.settings[str(ctx.guild.id)] = {}
         self.bot.settings[str(ctx.guild.id)]["purge_success"] = setting
 
         with open("settings.json", "w") as f:
@@ -112,10 +109,7 @@ class Settings:
             await ctx.send("Please specify either `True` or `False`.")
             return
 
-        try:
-            del self.bot.settings[str(ctx.guild.id)]["auto_message"]
-        except KeyError:
-            pass
+        self.bot.settings[str(ctx.guild.id)] = {}
         self.bot.settings[str(ctx.guild.id)]["auto_message"] = setting
 
         with open("settings.json", "w") as f:
@@ -134,10 +128,7 @@ class Settings:
             await ctx.send("Please specify either `True` or `False`.")
             return
 
-        try:
-            del self.bot.settings[str(ctx.guild.id)]["auto_role"]
-        except KeyError:
-            pass
+        self.bot.settings[str(ctx.guild.id)] = {}
         self.bot.settings[str(ctx.guild.id)]["auto_role"] = setting
 
         with open("settings.json", "w") as f:
