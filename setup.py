@@ -77,9 +77,9 @@ def check_db():
 
 
 def install_dependencies():
-    arguments = [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
+    arguments = [sys.executable, "-m", "pip", "install", "--user", "-r", "requirements.txt"]
     if args.upgrade:
-        arguments.insert(4, "--upgrade")
+        arguments.insert(5, "--upgrade")
     subprocess.call(arguments)
 
 
