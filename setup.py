@@ -26,6 +26,12 @@ def token_input():
     return input(">>> ")
 
 
+def is_venv():
+    return hasattr(sys, "real_prefix") or (
+        hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
+    )
+
+
 def load_config():
     print("Loading config.json...")
     try:
@@ -77,9 +83,11 @@ def check_db():
 
 
 def install_dependencies():
-    arguments = [sys.executable, "-m", "pip", "install", "--user", "-r", "requirements.txt"]
+    arguments = [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
     if args.upgrade:
-        arguments.insert(5, "--upgrade")
+        arguments.insert(4, "--upgrade")
+    if not is_venv():
+        arguments.insert(4, "--user")
     subprocess.call(arguments)
 
 
