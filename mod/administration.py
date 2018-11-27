@@ -25,6 +25,10 @@ class Admin:
                 await ctx.send(
                     "You require the **Ban Members** permission to run this command."
                 )
+            elif str(ctx.command) == "unban":
+                await ctx.send(
+                    "You require the **Manage Server** permission to use this command."
+                )
 
         elif isinstance(error, commands.BadArgument):
             await ctx.send("Member not found.")
