@@ -4,6 +4,10 @@
 
 import json
 import logging
+import sys
+
+from aiohttp.client_exceptions import ClientConnectorError
+
 from main import Von
 
 
@@ -31,10 +35,18 @@ def setup_logging():
 def main():
     print("Setting up logging...", end="\r")
     setup_logging()
-    print("Setting up logging... done")
 
+    print("Setting up logging... done")
     token = get_token()
-    Von().run(token)
+
+    try:
+        Von().run(token)
+    except ClientConnectorError:
+        print(
+            "An error occurred while logging in.",
+            "Make sure you have an internet connection and try again.",
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
