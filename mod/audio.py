@@ -79,12 +79,15 @@ class Playlist:
         try:
             self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
         except KeyError:
-            self.bot.settings[str(ctx.guild.id)] = {}
-            self.bot.settings[str(ctx.guild.id)]["default_volume"] = 0.5
-            self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
+            try:
+                self.bot.settings[str(ctx.guild.id)]["default_volume"] = 0.5
+            except KeyError:
+                self.bot.settings[str(ctx.guild.id)] = {}
+                self.bot.settings[str(ctx.guild.id)]["default_volume"] = 0.5
 
             with open("settings.json", "w") as f:
                 json.dump(self.bot.settings, f, indent=4)
+            self.volume = self.bot.settings[str(ctx.guild.id)]["default_volume"]
 
         self.current = None
         self.repeat = False
@@ -328,11 +331,53 @@ class Audio:
     @commands.guild_only()
     async def skip(self, ctx):
         playlist = self.get_playlist(ctx)
+        current = playlist.current.title
+        channel = ctx.voice_client.channel
+
+        try:
+            vote_skip = self.bot.settings[str(ctx.guild.id)]["vote_skip"]
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)]["vote_skip"] = True
+            vote_skip = self.bot.settings[str(ctx.guild.id)]
 
         if playlist.current is None:
             await ctx.send("No music is currently playing.")
             return
-        ctx.voice_client.stop()
+        elif vote_skip is False or len(channel.members) < 3:
+            if not ctx.author.voice:
+                raise commands.CommandError("Please join a voice channel first.")
+            elif ctx.author.voice.channel != ctx.voice_client.channel:
+                raise commands.CommandError(
+                    f"Please join me in the voice channel **{channel}**."
+                )
+
+            ctx.voice_client.stop()
+            return
+
+        embed = discord.Embed()
+        embed.colour = 0x0099FF
+
+        embed.title = self.bot.user.name
+        embed.description = "**Vote to skip the currently playing song.**"
+        embed.set_footer(text="Vote will end in 15 seconds.")
+        message = await ctx.send(embed=embed)
+
+        await message.add_reaction("👍")
+        await message.add_reaction("👎")
+        await asyncio.sleep(15)
+
+        # If a new song is playing, don't skip
+        if playlist.current.title != current:
+            return
+
+        cache = await ctx.get_message(message.id)
+        yes = discord.utils.get(cache.reactions, emoji="👍")
+        no = discord.utils.get(cache.reactions, emoji="👎")
+
+        if yes.count > no.count:
+            ctx.voice_client.stop()
+        else:
+            await ctx.send("Song continued.")
 
     @commands.command()
     @commands.guild_only()

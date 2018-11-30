@@ -33,6 +33,8 @@ def prefix_callable(bot, message):
 
 
 class Von(commands.Bot):
+    """Subclass of `discord.ext.commands.Bot`."""
+
     def __init__(self):
         super().__init__(command_prefix=prefix_callable)
         self.remove_command("help")
@@ -91,9 +93,13 @@ class Von(commands.Bot):
             send_message = self.settings[str(member.guild.id)]["auto_message"]
             add_role = self.settings[str(member.guild.id)]["auto_role"]
         except KeyError:
-            self.settings[str(member.guild.id)] = {}
-            self.settings[str(member.guild.id)]["auto_message"] = True
-            self.settings[str(member.guild.id)]["auto_role"] = True
+            try:
+                self.settings[str(member.guild.id)]["auto_message"] = True
+                self.settings[str(member.guild.id)]["auto_role"] = True
+            except KeyError:
+                self.settings[str(member.guild.id)] = {}
+                self.settings[str(member.guild.id)]["auto_message"] = True
+                self.settings[str(member.guild.id)]["auto_role"] = True
 
             send_message = self.settings[str(member.guild.id)]["auto_message"]
             add_role = self.settings[str(member.guild.id)]["auto_role"]
@@ -123,8 +129,14 @@ class Von(commands.Bot):
         try:
             send_message = self.settings[str(member.guild.id)]["auto_message"]
         except KeyError:
-            self.settings[str(member.guild.id)] = {}
-            self.settings[str(member.guild.id)]["auto_message"] = True
+            try:
+                self.settings[str(member.guild.id)]["auto_message"] = True
+            except KeyError:
+                self.settings[str(member.guild.id)] = {}
+                self.settings[str(member.guild.id)]["auto_message"] = True
+
+            with open("settings.json", "w") as f:
+                json.dump(self.settings, f, indent=4)
             send_message = self.settings[str(member.guild.id)]["auto_message"]
 
         if channel is None:
@@ -191,7 +203,9 @@ class Von(commands.Bot):
 
         if message.content.startswith("v!prefix"):
             if not message.guild:
-                await message.channel.send("This command can't be used in private messages.")
+                await message.channel.send(
+                    "This command can't be used in private messages."
+                )
                 return
 
             embed = discord.Embed()
@@ -205,7 +219,7 @@ class Von(commands.Bot):
                 prefix = self.prefixes[str(message.guild.id)]["prefix"]
 
                 with open("prefixes.json", "w") as f:
-                    json.dump(self.prefixes, f, indent=4)            
+                    json.dump(self.prefixes, f, indent=4)
 
             embed.title = self.user.name
             embed.description = f"The prefix in this server is `{prefix}`."
@@ -272,9 +286,13 @@ class Von(commands.Bot):
         try:
             self.experience[str(member.id)]["experience"] += 2
         except KeyError:
-            self.experience[str(member.id)] = {}
-            self.experience[str(member.id)]["experience"] = 2
-            self.experience[str(member.id)]["level"] = 1
+            try:
+                self.experience[str(member.id)]["experience"] = 2
+                self.experience[str(member.id)]["level"] = 1
+            except KeyError:
+                self.experience[str(member.id)] = {}
+                self.experience[str(member.id)]["experience"] = 2
+                self.experience[str(member.id)]["level"] = 1
 
     async def level_up(self, member, channel):
         if member.bot:
@@ -292,7 +310,7 @@ class Von(commands.Bot):
             embed.add_field(name="Experience", value=f"{experience} XP")
             embed.add_field(name="Level", value=after)
             self.experience[str(member.id)]["level"] = after
-            
+
             with open("experience.json", "w") as f:
                 json.dump(self.experience, f, indent=4)
 

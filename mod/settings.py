@@ -55,12 +55,19 @@ class Settings:
             await ctx.send("Please specify a new prefix.")
             return
 
-        self.bot.prefixes[str(ctx.guild.id)] = {}
-        self.bot.prefixes[str(ctx.guild.id)]["prefix"] = prefix
+        try:
+            del self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+        except KeyError:
+            pass
+
+        try:
+            self.bot.prefixes[str(ctx.guild.id)]["prefix"] = prefix
+        except KeyError:
+            self.bot.prefixes[str(ctx.guild.id)] = {}
+            self.bot.prefixes[str(ctx.guild.id)]["prefix"] = prefix
 
         with open("prefixes.json", "w") as f:
             json.dump(self.bot.prefixes, f, indent=4)
-
         await ctx.send(f":white_check_mark: Server prefix set to `{prefix}`.")
 
     @settings.command()
@@ -74,12 +81,19 @@ class Settings:
             await ctx.send("Please specify a number between `1` and `75`.")
             return
 
-        self.bot.settings[str(ctx.guild.id)] = {}
-        self.bot.settings[str(ctx.guild.id)]["default_volume"] = volume / 100
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["default_volume"]
+        except KeyError:
+            pass
+
+        try:
+            self.bot.settings[str(ctx.guild.id)]["default_volume"] = volume / 100
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+            self.bot.settings[str(ctx.guild.id)]["default_volume"] = volume / 100
 
         with open("settings.json", "w") as f:
             json.dump(self.bot.settings, f, indent=4)
-
         await ctx.send(f":white_check_mark: Default volume set to `{volume}`.")
 
     @settings.command()
@@ -90,8 +104,16 @@ class Settings:
             await ctx.send("Please specify either `True` or `False`.")
             return
 
-        self.bot.settings[str(ctx.guild.id)] = {}
-        self.bot.settings[str(ctx.guild.id)]["purge_success"] = setting
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["purge_success"]
+        except KeyError:
+            pass
+
+        try:
+            self.bot.settings[str(ctx.guild.id)]["purge_success"] = setting
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+            self.bot.settings[str(ctx.guild.id)]["purge_success"] = setting
 
         with open("settings.json", "w") as f:
             json.dump(self.bot.settings, f, indent=4)
@@ -109,8 +131,16 @@ class Settings:
             await ctx.send("Please specify either `True` or `False`.")
             return
 
-        self.bot.settings[str(ctx.guild.id)] = {}
-        self.bot.settings[str(ctx.guild.id)]["auto_message"] = setting
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["auto_message"]
+        except KeyError:
+            pass
+
+        try:
+            self.bot.settings[str(ctx.guild.id)]["auto_message"] = setting
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+            self.bot.settings[str(ctx.guild.id)]["auto_message"] = setting
 
         with open("settings.json", "w") as f:
             json.dump(self.bot.settings, f, indent=4)
@@ -128,8 +158,16 @@ class Settings:
             await ctx.send("Please specify either `True` or `False`.")
             return
 
-        self.bot.settings[str(ctx.guild.id)] = {}
-        self.bot.settings[str(ctx.guild.id)]["auto_role"] = setting
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["auto_role"]
+        except KeyError:
+            pass
+
+        try:
+            self.bot.settings[str(ctx.guild.id)]["auto_role"] = setting
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+            self.bot.settings[str(ctx.guild.id)]["auto_role"] = setting
 
         with open("settings.json", "w") as f:
             json.dump(self.bot.settings, f, indent=4)
