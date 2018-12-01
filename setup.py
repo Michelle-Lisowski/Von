@@ -39,13 +39,6 @@ def is_venv():
     )
 
 
-# def yes_no_input(msg):
-    # print(f"{msg} [y/n]")
-    # i = input(">>>")
-
-    # if i.lower() in ["yes", "y"]
-
-
 def load_config():
     print("Loading config.json...")
     try:
