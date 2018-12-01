@@ -177,6 +177,33 @@ class Settings:
         else:
             await ctx.send(":white_check_mark: Auto-role feature disabled.")
 
+    @settings.command()
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def vote_skip(self, ctx, setting: bool = None):
+        if setting is None:
+            await ctx.send("Please specify either `True` or `False`.")
+            return
+
+        try:
+            del self.bot.settings[str(ctx.guild.id)]["vote_skip"]
+        except KeyError:
+            pass
+
+        try:
+            self.bot.settings[str(ctx.guild.id)]["vote_skip"] = setting
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)] = {}
+            self.bot.settings[str(ctx.guild.id)]["vote_skip"] = setting
+
+        with open("settings.json", "w") as f:
+            json.dump(self.bot.settings, f, indent=4)
+
+        if setting is True:
+            await ctx.send(":white_check_mark: Vote to skip feature enabled.")
+        else:
+            await ctx.send(":white_check_mark: Vote to skip feature disabled.")
+
 
 def setup(bot):
     bot.add_cog(Settings(bot))
