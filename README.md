@@ -13,4 +13,5 @@ If you wish to contribute, you can. Just fork and pull.
 
 ## Development Status
 
-Next focus: Permission checks, voting in 'skip' and 'clear' commands, and documentation.
+Next focus: Command-specific help, command cooldowns, voting in 'clear' command,
+more customisable behaviour, and documentation.
