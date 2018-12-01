@@ -13,21 +13,48 @@ class Help:
         self.bot = bot
 
     @commands.command()
-    async def help(self, ctx):
-        embed = discord.Embed()
-        embed.title = self.bot.user.name
-        embed.colour = 0x0099FF
+    async def help(self, ctx, command: str = None):
+        cmds = [cmd.name for cmd in self.bot.commands]
+        help_cmds = ["help", "modules", "cmds"]
 
-        embed.description = (
-            "`v!cmds [module]` returns a list of commands in the "
-            "specified module.\n`v!modules` returns a list of available "
-            "command modules.\n~~`v!help [command]` returns information "
-            "about the specified command.~~"
-        )
+        if command is None:
+            embed = discord.Embed()
+            embed.title = self.bot.user.name
+            embed.colour = 0x0099FF
 
-        if ctx.guild:
-            await ctx.send(":mailbox_with_mail: Check your DMs")
-        await ctx.author.send(embed=embed)
+            embed.description = (
+                "`v!cmds [module]` returns a list of commands in the "
+                "specified module.\n`v!modules` returns a list of available "
+                "command modules.\n~~`v!help [command]` returns information "
+                "about the specified command.~~"
+            )
+
+            if ctx.guild:
+                await ctx.send(":mailbox_with_mail: Check your DMs")
+            await ctx.author.send(embed=embed)
+        elif not command in cmds:
+            await ctx.send("Command not found.")
+        else:
+            if command in help_cmds:
+                await ctx.invoke(self.help)
+                return
+
+            cmd = self.bot.get_command(command)
+            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+
+            embed = discord.Embed()
+            embed.colour = 0x0099FF
+
+            embed.title = cmd.qualified_name.capitalize()
+            embed.description = f"**{cmd.description}**"
+
+            embed.add_field(name="Usage", value=f"`{prefix}{cmd.usage}`")
+            embed.add_field(name="Example", value=f"`{prefix}{cmd.brief}`")
+
+            embed.set_footer(
+                text="{argument} - optional argument; [argument] - required argument"
+            )
+            await ctx.send(embed=embed)
 
     @commands.command()
     async def modules(self, ctx):
