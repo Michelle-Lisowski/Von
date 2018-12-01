@@ -89,6 +89,12 @@ class Von(commands.Bot):
         role = discord.utils.get(member.guild.roles, name="Member")
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
 
+        await self.change_presence(
+            activity=discord.Streaming(
+                name=f"with {len(self.users)} viewers!", url="https://twitch.tv/kraken"
+            )
+        )
+
         try:
             send_message = self.settings[str(member.guild.id)]["auto_message"]
             add_role = self.settings[str(member.guild.id)]["auto_role"]
@@ -125,6 +131,12 @@ class Von(commands.Bot):
 
     async def on_member_remove(self, member):
         channel = discord.utils.get(member.guild.text_channels, name="welcome")
+
+        await self.change_presence(
+            activity=discord.Streaming(
+                name=f"with {len(self.users)} viewers!", url="https://twitch.tv/kraken"
+            )
+        )
 
         try:
             send_message = self.settings[str(member.guild.id)]["auto_message"]
