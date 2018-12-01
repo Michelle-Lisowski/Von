@@ -319,10 +319,13 @@ class Audio:
                 while playlist.current.volume < volume:
                     playlist.current.volume += 0.01
                     await asyncio.sleep(0.05)
+                    playlist.volume = volume
 
                 while playlist.current.volume > volume:
                     playlist.current.volume -= 0.01
                     await asyncio.sleep(0.05)
+                    playlist.volume = volume
+
                 await ctx.send(
                     f":sound: Volume level set to **{round(volume * 100)}%**."
                 )
