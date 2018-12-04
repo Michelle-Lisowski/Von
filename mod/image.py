@@ -11,7 +11,9 @@ class Image:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(
+        description="Sends you a random picture of a cat.", usage="cat", brief="cat"
+    )
     async def cat(self, ctx):
         async with ctx.typing():
             embed = discord.Embed()
@@ -23,7 +25,9 @@ class Image:
                 embed.set_image(url=f["file"])
             await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Sends you a random picture of a dog.", usage="dog", brief="dog"
+    )
     async def dog(self, ctx):
         async with ctx.typing():
             embed = discord.Embed()
