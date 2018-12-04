@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import typing
 
 import discord
 from discord.ext import commands
@@ -93,29 +94,46 @@ class Moderation:
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    async def purge(self, ctx, number: int = None):
+    async def purge(
+        self, ctx, member: typing.Optional[discord.Member] = None, number: int = None
+    ):
+        if member is None:
+            members = [member for member in ctx.guild.members]
+        else:
+            members = [member]
+
         if number is None:
-            await ctx.send("Please specify a number of messages.")
+            await ctx.send("Please specify a number.")
             return
 
-        await ctx.send("This may take a while. Please be patient.")
         counter = 0
 
-        async for message in ctx.channel.history(limit=number + 1):
-            await message.delete()
-            counter += 1
+        async for message in ctx.channel.history():
+            for member in members:
+                if message.author.id == member.id:
+                    if counter < number:
+                        await message.delete()
+                        counter += 1
+                    else:
+                        break
 
         try:
             purge_success = self.bot.settings[str(ctx.guild.id)]["purge_success"]
         except KeyError:
-            self.bot.settings[str(ctx.guild.id)]["purge_success"] = True
+            try:
+                self.bot.settings[str(ctx.guild.id)]["purge_success"] = True
+            except KeyError:
+                self.bot.settings[str(ctx.guild.id)] = {}
+                self.bot.settings[str(ctx.guild.id)]["purge_success"] = True
             purge_success = self.bot.settings[str(ctx.guild.id)]["purge_success"]
 
             with open("settings.json", "w") as f:
                 json.dump(self.bot.settings, f, indent=4)
 
         if purge_success is True:
-            await ctx.send(f":white_check_mark: Deleted {counter - 1} messages.")
+            await ctx.send(
+                f":white_check_mark: Successfully deleted {counter} messages."
+            )
         else:
             pass
 
