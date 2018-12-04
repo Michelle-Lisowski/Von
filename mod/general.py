@@ -22,7 +22,9 @@ class General:
         elif isinstance(error, commands.BadArgument):
             await ctx.send("Member not found.")
 
-    @commands.command()
+    @commands.command(
+        description="Returns the bot's latency.", usage="ping", brief="ping"
+    )
     async def ping(self, ctx):
         latency = round(self.bot.latency * 1000)
         embed = discord.Embed()
@@ -32,7 +34,11 @@ class General:
         embed.set_footer(text=f"This took {latency} ms.")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Returns the member's avatar.",
+        usage="avatar {member}",
+        brief="avatar @sirtezza451#9856",
+    )
     async def avatar(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
@@ -43,7 +49,9 @@ class General:
         embed.set_image(url=member.avatar_url)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Returns information about the bot.", usage="info", brief="info"
+    )
     async def info(self, ctx):
         embed = discord.Embed()
         embed.title = self.bot.user.name
@@ -74,7 +82,11 @@ class General:
         embed.add_field(name="Source Code", value=gitrepo)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Returns information about the member.",
+        usage="profile {member}",
+        brief="profile @sirtezza451#9856",
+    )
     async def profile(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
@@ -93,7 +105,11 @@ class General:
         embed.add_field(name="Joined At", value=member.joined_at)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Returns information about the current server.",
+        usage="serverinfo",
+        brief="serverinfo",
+    )
     @commands.guild_only()
     async def serverinfo(self, ctx):
         embed = discord.Embed()
