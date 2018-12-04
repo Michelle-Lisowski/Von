@@ -180,7 +180,11 @@ class Audio:
         elif isinstance(error, commands.CommandError):
             await ctx.send(error)
 
-    @commands.command()
+    @commands.command(
+        description="Plays a song from YouTube and adds it to the end of the queue.",
+        usage="play [search]",
+        brief="play you reposted in the wrong neighbourhood",
+    )
     @commands.guild_only()
     async def play(self, ctx, *, search: str = None):
         async with ctx.typing():
@@ -188,7 +192,11 @@ class Audio:
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
             await playlist.add(source)
 
-    @commands.command()
+    @commands.command(
+        description="Plays a song from YouTube and adds it to the start of the queue.",
+        usage="playfirst [search]",
+        brief="playfirst you reposted in the wrong neighbourhood",
+    )
     @commands.guild_only()
     async def playfirst(self, ctx, *, search: str = None):
         async with ctx.typing():
@@ -196,7 +204,11 @@ class Audio:
             source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
             await playlist.add_first(source)
 
-    @commands.command()
+    @commands.command(
+        description="Pauses the currently playing song.",
+        usage="pause",
+        brief="pause"
+    )
     @commands.guild_only()
     async def pause(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -209,7 +221,11 @@ class Audio:
             ctx.voice_client.pause()
             await ctx.send(":pause_button: Song paused.")
 
-    @commands.command()
+    @commands.command(
+        description="Resumes the currently paused song.",
+        usage="resume",
+        brief="resume",
+    )
     @commands.guild_only()
     async def resume(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -222,7 +238,11 @@ class Audio:
             ctx.voice_client.resume()
             await ctx.send(":musical_note: Song resumed.")
 
-    @commands.command()
+    @commands.command(
+        description="Returns the currently playing song.",
+        usage="current",
+        brief="current",
+    )
     @commands.guild_only()
     async def current(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -236,7 +256,11 @@ class Audio:
                 )
             )
 
-    @commands.command()
+    @commands.command(
+        description="Returns the next song in the queue.",
+        usage="peek",
+        brief="peek",
+    )
     @commands.guild_only()
     async def peek(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -258,7 +282,11 @@ class Audio:
                 )
             )
 
-    @commands.command()
+    @commands.command(
+        description="Returns the current playlist.",
+        usage="playlist",
+        brief="playlist",
+    )
     @commands.guild_only()
     async def playlist(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -295,7 +323,11 @@ class Audio:
             embed.description = description
             await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Changes the volume of the current music.",
+        usage="volume [volume]",
+        brief="volume 65",
+    )
     @commands.guild_only()
     async def volume(self, ctx, volume: int = None):
         playlist = self.get_playlist(ctx)
@@ -329,7 +361,11 @@ class Audio:
                     f":sound: Volume level set to **{round(volume * 100)}%**."
                 )
 
-    @commands.command()
+    @commands.command(
+        description="Skips the currently playing song.",
+        usage="skip",
+        brief="skip",
+    )
     @commands.guild_only()
     async def skip(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -381,7 +417,11 @@ class Audio:
         else:
             await ctx.send("Song continued.")
 
-    @commands.command()
+    @commands.command(
+        description="Clears the current playlist.",
+        usage="clear",
+        brief="clear",
+    )
     @commands.guild_only()
     async def clear(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -393,7 +433,11 @@ class Audio:
         await playlist.clear()
         await ctx.send(":white_check_mark: Playlist cleared.")
 
-    @commands.command()
+    @commands.command(
+        description="Enables/disables repetition for the currently playing song.",
+        usage="repeat",
+        brief="repeat",
+    )
     @commands.guild_only()
     async def repeat(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -421,7 +465,11 @@ class Audio:
             self.task = self.bot.loop.create_task(self.repeat_song(ctx))
             await ctx.send(":repeat_one: Repetition enabled.")
 
-    @commands.command()
+    @commands.command(
+        description="Shuffles the current playlist.",
+        usage="shuffle",
+        brief="shuffle",
+    )
     @commands.guild_only()
     async def shuffle(self, ctx):
         playlist = self.get_playlist(ctx)
@@ -433,7 +481,11 @@ class Audio:
         await playlist.shuffle()
         await ctx.send(":white_check_mark: Playlist shuffled.")
 
-    @commands.command()
+    @commands.command(
+        description="Stops the currently playing music and disconnects.",
+        usage="stop",
+        brief="stop",
+    )
     @commands.guild_only()
     async def stop(self, ctx):
         playlist = self.get_playlist(ctx)

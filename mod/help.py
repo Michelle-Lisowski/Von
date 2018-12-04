@@ -28,8 +28,8 @@ class Help:
             embed.description = (
                 "`v!cmds [module]` returns a list of commands in the "
                 "specified module.\n`v!modules` returns a list of available "
-                "command modules.\n~~`v!help [command]` returns information "
-                "about the specified command.~~"
+                "command modules.\n`v!help [command]` returns information "
+                "about the specified command."
             )
 
             if ctx.guild:
