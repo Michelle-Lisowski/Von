@@ -46,8 +46,8 @@ class Help:
             embed.colour = 0x0099FF
             embed.description = f"**{cmd.description}**"
 
-            if cmd.cog_name == "Settings":
-                embed.title = f"Settings: {cmd.name.capitalize()}"
+            if len(cmd.qualified_name.split(" ")) > 1:
+                embed.title = f"{cmd.cog_name}: {cmd.name.capitalize()}"
             else:
                 embed.title = cmd.name.capitalize()
 
