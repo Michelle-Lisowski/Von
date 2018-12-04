@@ -18,7 +18,11 @@ class Number:
         if isinstance(error, commands.BadArgument):
             await ctx.send("Member not found.")
 
-    @commands.command()
+    @commands.command(
+        description="Tells you how gay someone is.",
+        usage="gay {member}",
+        example="gay @sirtezza451#9856",
+    )
     async def gay(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
@@ -38,7 +42,7 @@ class Number:
         embed.set_footer(text="Disclaimer: this calculation is 100% inaccurate.")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(description="Rolls a six-sided die.", usage="roll", brief="roll")
     async def roll(self, ctx):
         result = random.randint(1, 6)
         msg = await ctx.send(":game_die: The die rolls...")
