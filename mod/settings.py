@@ -24,9 +24,16 @@ class Settings:
             )
 
         elif isinstance(error, commands.BadArgument):
-            await ctx.send("Please specify either `True` or `False`.")
+            if ctx.command.qualified_name != "settings default_volume":
+                await ctx.send("Please specify either `True` or `False`.")
+            else:
+                await ctx.send("Please specify a number.")
 
-    @commands.group()
+    @commands.group(
+        description="Group for commands that customise the bot's behaviour.",
+        usage="settings [command] [arguments]",
+        brief="settings prefix -",
+    )
     @commands.guild_only()
     async def settings(self, ctx):
         if ctx.invoked_subcommand is None:
@@ -47,7 +54,11 @@ class Settings:
             embed.description = f"**`{cmds}`**"
             await ctx.send(embed=embed)
 
-    @settings.command()
+    @settings.command(
+        description="Changes the bot's prefix.",
+        usage="settings prefix [prefix]",
+        brief="settings prefix -",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def prefix(self, ctx, prefix: str = None):
@@ -70,7 +81,11 @@ class Settings:
             json.dump(self.bot.prefixes, f, indent=4)
         await ctx.send(f":white_check_mark: Server prefix set to `{prefix}`.")
 
-    @settings.command()
+    @settings.command(
+        description="Changes the default volume of music.",
+        usage="settings default_volume [volume]",
+        brief="settings default_volume 65",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def default_volume(self, ctx, volume: int = None):
@@ -96,7 +111,11 @@ class Settings:
             json.dump(self.bot.settings, f, indent=4)
         await ctx.send(f":white_check_mark: Default volume set to `{volume}`.")
 
-    @settings.command()
+    @settings.command(
+        description="Enables/disables sending the purge command's success message.",
+        usage="settings purge_success [setting]",
+        brief="settings purge_success False",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def purge_success(self, ctx, setting: bool = None):
@@ -123,7 +142,11 @@ class Settings:
         else:
             await ctx.send(":white_check_mark: Purge success message disabled.")
 
-    @settings.command()
+    @settings.command(
+        description="Enables/disables sending member join and leave messages.",
+        usage="settings auto_message [setting]",
+        brief="settings auto_message False"
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def auto_message(self, ctx, setting: bool = None):
@@ -150,7 +173,11 @@ class Settings:
         else:
             await ctx.send(":white_check_mark: Member join/leave messages disabled.")
 
-    @settings.command()
+    @settings.command(
+        description="Enables/disables automatically giving new members a role.",
+        usage="settings auto_role [setting]",
+        brief="settings auto_role False",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def auto_role(self, ctx, setting: bool = None):
@@ -177,7 +204,11 @@ class Settings:
         else:
             await ctx.send(":white_check_mark: Auto-role feature disabled.")
 
-    @settings.command()
+    @settings.command(
+        description="Enables/disables votes for skipping songs.",
+        usage="settings vote_skip [setting]",
+        brief="settings vote_skip False",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def vote_skip(self, ctx, setting: bool = None):
