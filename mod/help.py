@@ -17,8 +17,13 @@ class Help:
         help_cmds = ["help", "modules", "cmds"]
         owner_cmds = ["load", "unload", "reload"]
 
-        cmd = self.bot.get_command(command)
-        prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+        if command is not None:
+            cmd = self.bot.get_command(command)
+
+        try:
+            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
+        except KeyError:
+            prefix = "v!"
 
         if command is None:
             embed = discord.Embed()
