@@ -13,10 +13,12 @@ class Help:
         self.bot = bot
 
     @commands.command()
-    async def help(self, ctx, command: str = None):
-        cmds = [cmd.name for cmd in self.bot.commands]
+    async def help(self, ctx, *, command: str = None):
         help_cmds = ["help", "modules", "cmds"]
         owner_cmds = ["load", "unload", "reload"]
+
+        cmd = self.bot.get_command(command)
+        prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
 
         if command is None:
             embed = discord.Embed()
@@ -33,21 +35,21 @@ class Help:
             if ctx.guild:
                 await ctx.send(":mailbox_with_mail: Check your DMs")
             await ctx.author.send(embed=embed)
-        elif not command in cmds:
+        elif cmd is None:
             await ctx.send("Command not found.")
         else:
             if command in help_cmds or command in owner_cmds:
                 await ctx.invoke(self.help)
                 return
 
-            cmd = self.bot.get_command(command)
-            prefix = self.bot.prefixes[str(ctx.guild.id)]["prefix"]
-
             embed = discord.Embed()
             embed.colour = 0x0099FF
-
-            embed.title = cmd.qualified_name.capitalize()
             embed.description = f"**{cmd.description}**"
+
+            if cmd.cog_name == "Settings":
+                embed.title = f"Settings: {cmd.name.capitalize()}"
+            else:
+                embed.title = cmd.name.capitalize()
 
             embed.add_field(name="Usage", value=f"`{prefix}{cmd.usage}`")
             embed.add_field(name="Example", value=f"`{prefix}{cmd.brief}`")
