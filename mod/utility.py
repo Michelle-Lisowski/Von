@@ -11,7 +11,11 @@ class Utility:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(
+        description="Returns a definition from the urban dictionary.",
+        usage="urban [search]",
+        brief="urban Discord",
+    )
     async def urban(self, ctx, *, search: str = None):
         if search is None:
             await ctx.send("Please specify a search term.")
@@ -38,7 +42,11 @@ class Utility:
             embed.set_footer(text=f"Author: {a['author']}")
             await ctx.send(embed=embed)
 
-    @commands.command(aliases=["calc"])
+    @commands.command(
+        description="Returns the answer for an expression.",
+        usage="calculator [expression]",
+        brief="calculator 2^64",
+    )
     async def calculator(self, ctx, *, expression: str = None):
         if expression is None:
             await ctx.send("Please specify an expression.")
@@ -56,7 +64,11 @@ class Utility:
                     f"According to my calculations, the answer is **{result}**."
                 )
 
-    @commands.command()
+    @commands.command(
+        description="Returns weather data for a location.",
+        usage="weather [location]",
+        brief="weather london",
+    )
     async def weather(self, ctx, *, location: str = None):
         if location is None:
             await ctx.send("Please specify a location.")
