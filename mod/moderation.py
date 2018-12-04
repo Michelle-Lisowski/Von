@@ -30,7 +30,11 @@ class Moderation:
         elif isinstance(error, commands.CommandError):
             await ctx.send(error)
 
-    @commands.command()
+    @commands.command(
+        description="Prevents the member from speaking and sending messages.",
+        usage="mute [member]",
+        brief="mute @sirtezza451#9856",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, member: discord.Member = None):
@@ -53,7 +57,11 @@ class Moderation:
             embed.add_field(name="Muted By", value=str(ctx.author))
             await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Allows a formerly muted member to chat and speak again.",
+        usage="unmute [member]",
+        brief="unmute @sirtezza451#9856",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def unmute(self, ctx, member: discord.Member = None):
@@ -91,7 +99,11 @@ class Moderation:
             embed.add_field(name="Unmuted By", value=str(ctx.author))
             await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(
+        description="Deletes a number of messages in the channel from, optionally, a member.",
+        usage="purge {member} [number]",
+        brief="purge @sirtezza451#9856 10",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def purge(
