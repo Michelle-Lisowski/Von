@@ -33,7 +33,11 @@ class Admin:
         elif isinstance(error, commands.BadArgument):
             await ctx.send("Member not found.")
 
-    @commands.command()
+    @commands.command(
+        description="Kicks the specified member from the server.",
+        usage="kick [member]",
+        brief="kick @sirtezza451#9856",
+    )
     @commands.guild_only()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None):
@@ -57,7 +61,11 @@ class Admin:
                     f":white_check_mark: Successfully kicked <@{member.id}>."
                 )
 
-    @commands.command()
+    @commands.command(
+        description="Bans the specified member from the server.",
+        usage="ban [member]",
+        brief="ban @sirtezza451#9856",
+    )
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member = None):
@@ -83,7 +91,11 @@ class Admin:
                 f"Ban details are in <#{logs.id}>."
             )
 
-    @commands.command()
+    @commands.command(
+        description="Unbans a formerly banned member from the server.",
+        usage="unban [member]",
+        brief="unban @sirtezza451#9856",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def unban(self, ctx, user: discord.User = None):
