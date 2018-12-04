@@ -16,6 +16,7 @@ class Help:
     async def help(self, ctx, command: str = None):
         cmds = [cmd.name for cmd in self.bot.commands]
         help_cmds = ["help", "modules", "cmds"]
+        owner_cmds = ["load", "unload", "reload"]
 
         if command is None:
             embed = discord.Embed()
@@ -35,7 +36,7 @@ class Help:
         elif not command in cmds:
             await ctx.send("Command not found.")
         else:
-            if command in help_cmds:
+            if command in help_cmds or command in owner_cmds:
                 await ctx.invoke(self.help)
                 return
 
