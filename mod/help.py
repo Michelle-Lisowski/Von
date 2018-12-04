@@ -47,7 +47,7 @@ class Help:
             embed.description = f"**{cmd.description}**"
 
             if len(cmd.qualified_name.split(" ")) > 1:
-                embed.title = f"{cmd.cog_name}: {cmd.name.capitalize()}"
+                embed.title = f"{cmd.cog_name}: {cmd.name.title().replace('_', ' ')}"
             else:
                 embed.title = cmd.name.capitalize()
 
