@@ -372,16 +372,20 @@ class Audio:
         current = playlist.current.title
         channel = ctx.voice_client.channel
 
+        if playlist.current is None:
+            await ctx.send("No music is currently playing.")
+            return
+
         try:
             vote_skip = self.bot.settings[str(ctx.guild.id)]["vote_skip"]
         except KeyError:
             self.bot.settings[str(ctx.guild.id)]["vote_skip"] = True
             vote_skip = self.bot.settings[str(ctx.guild.id)]
 
-        if playlist.current is None:
-            await ctx.send("No music is currently playing.")
-            return
-        elif vote_skip is False or len(channel.members) < 3:
+            with open("settings.json", "w") as f:
+                json.dump(self.bot.settings, f, indent=4)
+
+        if vote_skip is False or len(channel.members) < 3:
             if not ctx.author.voice:
                 raise commands.CommandError("Please join a voice channel first.")
             elif ctx.author.voice.channel != ctx.voice_client.channel:
@@ -425,13 +429,52 @@ class Audio:
     @commands.guild_only()
     async def clear(self, ctx):
         playlist = self.get_playlist(ctx)
+        channel = ctx.voice_client.channel
+
+        try:
+            vote_clear = self.bot.settings[str(ctx.guild.id)]["vote_clear"]
+        except KeyError:
+            self.bot.settings[str(ctx.guild.id)]["vote_clear"] = True
+            vote_clear = self.bot.settings[str(ctx.guild.id)]
+
+            with open("settings.json", "w") as f:
+                json.dump(self.bot.settings, f, indent=4)
 
         if playlist.current is None:
             await ctx.send("No music is currently playing.")
             return
+        elif vote_clear is False or len(channel.members) < 3:
+            if not ctx.author.voice:
+                raise commands.CommandError("Please join a voice channel first.")
+            elif ctx.author.voice.channel != ctx.voice_client.channel:
+                raise commands.CommandError(
+                    f"Please join me in the voice channel **{channel}**."
+                )
 
-        await playlist.clear()
-        await ctx.send(":white_check_mark: Playlist cleared.")
+            await playlist.clear()
+            return
+
+        embed = discord.Embed()
+        embed.colour = 0x0099FF
+
+        embed.title = self.bot.user.name
+        embed.description = "**Vote to clear the current playlist.**"
+        embed.set_footer(text="Vote will end in 15 seconds.")
+        message = await ctx.send(embed=embed)
+
+        await message.add_reaction("👍")
+        await message.add_reaction("👎")
+        await asyncio.sleep(15)
+
+        cache = await ctx.get_message(message.id)
+        yes = discord.utils.get(cache.reactions, emoji="👍")
+        no = discord.utils.get(cache.reactions, emoji="👎")
+
+        if yes.count > no.count:
+            await playlist.clear()
+            await ctx.send("Playlist cleared.")
+        else:
+            await ctx.send("Playlist continued.")        
 
     @commands.command(
         description="Enables/disables repetition for the currently playing song.",
