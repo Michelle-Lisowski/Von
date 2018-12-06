@@ -7,11 +7,11 @@
 This is a rewrite of Von, with a couple of the main focuses
 being code efficiency and performance.
 
-It's almost finished, so I recommend using the code from this branch for self-hosting.
+~~It's almost finished, so I recommend using the code from this branch for self-hosting.~~
+It's complete. This code will soon be moved to the `master` branch as well, while the future
+third version will be in a reset `development` branch.
 
-If you wish to contribute, you can. Just fork and pull.
+## Development
 
-## Development Status
-
-Next focus: Command-specific help, command cooldowns, voting in 'clear' command,
-more customisable behaviour, and documentation.
+Next focus: Version 3.
+Contribute if you like. Just fork and pull.
