@@ -242,7 +242,7 @@ class Settings:
     )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def vote_skip(self, ctx, setting: bool = None):
+    async def vote_clear(self, ctx, setting: bool = None):
         if setting is None:
             await ctx.send("Please specify either `True` or `False`.")
             return
