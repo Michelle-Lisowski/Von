@@ -105,3 +105,6 @@ venv.bak/
 
 # Configuration
 config.json
+
+# Customisable Behaviour
+custom.json
