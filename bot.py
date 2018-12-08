@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+from json.decoder import JSONDecodeError
 from os import listdir
 from os.path import isfile, join
 
@@ -13,6 +15,19 @@ class Von(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="?")
         self.remove_command("help")
+        self.custom = self.get_custom()
+
+    def get_custom(self):
+        try:
+            with open("custom.json") as f:
+                custom = json.load(f)
+        except (FileNotFoundError, JSONDecodeError):
+            with open("custom.json", "w") as f:
+                f.write("{}")
+
+            with open("custom.json") as f:
+                custom = json.load(f)
+        return custom
 
     def run(self):
         token = set_token()
