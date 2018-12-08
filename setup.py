@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from bot import Von
 from utils import set_token
 
 
