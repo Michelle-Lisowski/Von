@@ -24,10 +24,10 @@ async def enable(ctx, *, command: str):
             ctx.bot.custom[str(ctx.guild.id)]["DISABLED_COMMANDS"] = []
         disabled_commands = ctx.bot.custom[str(ctx.guild.id)]["DISABLED_COMMANDS"]
 
-    if command in disabled_commands:
+    try:
         disabled_commands.remove(command)
         await ctx.send(f":white_check_mark: Enabled command `{command}`.")
-    else:
+    except ValueError:
         await ctx.send(f":information_source: Command `{command}` was never disabled.")
 
     with open("custom.json", "w") as f:
