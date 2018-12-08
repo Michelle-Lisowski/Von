@@ -12,7 +12,7 @@ async def enable(ctx, *, command: str):
     cmds = [cmd.qualified_name for cmd in ctx.bot.commands]
 
     if not command in cmds:
-        raise commands.CommandError(":grey_exclamation: Command not found.")
+        raise commands.CommandError(":exclamation: Command not found.")
 
     try:
         disabled_commands = ctx.bot.custom[str(ctx.guild.id)]["DISABLED_COMMANDS"]
