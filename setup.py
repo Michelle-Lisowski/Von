@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from utils import set_token
+import argparse
+
+from bot import Von
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-r", "--run", help="run bot", action="store_true")
+args = parser.parse_args()
 
 
 def exit(code):
@@ -11,11 +17,11 @@ def exit(code):
 
 
 def main():
-    print("Checking for token...")
-    set_token()
-
     print("Setup complete.")
-    exit(0)
+    if args.run:
+        Von().run()
+    else:
+        exit(0)
 
 
 if __name__ == "__main__":
