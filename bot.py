@@ -6,6 +6,7 @@ from os import listdir
 from os.path import isfile, join
 
 import discord
+from aiohttp import ClientConnectorError
 from discord.ext import commands
 
 from utils import set_token
@@ -37,7 +38,7 @@ class Von(commands.Bot):
             self.loop.run_until_complete(self.connect())
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
-        except (discord.LoginFailure, discord.HTTPException):
+        except (discord.LoginFailure, discord.HTTPException, ClientConnectorError):
             print("Logging out due to unsuccessful connection...")
             self.loop.run_until_complete(self.logout())
         finally:
