@@ -37,7 +37,7 @@ class Von(commands.Bot):
             self.loop.run_until_complete(self.connect())
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
-        except discord.LoginFailure:
+        except (discord.LoginFailure, discord.HTTPException):
             print("Logging out due to unsuccessful connection...")
             self.loop.run_until_complete(self.logout())
         finally:
