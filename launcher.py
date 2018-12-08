@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from bot import Von
+import sys
+
+try:
+    from bot import Von
+except (ImportError, SyntaxError):
+    pass
 
 
 def main():
+    if not sys.version_info >= (3, 6):
+        print("Python 3.6 or above is required to run Von.")
+        sys.exit(1)
     Von().run()
 
 
