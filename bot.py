@@ -16,9 +16,9 @@ class Von(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="?")
         self.remove_command("help")
-        self.custom = self.get_custom()
+        self.custom = self.get_custom_settings()
 
-    def get_custom(self):
+    def get_custom_settings(self):
         try:
             with open("custom.json") as f:
                 custom = json.load(f)
