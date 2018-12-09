@@ -7,7 +7,8 @@ from discord.ext import commands
 def is_enabled(ctx):
     try:
         disabled_commands = ctx.bot.custom[str(ctx.guild.id)]["DISABLED_COMMANDS"]
-    except KeyError:
+    # An AttributeError would happen in DMs, since the guild attribute doesn't exist
+    except (KeyError, AttributeError):
         disabled_commands = []
 
     if str(ctx.command) in disabled_commands:
