@@ -12,10 +12,13 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send(error)
 
-    elif isinstance(error, commands.NotOwner):
+    elif isinstance(error, commands.NoPrivateMessage):
         await ctx.send(
-            ":no_entry_sign: You must be the owner of me to run command."
+            f":exclamation: Command `{ctx.command}` can't be used in private messaging."
         )
+
+    elif isinstance(error, commands.NotOwner):
+        await ctx.send(":no_entry_sign: You must be the owner of bot to run command.")
 
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send(":no_entry_sign:" + error)

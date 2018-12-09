@@ -9,6 +9,7 @@ import discord
 from aiohttp import ClientConnectorError
 from discord.ext import commands
 
+import psutil
 from utils import set_token
 
 
@@ -16,7 +17,9 @@ class Von(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="?")
         self.remove_command("help")
+
         self.custom = self.get_custom_settings()
+        self.process = psutil.Process()
 
     def get_custom_settings(self):
         try:
@@ -69,3 +72,22 @@ class Von(commands.Bot):
             self.load_extension("checks")
         except (discord.ClientException, ModuleNotFoundError):
             print("Failed to load custom checks")
+
+    async def on_message(self, message):
+        if message.content.startswith("?prefix"):
+            try:
+                prefix = self.custom[str(message.guild.id)]["PREFIX"]
+            except KeyError:
+                prefix = "?"
+            except AttributeError:
+                await message.channel.send(
+                    ":exclamation: Command `prefix` can't be used in private messaging."
+                )
+
+            embed = discord.Embed()
+            embed.colour = 0x0099FF
+            embed.title = self.user.name
+
+            embed.description = f"The prefix in this server is `{prefix}`."
+            await message.channel.send(embed=embed)
+        await self.process_commands(message)
