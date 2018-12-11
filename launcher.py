@@ -4,7 +4,7 @@ import sys
 
 try:
     from bot import Von
-except (ImportError, SyntaxError):
+except SyntaxError:
     pass
 
 

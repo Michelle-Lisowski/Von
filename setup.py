@@ -8,9 +8,8 @@ from subprocess import CalledProcessError
 
 try:
     from bot import Von
-except (ImportError, SyntaxError):
+except SyntaxError:
     pass
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-r", "--run", help="run bot", action="store_true")
