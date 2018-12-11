@@ -1,16 +1,33 @@
 # -*- coding: utf-8 -*-
 
 import json
+import sys
 from json.decoder import JSONDecodeError
 from os import listdir
 from os.path import isfile, join
 
-import discord
-from aiohttp import ClientConnectorError
-from discord.ext import commands
+try:
+    import discord
+    from aiohttp import ClientConnectorError
+    from discord.ext import commands
 
-import psutil
-from utils import set_token
+    import psutil
+    from utils import set_token
+except ImportError:
+    if not "setup.py" in sys.argv[0]:
+        print(
+            "Some required dependencies are missing.",
+            "Please run the setup to install these.",
+        )
+        sys.exit(1)
+except SyntaxError:
+    print(
+        "A syntax error occurred while importing",
+        "the required dependencies. This is likely",
+        "because of an unsupported Python version,",
+        "such as Python 2.x or Python 3.3 or lower.",
+    )
+    sys.exit(1)
 
 
 class Von(commands.Bot):
