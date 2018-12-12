@@ -14,7 +14,7 @@ try:
     import psutil
     from utils import set_token
 except ImportError:
-    if not "setup.py" in sys.argv[0]:
+    if __name__ == "__main__":
         print(
             "Some required dependencies are missing.",
             "Please run the setup to install these.",
