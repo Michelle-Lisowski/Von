@@ -92,18 +92,15 @@ class Von(commands.Bot):
 
     async def on_message(self, message):
         if message.content.startswith("?prefix"):
-            try:
-                prefix = self.custom[str(message.guild.id)]["PREFIX"]
-            except KeyError:
-                prefix = "?"
-            except AttributeError:
-                await message.channel.send(
+            if message.guild is None:
+                return await message.channel.send(
                     ":exclamation: Command `prefix` can't be used in private messaging."
                 )
 
             embed = discord.Embed()
             embed.colour = 0x0099FF
             embed.title = self.user.name
+            prefix = await self.get_prefix(message)
 
             embed.description = f"The prefix in this server is `{prefix}`."
             await message.channel.send(embed=embed)
