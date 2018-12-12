@@ -32,7 +32,7 @@ except SyntaxError:
 
 class Von(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix="?")
+        super().__init__(command_prefix=self.get_prefix)
         self.remove_command("help")
 
         self.custom = self.get_custom_settings()
@@ -108,3 +108,10 @@ class Von(commands.Bot):
             embed.description = f"The prefix in this server is `{prefix}`."
             await message.channel.send(embed=embed)
         await self.process_commands(message)
+
+    async def get_prefix(self, message):
+        try:
+            prefix = self.custom[str(message.guild.id)]["PREFIX"]
+        except (KeyError, AttributeError):
+            prefix = "?"
+        return prefix
