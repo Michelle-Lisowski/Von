@@ -61,6 +61,9 @@ class Von(commands.Bot):
         except (discord.LoginFailure, discord.HTTPException, ClientConnectorError):
             print("Logging out due to unsuccessful connection...")
             self.loop.run_until_complete(self.logout())
+        except (discord.GatewayNotFound, discord.ConnectionClosed):
+            print("Logging out due to unsuccessful gateway connection...")
+            self.loop.run_until_complete(self.logout())
         finally:
             self.loop.close()
 
