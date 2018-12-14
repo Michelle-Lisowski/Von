@@ -16,7 +16,7 @@ async def configure(ctx):
         prefix = await ctx.bot.get_prefix(ctx.message)
 
         for command in ctx.command.commands:
-            subcommands.append(f"**`{prefix}{command}`**")
+            subcommands.append(f"`{prefix}{command}`")
 
         embed.title = "Configuration Options"
         embed.description = "\n".join(subcommands)
