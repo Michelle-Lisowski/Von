@@ -12,6 +12,12 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send(error)
 
+    elif isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(
+            f":exclamation: Slow down! This {str(error.cooldown.type).split('BucketType.')[1]} "
+            f"can use command `{ctx.command}` again after {round(error.retry_after)} seconds."
+        )
+
     elif isinstance(error, commands.NoPrivateMessage):
         await ctx.send(
             f":exclamation: Command `{ctx.command}` can't be used in private messaging."
