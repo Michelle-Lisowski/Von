@@ -56,11 +56,13 @@ class Von(commands.Bot):
 
         if command is None:
             raise commands.CommandNotFound(
-                "A command with the specified name wasn't found."
+                "add_handler: A command with the specified name wasn't found."
             )
 
         if not asyncio.iscoroutinefunction(coro):
-            raise discord.ClientException("The specified function must be a coroutine.")
+            raise discord.ClientException(
+                "add_handler: The specified function must be a coroutine."
+            )
 
         command.on_error = coro
         return coro
