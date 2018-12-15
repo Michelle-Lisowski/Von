@@ -6,7 +6,10 @@ from discord.ext import commands
 async def on_command_error(ctx, error):
     error = getattr(error, "original", error)
 
-    if isinstance(error, commands.CommandNotFound):
+    if hasattr(ctx.command, "on_error"):
+        pass
+
+    elif isinstance(error, commands.CommandNotFound):
         pass
 
     elif isinstance(error, commands.DisabledCommand):
