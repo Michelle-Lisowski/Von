@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import discord
 from discord.ext import commands
 
 
@@ -49,5 +50,27 @@ async def on_command_error(ctx, error):
         await ctx.send(error)
 
 
+async def roll_error(ctx, error):
+    error = getattr(error, "original", error)
+
+    if isinstance(error, commands.BadArgument):
+        await ctx.send(":exclamation: Please specify a **number**.")
+
+
+async def gay_error(ctx, error):
+    error = getattr(error, "original", error)
+
+    if isinstance(error, commands.BadArgument):
+        await ctx.send(":exclamation: Member not found.")
+
+
 def setup(bot):
     bot.add_listener(on_command_error)
+
+    try:
+        bot.add_handler(roll_error, "roll")
+        bot.add_handler(gay_error, "gay")
+    except commands.CommandNotFound as error:
+        print(error)
+    except discord.ClientException as error:
+        print(error)
