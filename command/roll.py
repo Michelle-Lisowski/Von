@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import random
-import typing
 
-import discord
 from discord.ext import commands
 
 
