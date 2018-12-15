@@ -13,9 +13,12 @@ async def on_command_error(ctx, error):
         await ctx.send(error)
 
     elif isinstance(error, commands.CommandOnCooldown):
+        cooldown_type = (
+            str(error.cooldown.type).split("BucketType.")[1].replace("guild", "server")
+        )
         await ctx.send(
-            f":exclamation: Slow down! This {str(error.cooldown.type).split('BucketType.')[1]} "
-            f"can use command `{ctx.command}` again after {round(error.retry_after)} seconds."
+            f":exclamation: Slow down! This {cooldown_type} can use command "
+            f"`{ctx.command}` again after {round(error.retry_after)} seconds."
         )
 
     elif isinstance(error, commands.NoPrivateMessage):
