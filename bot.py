@@ -13,8 +13,8 @@ try:
 
     import psutil
     from utils import set_token
-except ImportError:
-    if __name__ == "__main__":
+except (ImportError, ModuleNotFoundError):
+    if __name__ == "__main__" or sys.argv[0] == "launcher.py":
         print(
             "Some required dependencies are missing.",
             "Please run the setup to install these.",
