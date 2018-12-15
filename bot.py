@@ -39,6 +39,9 @@ class Von(commands.Bot):
         self.custom = self.get_custom_settings()
         self.process = psutil.Process()
 
+        self.discordpy_version = discord.__version__
+        self.python_version = sys.version.split(" (")[0]
+
     def get_custom_settings(self):
         try:
             with open("custom.json") as f:
