@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import asyncio
 import json
 import sys
 from json.decoder import JSONDecodeError
@@ -49,6 +50,20 @@ class Von(commands.Bot):
             with open("custom.json") as f:
                 custom = json.load(f)
         return custom
+
+    def add_handler(self, coro, command: str):
+        command = self.get_command(command)
+
+        if command is None:
+            raise commands.CommandNotFound(
+                "A command with the specified name wasn't found."
+            )
+
+        if not asyncio.iscoroutinefunction(coro):
+            raise discord.ClientException("The specified function must be a coroutine.")
+
+        command.on_error = coro
+        return coro
 
     def run(self):
         token = set_token()
