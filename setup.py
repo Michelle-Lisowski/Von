@@ -11,22 +11,6 @@ parser.add_argument("-r", "--run", help="run bot", action="store_true")
 parser.add_argument("-u", "--upgrade", help="upgrade dependencies", action="store_true")
 args = parser.parse_args()
 
-if args.run:
-    try:
-        from bot import Von
-    except (ImportError, ModuleNotFoundError):
-        print(
-            "The bot class could not be imported, which means",
-            "that it is not able to be run. Make sure you don't",
-            "have any missing files. If you do, you'll need to",
-            "either clone the GitHub repository, update the code",
-            "using the 'git pull' command. This will only work",
-            "inside the folder of a cloned GitHub repositry.",
-        )
-        sys.exit(1)
-    except SyntaxError:
-        pass
-
 
 def is_venv():
     return hasattr(sys, "real_prefix") or (
@@ -61,10 +45,16 @@ def main():
     print("Setup complete.")
     if args.run:
         print("Starting bot...")
-        Von().run()
+        try:
+            Von().run()
+        except NameError:
+            print("Failed to start bot, exiting...")
+            sys.exit(1)
     else:
         sys.exit(0)
 
 
 if __name__ == "__main__":
+    if args.run:
+        from bot import Von
     main()
