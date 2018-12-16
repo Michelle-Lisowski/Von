@@ -15,7 +15,7 @@ try:
     import psutil
     import utils
 except (ImportError, ModuleNotFoundError):
-    if __name__ == "__main__" or sys.argv[0] == "launcher.py":
+    if __name__ == "__main__" or "launcher":
         print(
             "Some required dependencies are missing.",
             "Please run the setup to install these.",
