@@ -13,7 +13,7 @@ try:
     from discord.ext import commands
 
     import psutil
-    from utils import set_token
+    import utils
 except (ImportError, ModuleNotFoundError):
     if __name__ == "__main__" or sys.argv[0] == "launcher.py":
         print(
@@ -71,7 +71,7 @@ class Von(commands.Bot):
         return coro
 
     def run(self):
-        token = set_token()
+        token = utils.set_token()
 
         try:
             self.loop.run_until_complete(self.login(token))
