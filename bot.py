@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-import json
 import sys
-from json.decoder import JSONDecodeError
 from os import listdir
 from os.path import isfile, join
 
@@ -36,23 +34,11 @@ class Von(commands.Bot):
         super().__init__(command_prefix=self.get_prefix)
         self.remove_command("help")
 
-        self.custom = self.get_custom_settings()
+        self.custom = utils.get_custom_settings()
         self.process = psutil.Process()
 
         self.discordpy_version = discord.__version__
         self.python_version = sys.version.split(" (")[0]
-
-    def get_custom_settings(self):
-        try:
-            with open("custom.json") as f:
-                custom = json.load(f)
-        except (FileNotFoundError, JSONDecodeError):
-            with open("custom.json", "w") as f:
-                f.write("{}")
-
-            with open("custom.json") as f:
-                custom = json.load(f)
-        return custom
 
     def add_handler(self, coro, command: str):
         command = self.get_command(command)
