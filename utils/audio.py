@@ -7,6 +7,6 @@ def get_player(ctx):
     try:
         player = ctx.bot.players[str(ctx.guild.id)]
     except KeyError:
-        ctx.bot.players[str(ctx.guild.id)] = Playlist()
+        ctx.bot.players[str(ctx.guild.id)] = Playlist(ctx)
         player = ctx.bot.players[str(ctx.guild.id)]
     return player
