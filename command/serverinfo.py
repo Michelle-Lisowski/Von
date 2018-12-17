@@ -19,7 +19,7 @@ async def serverinfo(ctx):
     region = utils.clean_region(str(ctx.guild.region))
 
     embed.set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text=f"Some of this information may change.")
+    embed.set_footer(text="Some of this information may change.")
 
     embed.add_field(name="Server ID", value=ctx.guild.id)
     embed.add_field(name="Created At", value=created)
