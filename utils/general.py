@@ -17,6 +17,27 @@ def get_custom_settings():
     return custom
 
 
+def clean_region(region: str):
+    """
+    Returns a cleaned up string of a guild's
+    voice region. For example, `vip-us-east`
+    will become `VIP US East`.
+    """
+    split = region.split("-")
+    strs = []
+
+    if len(split) == 3:
+        strs.append(split[0].upper())
+        strs.append(split[1].upper())
+        strs.append(split[2].capitalize())
+    elif len(split) == 2:
+        strs.append(split[0].upper())
+        strs.append(split[1].capitalize())
+    elif len(split) == 1:
+        strs.append(split[0].capitalize())
+    return " ".join(strs)
+
+
 def set_token():
     try:
         with open("config.json") as f:
