@@ -2,6 +2,7 @@
 
 import asyncio
 import sys
+import typing
 from os import listdir
 from os.path import isfile, join
 
@@ -32,7 +33,9 @@ except SyntaxError:
 class Von(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=self.get_prefix)
+
         self.remove_command("help")
+        self.players = {}
 
         self.custom = utils.get_custom_settings()
         self.process = psutil.Process()
@@ -54,6 +57,24 @@ class Von(commands.Bot):
             )
 
         command.on_error = coro
+        return coro
+
+    def add_command_check(self, coro, cmds: typing.Union[str, list]):
+        if type(cmds) == list:
+            for command in cmds:
+                command = self.get_command(command)
+
+                try:
+                    command.checks.append(coro)
+                except discord.ClientException:
+                    pass
+        else:
+            command = self.get_command(command)
+
+            try:
+                command.checks.append(coro)
+            except discord.ClientException:
+                pass
         return coro
 
     def run(self):
