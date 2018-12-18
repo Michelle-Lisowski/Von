@@ -66,14 +66,14 @@ class Von(commands.Bot):
 
                 try:
                     command.checks.append(coro)
-                except discord.ClientException:
+                except (AttributeError, discord.ClientException):
                     pass
         else:
             command = self.get_command(command)
 
             try:
                 command.checks.append(coro)
-            except discord.ClientException:
+            except (AttributeError, discord.ClientException):
                 pass
         return coro
 
