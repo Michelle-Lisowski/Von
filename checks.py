@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 
-def is_enabled(ctx):
+async def is_enabled(ctx):
     try:
         disabled_commands = ctx.bot.custom[str(ctx.guild.id)]["DISABLED_COMMANDS"]
     # An AttributeError would happen in DMs, since the guild attribute doesn't exist
@@ -18,5 +18,20 @@ def is_enabled(ctx):
     return True
 
 
+async def is_connected(ctx):
+    if not ctx.voice_client:
+        try:
+            await ctx.author.voice.channel.connect()
+        except AttributeError:
+            raise commands.CommandError(":grey_exclamation: Please join a voice channel first.")
+    else:
+        if not ctx.author.voice:
+            raise commands.CommandError(":grey_exclamation: Please join a voice channel first.")
+        elif ctx.author.voice.channel != ctx.voice_client.channel:
+            raise commands.CommandError(":grey_exclamation: Please join the same voice channel as me.")
+    return True
+
+
 def setup(bot):
     bot.add_check(is_enabled)
+    bot.add_command_check(is_connected, ["play"])
