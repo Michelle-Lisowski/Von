@@ -24,7 +24,7 @@ class Playlist:
             after=lambda _: self.ctx.bot.loop.call_soon_threadsafe(self.next.set),
         )
 
-        await self.ctx.channel.send(
+        await self.ctx.send(
             ":musical_note: Now playing: **{0.uploader}** - **{0.title}**.".format(
                 self.song
             )
@@ -47,3 +47,4 @@ class Playlist:
             if len(self.queue._queue) == 0:
                 await self.ctx.voice_client.disconnect()
                 del self.ctx.bot.players[str(self.ctx.guild.id)]
+                await self.ctx.send(":information_source: End of the playlist.")
