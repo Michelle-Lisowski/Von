@@ -50,27 +50,16 @@ async def on_command_error(ctx, error):
         await ctx.send(error)
 
 
-async def roll_error(ctx, error):
+async def bad_argument(ctx, error):
     error = getattr(error, "original", error)
 
     if isinstance(error, commands.BadArgument):
-        await ctx.send(":exclamation: Please specify a **number**.")
-
-
-async def gay_error(ctx, error):
-    error = getattr(error, "original", error)
-
-    if isinstance(error, commands.BadArgument):
-        await ctx.send(":exclamation: Member not found.")
+        if str(ctx.command) == "gay":
+            await ctx.send(":exclamation: Member not found.")
+        elif str(ctx.command) == "roll":
+            await ctx.send(":exclamation: Please specify a **number**.")
 
 
 def setup(bot):
     bot.add_listener(on_command_error)
-
-    try:
-        bot.add_handler(roll_error, "roll")
-        bot.add_handler(gay_error, "gay")
-    except commands.CommandNotFound as error:
-        print(error)
-    except discord.ClientException as error:
-        print(error)
+    bot.add_handler(bad_argument, ["gay", "roll"])

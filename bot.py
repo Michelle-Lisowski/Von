@@ -43,20 +43,22 @@ class Von(commands.Bot):
         self.discordpy_version = discord.__version__
         self.python_version = sys.version.split(" (")[0]
 
-    def add_handler(self, coro, command: str):
-        command = self.get_command(command)
+    def add_handler(self, coro, cmds: typing.Union[str, list]):
+        if type(cmds) == list:
+            for command in cmds:
+                command = self.get_command(command)
 
-        if command is None:
-            raise commands.CommandNotFound(
-                "add_handler: A command with the specified name wasn't found."
-            )
+                try:
+                    command.checks.append(coro)
+                except (AttributeError, discord.ClientException):
+                    pass
+        else:
+            command = self.get_command(command)
 
-        if not asyncio.iscoroutinefunction(coro):
-            raise discord.ClientException(
-                "add_handler: The specified function must be a coroutine."
-            )
-
-        command.on_error = coro
+            try:
+                command.checks.append(command)
+            except (AttributeError, discord.ClientException):
+                pass
         return coro
 
     def add_command_check(self, coro, cmds: typing.Union[str, list]):
