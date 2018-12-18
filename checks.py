@@ -23,12 +23,18 @@ async def is_connected(ctx):
         try:
             await ctx.author.voice.channel.connect()
         except AttributeError:
-            raise commands.CommandError(":grey_exclamation: Please join a voice channel first.")
+            raise commands.CommandError(
+                ":grey_exclamation: Please join a voice channel first."
+            )
     else:
         if not ctx.author.voice:
-            raise commands.CommandError(":grey_exclamation: Please join a voice channel first.")
+            raise commands.CommandError(
+                ":grey_exclamation: Please join a voice channel first."
+            )
         elif ctx.author.voice.channel != ctx.voice_client.channel:
-            raise commands.CommandError(":grey_exclamation: Please join the same voice channel as me.")
+            raise commands.CommandError(
+                ":grey_exclamation: Please join the same voice channel as me."
+            )
     return True
 
 
