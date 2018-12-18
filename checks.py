@@ -20,12 +20,15 @@ async def is_enabled(ctx):
 
 async def is_connected(ctx):
     if not ctx.voice_client:
-        try:
-            await ctx.author.voice.channel.connect()
-        except AttributeError:
-            raise commands.CommandError(
-                ":grey_exclamation: Please join a voice channel first."
-            )
+        if str(ctx.command) == "play":
+            try:
+                await ctx.author.voice.channel.connect()
+            except AttributeError:
+                raise commands.CommandError(
+                    ":grey_exclamation: Please join a voice channel first."
+                )
+        else:
+            pass
     else:
         if not ctx.author.voice:
             raise commands.CommandError(
@@ -38,6 +41,17 @@ async def is_connected(ctx):
     return True
 
 
+async def is_playing(ctx):
+    if not ctx.voice_client or not ctx.voice_client.is_playing():
+        raise commands.CommandError(":grey_exclamation: No music is currently playing.")
+    elif ctx.voice_client.is_paused():
+        raise commands.CommandError(
+            ":grey_exclamation: The currently playing music has been paused."
+        )
+    return True
+
+
 def setup(bot):
     bot.add_check(is_enabled)
-    bot.add_command_check(is_connected, ["play"])
+    bot.add_command_check(is_connected, ["play", "stop"])
+    bot.add_command_check(is_playing, ["stop"])
