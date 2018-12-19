@@ -5,6 +5,8 @@ import asyncio
 import discord
 from youtube_dl import YoutubeDL
 
+from .audio import get_player
+
 ytdlopts = {
     "format": "bestaudio/best",
     "outtmpl": "downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s",
@@ -33,6 +35,7 @@ class Source(discord.PCMVolumeTransformer):
 
     @classmethod
     async def download(cls, ctx, search: str, *, loop=None, volume=None, stream=False):
+        playlist = get_player(ctx)
         volume = volume or 0.5
         loop = loop or asyncio.get_event_loop()
 
@@ -48,11 +51,12 @@ class Source(discord.PCMVolumeTransformer):
         else:
             return
 
-        await ctx.send(
-            ":musical_note: **{}** - **{}** has been added to the playlist.".format(
-                data["uploader"], data["title"]
+        if playlist.song is not None:
+            await ctx.send(
+                ":musical_note: **{}** - **{}** has been added to the playlist.".format(
+                    data["uploader"], data["title"]
+                )
             )
-        )
 
         return cls(
             discord.FFmpegPCMAudio(source, **ffmpegopts), volume=volume, data=data

@@ -34,14 +34,12 @@ class Playlist:
         await self.ctx.bot.wait_until_ready()
         while not self.ctx.bot.is_closed():
             self.next.clear()
-
-            source = await self.queue.get()
-            self.song = source
+            self.song = await self.queue.get()
 
             await self.play()
             await self.next.wait()
 
-            source.cleanup()
+            self.song.cleanup()
             self.song = None
 
             if len(self.queue._queue) == 0:
