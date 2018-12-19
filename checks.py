@@ -53,5 +53,5 @@ async def is_playing(ctx):
 
 def setup(bot):
     bot.add_check(is_enabled)
-    bot.add_command_check(is_connected, ["play", "stop"])
-    bot.add_command_check(is_playing, ["stop"])
+    bot.add_command_check(is_connected, ["play", "skip", "stop"])
+    bot.add_command_check(is_playing, ["skip", "stop"])
