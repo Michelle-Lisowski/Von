@@ -7,10 +7,7 @@ from discord.ext import commands
 async def on_command_error(ctx, error):
     error = getattr(error, "original", error)
 
-    if hasattr(ctx.command, "on_error"):
-        pass
-
-    elif isinstance(error, commands.CommandNotFound):
+    if isinstance(error, commands.CommandNotFound):
         pass
 
     elif isinstance(error, commands.DisabledCommand):
@@ -54,7 +51,7 @@ async def bad_argument(ctx, error):
     error = getattr(error, "original", error)
 
     if isinstance(error, commands.BadArgument):
-        if str(ctx.command) == "roll":
+        if str(ctx.command) == "roll" or "volume":
             await ctx.send(":exclamation: Please specify a **number**.")
         elif str(ctx.command) == "gay" or "profile":
             await ctx.send(":exclamation: Member not found.")
@@ -62,4 +59,4 @@ async def bad_argument(ctx, error):
 
 def setup(bot):
     bot.add_listener(on_command_error)
-    bot.add_handler(bad_argument, ["gay", "roll", "profile"])
+    bot.add_handler(bad_argument, ["gay", "roll", "volume", "profile"])

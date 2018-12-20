@@ -27,8 +27,6 @@ async def is_connected(ctx):
                 raise commands.CommandError(
                     ":grey_exclamation: Please join a voice channel first."
                 )
-        else:
-            pass
     else:
         if not ctx.author.voice:
             raise commands.CommandError(
@@ -53,5 +51,5 @@ async def is_playing(ctx):
 
 def setup(bot):
     bot.add_check(is_enabled)
-    bot.add_command_check(is_connected, ["play", "skip", "stop"])
-    bot.add_command_check(is_playing, ["skip", "stop"])
+    bot.add_command_check(is_playing, ["skip", "stop", "volume"])
+    bot.add_command_check(is_connected, ["play", "skip", "stop", "volume"])

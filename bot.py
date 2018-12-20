@@ -43,40 +43,36 @@ class Von(commands.Bot):
         self.discordpy_version = discord.__version__
         self.python_version = sys.version.split(" (")[0]
 
-    def add_handler(self, coro, cmds: typing.Union[str, list]):
-        if type(cmds) == list:
-            for command in cmds:
-                command = self.get_command(command)
+    def add_handler(self, coro, cmds: list):
+        if not isinstance(cmds, list):
+            try:
+                raise TypeError("add_handler: cmds argument must be of type list")
+            except TypeError as error:
+                print(error)
 
-                try:
-                    command.on_error = coro
-                except (AttributeError, discord.ClientException):
-                    pass
-        else:
-            command = self.get_command(command)
+        for cmd in cmds:
+            command = self.get_command(cmd)
 
             try:
                 command.on_error = coro
-            except (AttributeError, discord.ClientException):
-                pass
+            except Exception as error:
+                print(error)
         return coro
 
-    def add_command_check(self, coro, cmds: typing.Union[str, list]):
-        if type(cmds) == list:
-            for command in cmds:
-                command = self.get_command(command)
+    def add_command_check(self, coro, cmds: list):
+        if not isinstance(cmds, list):
+            try:
+                raise TypeError("add_command_check: cmds argument must be of type list")
+            except TypeError as error:
+                print(error)
 
-                try:
-                    command.checks.append(coro)
-                except (AttributeError, discord.ClientException):
-                    pass
-        else:
-            command = self.get_command(command)
+        for cmd in cmds:
+            command = self.get_command(cmd)
 
             try:
                 command.checks.append(coro)
-            except (AttributeError, discord.ClientException):
-                pass
+            except Exception as error:
+                print(error)
         return coro
 
     def run(self):
@@ -88,10 +84,8 @@ class Von(commands.Bot):
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
         except (discord.LoginFailure, discord.HTTPException, ClientConnectorError):
-            print("Logging out due to unsuccessful connection...")
             self.loop.run_until_complete(self.logout())
         except (discord.GatewayNotFound, discord.ConnectionClosed):
-            print("Logging out due to unsuccessful gateway connection...")
             self.loop.run_until_complete(self.logout())
         finally:
             self.loop.close()
