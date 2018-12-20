@@ -10,6 +10,12 @@ from discord.ext import commands
 async def disable(ctx, *, command: str):
     cmds = [cmd.qualified_name for cmd in ctx.bot.commands]
 
+    if command == "enable":
+        raise commands.CommandError(
+            ":exclamation: With the `enable` command disabled, "
+            "you won't be able to re-enable disabled commands."
+        )
+
     if not command in cmds:
         raise commands.CommandError(":exclamation: Command not found.")
 
