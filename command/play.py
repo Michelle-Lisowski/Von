@@ -11,7 +11,7 @@ async def play(ctx, *, search_term: str):
 
     async with ctx.typing():
         source = await Source.download(ctx, search_term)
-        await player.add(source)
+        player.put(source)
 
 
 def setup(bot):

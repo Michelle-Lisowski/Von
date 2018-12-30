@@ -81,11 +81,8 @@ class Von(commands.Bot):
         try:
             self.loop.run_until_complete(self.login(token))
             self.loop.run_until_complete(self.connect())
-        except KeyboardInterrupt:
-            self.loop.run_until_complete(self.logout())
-        except (discord.LoginFailure, discord.HTTPException, ClientConnectorError):
-            self.loop.run_until_complete(self.logout())
-        except (discord.GatewayNotFound, discord.ConnectionClosed):
+        except Exception as error:
+            print(f"An error occurred while logging in:\n{error}")
             self.loop.run_until_complete(self.logout())
         finally:
             self.loop.close()

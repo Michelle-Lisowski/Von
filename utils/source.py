@@ -3,9 +3,11 @@
 import asyncio
 
 import discord
-from youtube_dl import YoutubeDL
+import youtube_dl
 
-from .audio import get_player
+from . import get_player
+
+youtube_dl.utils.bug_reports_message = lambda: ""
 
 ytdlopts = {
     "format": "bestaudio/best",
@@ -22,12 +24,12 @@ ytdlopts = {
 }
 
 ffmpegopts = {"options": "-vn"}
-downloader = YoutubeDL(ytdlopts)
+downloader = youtube_dl.YoutubeDL(ytdlopts)
 
 
 class Source(discord.PCMVolumeTransformer):
     def __init__(self, source, *, volume, data):
-        super().__init__(source)
+        super().__init__(source, volume)
 
         self.url = data.get("url")
         self.title = data.get("title")
@@ -35,7 +37,7 @@ class Source(discord.PCMVolumeTransformer):
 
     @classmethod
     async def download(cls, ctx, search: str, *, loop=None, volume=None, stream=False):
-        playlist = get_player(ctx)
+        player = get_player(ctx)
         volume = volume or 0.5
         loop = loop or asyncio.get_event_loop()
 
@@ -45,13 +47,9 @@ class Source(discord.PCMVolumeTransformer):
 
         if "entries" in data:
             data = data["entries"][0]
+        source = data["url"] if stream else downloader.prepare_filename(data)
 
-        if ctx.voice_client:
-            source = data["url"] if stream else downloader.prepare_filename(data)
-        else:
-            return
-
-        if playlist.song is not None:
+        if player.entry is not None:
             await ctx.send(
                 ":musical_note: **{}** - **{}** has been added to the playlist.".format(
                     data["uploader"], data["title"]
