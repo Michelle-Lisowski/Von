@@ -6,10 +6,9 @@ import random
 
 class Playlist:
     def __init__(self, ctx):
-        self.channel = ctx.channel
         self.client = ctx.voice_client
-        self.guild = ctx.guild
         self.bot = ctx.bot
+        self.ctx = ctx
 
         self.entries = asyncio.Queue()
         self.next = asyncio.Event()
@@ -18,10 +17,8 @@ class Playlist:
         self.entry = None
 
     def cleanup(self):
-        self.entry = None
         self.loop.cancel()
-
-        del self.bot.players[str(self.guild.id)]
+        del self.bot.players[str(self.ctx.guild.id)]
         self.bot.loop.create_task(self.client.disconnect())
 
     def clear(self):
@@ -33,21 +30,18 @@ class Playlist:
         else:
             self.entries._queue.append(entry)
 
+        self.entries._unfinished_tasks += 1
+        self.entries._finished.clear()
+        self.entries._wakeup_next(self.entries._getters)
+
     def shuffle(self):
         random.shuffle(self.entries._queue)
 
-    async def get(self):
-        while self.entries is not None:
-            if len(self.entries._queue) > 0:
-                return self.entries._queue.popleft()
-            await asyncio.sleep(0.25)
-
     async def play(self):
-        entry = await self.get()
-        self.client.play(entry, after=lambda _: self.next.set())
+        self.entry = await self.entries.get()
+        self.client.play(self.entry, after=lambda _: self.next.set())
 
-        self.entry = entry
-        await self.channel.send(
+        await self.ctx.send(
             ":musical_note: Now playing: **{0.uploader}** - **{0.title}**".format(
                 self.entry
             )
@@ -61,4 +55,4 @@ class Playlist:
 
             if len(self.entries._queue) == 0:
                 self.cleanup()
-                await self.channel.send(":information_source: End of the playlist.")
+                await self.ctx.send(":information_source: End of the playlist.")

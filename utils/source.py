@@ -5,7 +5,7 @@ import asyncio
 import discord
 import youtube_dl
 
-from . import get_player
+from .audio import get_player
 
 youtube_dl.utils.bug_reports_message = lambda: ""
 
